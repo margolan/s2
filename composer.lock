@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "1eb9b21b09fe2f702ce89e9631683a7a",
+    "content-hash": "07054ce887608878632b5b8b8a383c55",
     "packages": [
         {
             "name": "brick/math",
@@ -2597,59 +2597,6 @@
                 }
             ],
             "time": "2025-08-21T11:53:16+00:00"
-        },
-        {
-            "name": "protoqol/prequel",
-            "version": "v1.22.61",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/Protoqol/Prequel.git",
-                "reference": "358d80ae67488b59af6495c9e9a5a53fb5dabd37"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/Protoqol/Prequel/zipball/358d80ae67488b59af6495c9e9a5a53fb5dabd37",
-                "reference": "358d80ae67488b59af6495c9e9a5a53fb5dabd37",
-                "shasum": ""
-            },
-            "require": {
-                "laravel/framework": ">=5.6",
-                "php": "^7.1|^8.0"
-            },
-            "require-dev": {
-                "orchestra/testbench": "^3.7",
-                "phpmd/phpmd": "^2.6"
-            },
-            "type": "library",
-            "extra": {
-                "laravel": {
-                    "providers": [
-                        "Protoqol\\Prequel\\PrequelServiceProvider"
-                    ]
-                }
-            },
-            "autoload": {
-                "psr-4": {
-                    "Protoqol\\Prequel\\": "src"
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "Quinten Schorsij",
-                    "email": "quinten@protoqol.xyz"
-                }
-            ],
-            "description": "Clear and concise database management.",
-            "support": {
-                "issues": "https://github.com/Protoqol/Prequel/issues",
-                "source": "https://github.com/Protoqol/Prequel/tree/v1.22.61"
-            },
-            "abandoned": true,
-            "time": "2021-10-01T20:48:03+00:00"
         },
         {
             "name": "psr/clock",
