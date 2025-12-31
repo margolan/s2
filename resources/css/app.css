@@ -1,3 +1,9 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+@layer components {
+  .custom-file-input::file-selector-button {
+    @apply bg-white px-3 h-[42px] cursor-pointer border mr-5;
+  }
+}

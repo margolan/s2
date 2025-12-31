@@ -1,0 +1,38 @@
+{
+	"version": "2.0.0",
+	"tasks": [
+		{
+			"label": "Run Full Dev Environment",
+			"type": "shell",
+			"dependsOn": [
+				"Run Vite (npm run dev)",
+				"Run Laravel Server (php artisan serve)"
+			],
+			"detail": "Запуск сервера Laravel и Vite одновременно",
+			"problemMatcher": []
+		},
+		{
+			"label": "Run Vite (npm run dev)",
+			"type": "process",
+			"command": "cmd",
+			"args": ["/c", "npm run dev"],
+			"group": {
+				"kind": "build",
+				"isDefault": true
+			},
+			"problemMatcher": [],
+			"detail": "Запуск Vite для сборки фронтенда"
+		},
+		{
+			"label": "Run Laravel Server (php artisan serve)",
+			"type": "shell",
+			"command": "php artisan serve",
+			"group": {
+				"kind": "build",
+				"isDefault": true
+			},
+			"problemMatcher": [],
+			"detail": "Запуск встроенного сервера Laravel"
+		},
+	]
+}

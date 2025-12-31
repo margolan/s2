@@ -19,6 +19,6 @@ class ScheduleDate extends Model
 
     public function schedules()
     {
-        return $this->hasMany(Schedule::class, 'date_id');
+        return $this->hasMany(ScheduleDay::class, 'date_id');
     }
 }

@@ -1,0 +1,11 @@
+{
+  "editor.openSideBySideDirection": "right",
+
+  "editor.gotoLocation.multipleDefinitions": "goto",
+  "editor.gotoLocation.multipleDeclarations": "goto",
+  "editor.gotoLocation.multipleImplementations": "goto",
+  "editor.gotoLocation.multipleReferences": "goto",
+  "editor.gotoLocation.multipleTypeDefinitions": "goto",
+
+  "editor.definitionLinkOpensInPeek": false
+}
