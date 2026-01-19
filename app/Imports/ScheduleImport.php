@@ -2,122 +2,95 @@
 
 namespace App\Imports;
 
-use Maatwebsite\Excel\Concerns\ToCollection;
-use Illuminate\Support\Collection;
-use PhpOffice\PhpSpreadsheet\Worksheet\Worksheet;
+use App\Models\Schedule;
 
-class ScheduleImport implements ToCollection
+
+class ScheduleImport
 {
-    public array $result = [];
-    protected ?Worksheet $worksheet = null;
 
-    // Для чтения цвета (если понадобится)
-    public function setWorksheet(Worksheet $worksheet)
+    public function store($data, $request)
     {
-        $this->worksheet = $worksheet;
-    }
 
-    public function collection(Collection $rows)
-    {
-        $rowCount = $rows->count();
+        $sheet = $data->getActiveSheet();
 
-        foreach ($rows as $rowIndex => $row) {
+        function getCellData($cell)
+        { // checkin for rich text
+            $text = $cell->getValue();
+            if ($text instanceof \PhpOffice\PhpSpreadsheet\RichText\RichText) {
+                return $text->getPlainText();
+            }
+            return $text;
+        }
 
-            foreach ($row as $colIndex => $cellValue) {
+        foreach ($sheet->getRowIterator() as $rowIndex => $rowValue) { // checking and collecting anchors by keywords
+            $cellIterator = $rowValue->getCellIterator();
+            $cellIterator->setIterateOnlyExistingCells(true);
 
-                if ($this->isServiceEngineer($cellValue)) {
-
-                    // Имя слева
-                    $employeeName = $row[$colIndex - 1] ?? null;
-                    if (!$employeeName) continue;
-
-                    $dayStartCol = $colIndex + 2; // через 1 колонку
-
-                    $days = [];
-
-                    for ($dayCol = $dayStartCol; $dayCol < count($row); $dayCol++) {
-
-                        $upperCell = $row[$dayCol] ?? null;
-                        $lowerCell = $rows[$rowIndex + 1][$dayCol] ?? null;
-
-                        $dayData = $this->analyzeDay($upperCell, $lowerCell, $rowIndex + 1, $dayCol + 1);
-
-                        if ($dayData) $days[] = $dayData;
-                    }
-
-                    $this->result[] = [
-                        'employee' => trim($employeeName),
-                        'position' => 'сервис инженер',
-                        'days' => $days,
-                    ];
+            foreach ($cellIterator as $cell) {
+                if (getCellData($cell) === 'сервис инженер') {
+                    $processed_data['anchor'][] = $rowIndex;
                 }
             }
         }
-    }
 
-    private function isServiceEngineer($value): bool
-    {
-        if (!$value) return false;
-        $value = mb_strtolower(trim($value));
-        return str_contains($value, 'сервис') && str_contains($value, 'инженер');
-    }
-
-    private function analyzeDay($upper, $lower, $rowNum, $colNum): ?array
-    {
-        if (!$upper) return null;
-
-        $upper = trim((string)$upper);
-        $lower = trim((string)$lower);
-
-        $upperNorm = mb_strtolower($upper);
-        $lowerNorm = mb_strtolower($lower);
-
-        // Выходной
-        if (in_array($upperNorm, ['b', 'в'])) {
-            return $this->dayResult('weekend', $rowNum, $colNum, true, false, false, false);
+        if (!isset($processed_data['anchor'])) { // return if no anchors found
+            return redirect()->back()->with('status', "Сервис инженеры не найдены. Проверьте таблицу на наличие записи 'сервис инженер'");
         }
 
-        // Отпуск
-        if (in_array($upperNorm, ['o', 'о'])) {
-            return $this->dayResult('vacation', $rowNum, $colNum, false, false, true, false);
+        foreach ($processed_data['anchor'] as $index => $value) {
+
+            $processed_data['names'][] = getCellData($sheet->getCell('B' . $value));
+
+            $row = $sheet->getRowIterator($value, $value)->current();
+            $cellIterator = $row->getCellIterator();
+            $cellIterator->setIterateOnlyExistingCells(true);
+
+            $cellIndexCount = 0;
+
+            foreach ($cellIterator as $cellValue) { // processing data
+                $cellIndexCount++;
+                if ($cellIndexCount > 4 && $cellIndexCount < (cal_days_in_month(CAL_GREGORIAN, $request->month, $request->year) + 5)) {
+
+                    $cellColor = $sheet->getStyle($cellValue->getCoordinate())->getFill()->getStartColor()->getRGB();
+
+                    if (str_contains($cellValue->getValue(), '8:00') && $cellColor === 'FFFFFF') {
+                        $processed_data['data'][$index][] = '+';
+                    } else if (str_contains($cellValue->getValue(), '8:00') && $cellColor === 'E6B8B8') {
+                        $processed_data['data'][$index][] = '+';
+                    } else if (str_contains($cellValue->getValue(), '8:00') && $cellColor === 'FFC000') {
+                        $processed_data['data'][$index][] = 'D';
+                    } else if (preg_match('/\p{Cyrillic}/u', $cellValue) && preg_match('/[Оо]/u', $cellValue)) {
+                        $processed_data['data'][$index][] = 'O';
+                    } else if (preg_match('/\p{Latin}/u', $cellValue) && preg_match('/[Oo]/u', $cellValue)) {
+                        $processed_data['data'][$index][] = 'O';
+                    } else if (str_contains($cellValue->getValue(), 'В')) {
+                        $processed_data['data'][$index][] = '-';
+                    } else {
+                        $processed_data['data'][$index][] = $cellColor . ' ' . $cellValue->getValue();
+                    }
+                }
+            }
         }
 
-        // Рабочий
-        if ($upper == '8:00' && $lower == '9:00') {
-            return $this->dayResult('work', $rowNum, $colNum, false, true, false, false);
+        for ($i = 0; $i < cal_days_in_month(CAL_GREGORIAN, $request->month, $request->year); $i++) { // numbers and days of the week
+            $processed_data['dates']['day'][] = $i + 1;
+            $processed_data['dates']['date'][] = __("messages.date" . date('w', mktime(0, 0, 0, $request->month, $i, $request->year)));
         }
 
-        // Дежурство
-        if ($upper == '8:00' && $lower == '12:00') {
-            return $this->dayResult('duty', $rowNum, $colNum, false, false, false, true);
+        $dataToStore = [];
+
+        foreach ($processed_data as $key => $value) {
+            if (!empty($value)) {
+                $dataToStore[$key] = json_encode($value, JSON_UNESCAPED_UNICODE);
+            }
         }
 
-        return null;
-    }
+        $dataToStore['date'] = $request->input('month') . $request->input('year');
+        $dataToStore['city'] = $request->input('city');
+        $dataToStore['depart'] = $request->input('depart');
 
-    private function dayResult(
-        string $type,
-        int $row,
-        int $col,
-        bool $isWeekend,
-        bool $isWork,
-        bool $isVacation,
-        bool $isDuty
-    ): array {
-        // Цвет ячейки (если есть worksheet)
-        $cellColor = null;
-        if ($this->worksheet) {
-            $cell = $this->worksheet->getCellByColumnAndRow($col, $row);
-            $cellColor = $cell->getStyle()->getFill()->getStartColor()->getRGB();
-        }
+        // Schedule::create($dataToStore);
 
-        return [
-            'type' => $type,
-            'is_weekend' => $isWeekend,
-            'is_workday' => $isWork,
-            'is_vacation' => $isVacation,
-            'is_duty' => $isDuty,
-            'cell_color' => $cellColor,
-        ];
+        return $processed_data;
     }
 }

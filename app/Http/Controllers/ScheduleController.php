@@ -5,7 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Carbon\Carbon;
 use App\Imports\ScheduleImport;
-use Maatwebsite\Excel\Facades\Excel;
+use PhpOffice\PhpSpreadsheet\IOFactory;
 
 class ScheduleController extends Controller
 {
@@ -20,20 +20,19 @@ class ScheduleController extends Controller
     return view('dashboard.schedule.create', ['date' => $date]);
   }
 
-
   public function store(Request $request)
   {
+
     $request->validate([
       'file' => ['required', 'file', 'mimes:xlsx,xls'],
     ]);
 
-    $data = new ScheduleImport();
+    $spreadsheet = IOFactory::load($request->file('file'));
 
-    // Чтобы читать цвет
-    Excel::import($data, $request->file('file'), null, \Maatwebsite\Excel\Excel::XLSX);
+    $ExcelImport = new ScheduleImport();
 
-    // return view('dashboard.schedule.result', ['data' => $data]);
+    $data = $ExcelImport->store($spreadsheet, $request);
 
-    return response()->json($data->result);
+    return redirect()->route('admin_index')->with('data', $data)->with('status', 'Запись успешно добавлена');
   }
 }
