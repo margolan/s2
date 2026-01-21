@@ -33,6 +33,6 @@ class ScheduleController extends Controller
 
     $data = $ExcelImport->store($spreadsheet, $request);
 
-    return redirect()->route('admin_index')->with('data', $data)->with('status', 'Запись успешно добавлена');
+    return view('dashboard.schedule.result', ['data' => $data])->with('status', 'Запись успешно добавлена');
   }
 }

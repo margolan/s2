@@ -2,8 +2,10 @@
 
 namespace App\Imports;
 
-use App\Models\Schedule;
-
+use App\Models\ScheduleDate;
+use App\Models\ScheduleWorker;
+use App\Models\ScheduleDay;
+use Carbon\Carbon;
 
 class ScheduleImport
 {
@@ -74,7 +76,7 @@ class ScheduleImport
 
         for ($i = 0; $i < cal_days_in_month(CAL_GREGORIAN, $request->month, $request->year); $i++) { // numbers and days of the week
             $processed_data['dates']['day'][] = $i + 1;
-            $processed_data['dates']['date'][] = __("messages.date" . date('w', mktime(0, 0, 0, $request->month, $i, $request->year)));
+            $processed_data['dates']['carbon'][] = Carbon::create($request->year, $request->month, $i + 1)->translatedFormat('D');
         }
 
         $dataToStore = [];
@@ -90,6 +92,10 @@ class ScheduleImport
         $dataToStore['depart'] = $request->input('depart');
 
         // Schedule::create($dataToStore);
+
+        ScheduleDate::class;
+        ScheduleDay::class;
+        ScheduleWorker::class;
 
         return $processed_data;
     }

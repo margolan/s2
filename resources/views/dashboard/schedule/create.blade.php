@@ -14,7 +14,7 @@
       <div class="flex gap-5">
         <select name="month">
           @foreach ($date['month'] as $index => $month)
-            <option value="{{ $index }}" @if ($date['current'][0] == $index) selected @endif>
+            <option value="{{ $index + 1 }}" @if ($date['current'][0] == $index) selected @endif>
               {{ $month }} </option>
           @endforeach
         </select>
