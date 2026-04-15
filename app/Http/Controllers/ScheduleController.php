@@ -5,7 +5,11 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Carbon\Carbon;
 use App\Imports\ScheduleImport;
+use DateTime;
 use PhpOffice\PhpSpreadsheet\IOFactory;
+use ReturnTypeWillChange;
+use Illuminate\Support\Facades\Auth;
+
 
 class ScheduleController extends Controller
 {
@@ -13,26 +17,48 @@ class ScheduleController extends Controller
   public function create()
   {
 
-    $date['month'] = array_map(fn($month) => Carbon::create(0, $month)->translatedFormat('F'), range(1, 12));
-    $date['year'] = range(date('Y'), date('Y') + 1);
-    $date['current'] = [date('n') == 12 ? 0 : date('n') - 1, date('n') == 12 ? date('Y') + 1 : date('Y')];
+    $months = collect(range(1, 12))->mapWithKeys(function ($month) {
+      return [$month => Carbon::now()->month($month)->translatedFormat('F')];
+    });
 
-    return view('dashboard.schedule.create', ['date' => $date]);
+    $years = range(date('Y'), date('Y') + 1);
+
+    $nextMonthDate = Carbon::now()->addMonth();
+
+    $currentMonth = $nextMonthDate->month;
+    $currentYear = $nextMonthDate->year;
+
+    return view('dashboard.schedule.create', compact('months', 'years', 'currentMonth', 'currentYear'));
   }
 
   public function store(Request $request)
   {
-
     $request->validate([
       'file' => ['required', 'file', 'mimes:xlsx,xls'],
+      'month' => ['required', 'integer', 'between:1,12'],
+      'year' => ['required', 'integer'],
     ]);
 
+    // Берем данные напрямую из авторизованного пользователя
+    $user = Auth::user();
+
     $spreadsheet = IOFactory::load($request->file('file'));
+    $import = new ScheduleImport();
 
-    $ExcelImport = new ScheduleImport();
+    // Передаем город и департамент пользователя в импорт
+    $data = $import->store(
+      $spreadsheet,
+      $request,
+      $user->city,
+      $user->depart
+    );
 
-    $data = $ExcelImport->store($spreadsheet, $request);
+    return view('dashboard.schedule.result', ['data' => $data]);
+  }
 
-    return view('dashboard.schedule.result', ['data' => $data])->with('status', 'Запись успешно добавлена');
+  public function check()
+  {
+
+    return view('dashboard.schedule.result');
   }
 }

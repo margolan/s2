@@ -4,16 +4,19 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
-class ScheduleWorker extends Model
+class Schedule extends Model
 {
     protected $fillable = [
-        'full_name',
+        'worker_name',
+        'schedule_data',
+        'month',
+        'year',
         'city',
-        'depart'
+        'depart',
+        'is_active',
     ];
 
-    public function dates()
-    {
-        return $this->hasMany(ScheduleDate::class, 'worker_id');
-    }
+    protected $casts = [
+        'schedule_data' => 'array',
+    ];
 }

@@ -1,11 +1,18 @@
 @extends('dashboard')
 @section('dashboard-content')
-  <h1>Result</h1>
   <hr class="border-red-500 my-3">
+  <h1>Result</h1>
 
   @isset($data)
-    <pre>
-      {{print_r($data, true)}}
-    </pre>
+    {{-- {{ $data }} --}}
+    <hr>
+
+    @dump($data)
   @endisset
+
+  @if (session('status'))
+    <p>{{ session('status') }}</p>
+  @endif
+
+  @dump(session('data'))
 @endsection

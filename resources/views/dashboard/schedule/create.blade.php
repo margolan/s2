@@ -8,19 +8,23 @@
   @endsession
 
   <div class="py-5">
+
     <form action="{{ route('schedule-store') }}" enctype="multipart/form-data" method="POST"
-      class="flex flex-col gap-5 dark:text-black">
+      class="max-w-[327px] flex flex-col gap-5">
       @csrf
       <div class="flex gap-5">
         <select name="month">
-          @foreach ($date['month'] as $index => $month)
-            <option value="{{ $index + 1 }}" @if ($date['current'][0] == $index) selected @endif>
-              {{ $month }} </option>
+          @foreach ($months as $value => $name)
+            <option value="{{ $value }}" @selected($currentMonth == $value)>
+              {{ $name }}
+            </option>
           @endforeach
         </select>
+
         <select name="year">
-          @foreach ($date['year'] as $year)
-            <option value="{{ $year }}" @if ($date['current'][1] == $year) selected @endif>{{ $year }}
+          @foreach ($years as $year)
+            <option value="{{ $year }}" @selected($currentYear == $year)>
+              {{ $year }}
             </option>
           @endforeach
         </select>
@@ -29,6 +33,9 @@
       <input type="submit" value="Отправить"
         class="w-max bg-white px-3 h-[42px] cursor-pointer border border-gray-800 mr-5">
     </form>
+
   </div>
+
+  {{-- @dump($currentMonth); --}}
 
 @endsection

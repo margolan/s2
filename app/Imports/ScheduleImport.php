@@ -2,101 +2,122 @@
 
 namespace App\Imports;
 
-use App\Models\ScheduleDate;
-use App\Models\ScheduleWorker;
-use App\Models\ScheduleDay;
+use App\Models\Schedule;
 use Carbon\Carbon;
+use PhpOffice\PhpSpreadsheet\RichText\RichText;
+use PhpOffice\PhpSpreadsheet\Cell\Coordinate;
 
 class ScheduleImport
 {
-
-    public function store($data, $request)
+    /**
+     * Основной метод импорта
+     */
+    public function store($spreadsheet, $request, $city, $depart)
     {
+        $sheet = $spreadsheet->getActiveSheet();
 
-        $sheet = $data->getActiveSheet();
+        // Входные данные из формы
+        $month = (int)$request->input('month');
+        $year = (int)$request->input('year');
 
-        function getCellData($cell)
-        { // checkin for rich text
-            $text = $cell->getValue();
-            if ($text instanceof \PhpOffice\PhpSpreadsheet\RichText\RichText) {
-                return $text->getPlainText();
-            }
-            return $text;
-        }
+        $daysInMonth = cal_days_in_month(CAL_GREGORIAN, $month, $year);
+        $foundSchedules = [];
 
-        foreach ($sheet->getRowIterator() as $rowIndex => $rowValue) { // checking and collecting anchors by keywords
-            $cellIterator = $rowValue->getCellIterator();
-            $cellIterator->setIterateOnlyExistingCells(true);
-
-            foreach ($cellIterator as $cell) {
-                if (getCellData($cell) === 'сервис инженер') {
-                    $processed_data['anchor'][] = $rowIndex;
+        // 1. Поиск анкеров (ограничиваем поиск 500 строками для защиты сервера)
+        $anchors = [];
+        foreach ($sheet->getRowIterator(1, 500) as $rowIndex => $row) {
+            // Проверяем только первые 10 колонок, чтобы не сканировать пустоту справа
+            foreach ($row->getCellIterator('A', 'J') as $cell) {
+                if (mb_strtolower($this->getCellValue($cell)) === 'сервис инженер') {
+                    $anchors[] = $rowIndex;
+                    break;
                 }
             }
         }
 
-        if (!isset($processed_data['anchor'])) { // return if no anchors found
-            return redirect()->back()->with('status', "Сервис инженеры не найдены. Проверьте таблицу на наличие записи 'сервис инженер'");
+        if (empty($anchors)) {
+            return "Сервис инженеры не найдены. Проверьте наличие фразы 'сервис инженер'.";
         }
 
-        foreach ($processed_data['anchor'] as $index => $value) {
+        // 2. Сбор данных на основе найденных анкеров
+        foreach ($anchors as $anchorRow) {
+            // Имя сотрудника всегда в колонке B
+            $workerName = $this->getCellValue($sheet->getCell('B' . $anchorRow));
 
-            $processed_data['names'][] = getCellData($sheet->getCell('B' . $value));
+            $monthlyStatuses = [];
 
-            $row = $sheet->getRowIterator($value, $value)->current();
-            $cellIterator = $row->getCellIterator();
-            $cellIterator->setIterateOnlyExistingCells(true);
+            // Проходим по дням месяца (начинаем с колонки E, которая 5-я по счету)
+            for ($day = 1; $day <= $daysInMonth; $day++) {
+                $columnLetter = Coordinate::stringFromColumnIndex($day + 4);
 
-            $cellIndexCount = 0;
+                // Берем текущую ячейку (часы) и ячейку под ней (начало работы)
+                $cellHours = $sheet->getCell($columnLetter . $anchorRow);
+                $cellStart = $sheet->getCell($columnLetter . ($anchorRow + 1));
 
-            foreach ($cellIterator as $cellValue) { // processing data
-                $cellIndexCount++;
-                if ($cellIndexCount > 4 && $cellIndexCount < (cal_days_in_month(CAL_GREGORIAN, $request->month, $request->year) + 5)) {
-
-                    $cellColor = $sheet->getStyle($cellValue->getCoordinate())->getFill()->getStartColor()->getRGB();
-
-                    if (str_contains($cellValue->getValue(), '8:00') && $cellColor === 'FFFFFF') {
-                        $processed_data['data'][$index][] = '+';
-                    } else if (str_contains($cellValue->getValue(), '8:00') && $cellColor === 'E6B8B8') {
-                        $processed_data['data'][$index][] = '+';
-                    } else if (str_contains($cellValue->getValue(), '8:00') && $cellColor === 'FFC000') {
-                        $processed_data['data'][$index][] = 'D';
-                    } else if (preg_match('/\p{Cyrillic}/u', $cellValue) && preg_match('/[Оо]/u', $cellValue)) {
-                        $processed_data['data'][$index][] = 'O';
-                    } else if (preg_match('/\p{Latin}/u', $cellValue) && preg_match('/[Oo]/u', $cellValue)) {
-                        $processed_data['data'][$index][] = 'O';
-                    } else if (str_contains($cellValue->getValue(), 'В')) {
-                        $processed_data['data'][$index][] = '-';
-                    } else {
-                        $processed_data['data'][$index][] = $cellColor . ' ' . $cellValue->getValue();
-                    }
-                }
+                $monthlyStatuses[] = $this->determineStatus($cellHours, $cellStart, $sheet);
             }
+
+            // Формируем запись для базы данных
+            $foundSchedules[] = [
+                'worker_name'   => $workerName,
+                'city'          => $city,
+                'depart'        => $depart,
+                'month'         => $month,
+                'year'          => $year,
+                'schedule_data' => $monthlyStatuses, // Благодаря Cast в модели, станет JSON автоматически
+                'is_active'     => false,
+            ];
         }
 
-        for ($i = 0; $i < cal_days_in_month(CAL_GREGORIAN, $request->month, $request->year); $i++) { // numbers and days of the week
-            $processed_data['dates']['day'][] = $i + 1;
-            $processed_data['dates']['carbon'][] = Carbon::create($request->year, $request->month, $i + 1)->translatedFormat('D');
+        // 3. Массовое сохранение в базу (чтобы не делать много запросов)
+        foreach ($foundSchedules as $data) {
+            Schedule::create($data);
         }
 
-        $dataToStore = [];
+        return $foundSchedules; // Возвращаем данные для превью во вьюхе
+    }
 
-        foreach ($processed_data as $key => $value) {
-            if (!empty($value)) {
-                $dataToStore[$key] = json_encode($value, JSON_UNESCAPED_UNICODE);
-            }
+    /**
+     * Логика определения статуса (Работа, Дежурство, Выходной...)
+     */
+    private function determineStatus($cellHours, $cellStart, $sheet)
+    {
+        $hours = $this->getCellValue($cellHours);
+        $start = $this->getCellValue($cellStart);
+
+        // 1. Проверка на Дежурство (Твоя главная закономерность)
+        if ($hours == '8:00' && $start == '12:00') {
+            return 'D';
         }
 
-        $dataToStore['date'] = $request->input('month') . $request->input('year');
-        $dataToStore['city'] = $request->input('city');
-        $dataToStore['depart'] = $request->input('depart');
+        // 2. Проверка по цвету (Оставляем как резерв)
+        // $color = $sheet->getStyle($cellHours->getCoordinate())->getFill()->getStartColor()->getRGB();
+        // if ($color === 'FFC000') {
+        //     return 'D';
+        // }
 
-        // Schedule::create($dataToStore);
+        // 3. Проверка на стандартную работу
+        if ($hours == '8:00' && $start == '9:00') {
+            return '+';
+        }
 
-        ScheduleDate::class;
-        ScheduleDay::class;
-        ScheduleWorker::class;
+        // 4. Проверка на Отпуск или Выходной через регулярки
+        if (preg_match('/[ОоOo]/u', $hours)) return 'O';
+        if (preg_match('/[ВвBb]/u', $hours)) return '-';
 
-        return $processed_data;
+        // Если ничего не подошло, возвращаем исходное значение (или пустую строку)
+        return $hours ?? '?';
+    }
+
+    /**
+     * Помощник для получения чистого текста из ячейки
+     */
+    private function getCellValue($cell)
+    {
+        $value = $cell->getValue();
+        if ($value instanceof RichText) {
+            return $value->getPlainText();
+        }
+        return $value;
     }
 }

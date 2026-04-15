@@ -12,14 +12,16 @@ return new class extends Migration
     public function up(): void
     {
 
-        Schema::create('schedule_dates', function (Blueprint $table) {
+        Schema::create('schedules', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('worker_id')->constrained('schedule_workers')->cascadeOnDelete();
-            $table->smallInteger('year');
-            $table->tinyInteger('month');
+            $table->string('worker_name');
+            $table->text('schedule_data');
+            $table->integer('month');
+            $table->integer('year');
+            $table->string('city');
+            $table->string('depart');
+            $table->boolean('is_active')->default(false);
             $table->timestamps();
-
-            $table->unique(['worker_id', 'year', 'month']);
         });
     }
 
@@ -28,6 +30,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('schedule_dates');
+        Schema::dropIfExists('schedules');
     }
 };
