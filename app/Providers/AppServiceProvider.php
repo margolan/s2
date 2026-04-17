@@ -20,12 +20,12 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        Gate::define('create-schedule', function ($user) {
+        Gate::define('view-schedule', function ($user) {
             return in_array($user->role, ['rg','se', 'admin']);
         });
 
         Gate::define('view-users', function ($user) {
-            return in_array($user->role, ['rg', 'admin']);
+            return in_array($user->role, ['admin']);
         });
     }
 }

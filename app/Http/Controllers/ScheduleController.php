@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Carbon\Carbon;
 use App\Imports\ScheduleImport;
+use App\Models\Schedule;
 use DateTime;
 use PhpOffice\PhpSpreadsheet\IOFactory;
 use ReturnTypeWillChange;
@@ -13,6 +14,14 @@ use Illuminate\Support\Facades\Auth;
 
 class ScheduleController extends Controller
 {
+
+  public function index()
+  {
+
+    $data = Schedule::where('month', '5')->get()->groupBy('created_at');
+
+    return view('dashboard.schedule.index',compact('data'));
+  }
 
   public function create()
   {
@@ -53,12 +62,12 @@ class ScheduleController extends Controller
       $user->depart
     );
 
-    return view('dashboard.schedule.result', ['data' => $data]);
+    return view('dashboard.schedule.check', ['data' => $data]);
   }
 
   public function check()
   {
 
-    return view('dashboard.schedule.result');
+    return view('dashboard.schedule.check');
   }
 }
