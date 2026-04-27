@@ -12,9 +12,9 @@
 
           <div class="py-5">
             <form action="{{ route('schedule-store') }}" enctype="multipart/form-data" method="POST"
-              class="max-w-[327px] flex flex-col gap-5">
+              class="max-w-[327px] flex flex-col gap-5 dark:text-gray-800">
               @csrf
-              <div class="flex gap-5">
+              <div class="flex gap-5 ">
                 <select name="month">
                   @foreach ($months as $value => $name)
                     <option value="{{ $value }}" @selected($currentMonth == $value)>

@@ -18,9 +18,9 @@ class ScheduleController extends Controller
   public function index()
   {
 
-    $data = Schedule::where('month', '5')->get()->groupBy('created_at');
+    $data = Schedule::get()->groupBy('month');
 
-    return view('dashboard.schedule.index',compact('data'));
+    return view('dashboard.schedule.index', compact('data'));
   }
 
   public function create()
@@ -42,32 +42,36 @@ class ScheduleController extends Controller
 
   public function store(Request $request)
   {
+
+    $user = Auth::user();
+
+    $checkExist = Schedule::where('month', $request->month)->where('year', $request->year)->where('depart', $user->depart)->exists();
+
+    if ($checkExist)     return redirect()->route('schedule-index')->with('status', 'Schedule already exist');
+
+
     $request->validate([
       'file' => ['required', 'file', 'mimes:xlsx,xls'],
       'month' => ['required', 'integer', 'between:1,12'],
       'year' => ['required', 'integer'],
     ]);
 
-    // Берем данные напрямую из авторизованного пользователя
-    $user = Auth::user();
 
     $spreadsheet = IOFactory::load($request->file('file'));
     $import = new ScheduleImport();
 
     // Передаем город и департамент пользователя в импорт
-    $data = $import->store(
+    // $data = $import->store(
+    $import->store(
       $spreadsheet,
       $request,
       $user->city,
       $user->depart
     );
 
-    return view('dashboard.schedule.check', ['data' => $data]);
+    // return view('dashboard.schedule.check', ['data' => $data]);
+    return redirect()->route('schedule-index');
   }
 
-  public function check()
-  {
-
-    return view('dashboard.schedule.check');
-  }
+  public function delete(Request $request) {}
 }
