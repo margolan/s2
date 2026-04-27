@@ -3,14 +3,12 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use Carbon\Carbon;
 use App\Imports\ScheduleImport;
 use App\Models\Schedule;
-use DateTime;
+use Illuminate\Support\Carbon;
 use PhpOffice\PhpSpreadsheet\IOFactory;
-use ReturnTypeWillChange;
 use Illuminate\Support\Facades\Auth;
-
+use Illuminate\Support\Str;
 
 class ScheduleController extends Controller
 {
@@ -18,7 +16,17 @@ class ScheduleController extends Controller
   public function index()
   {
 
-    $data = Schedule::get()->groupBy('month');
+    $data = Schedule::orderBy('year')
+      ->orderBy('month')
+      ->get()
+      ->groupBy(['year', 'month'])
+      ->map(function ($month, $year) {
+        return $month->mapWithKeys(function ($item, $key) {
+          $monthName = Carbon::create(null, $key)->translatedFormat('F');
+          return [$monthName => $item];
+        });
+      });
+
 
     return view('dashboard.schedule.index', compact('data'));
   }
@@ -47,7 +55,8 @@ class ScheduleController extends Controller
 
     $checkExist = Schedule::where('month', $request->month)->where('year', $request->year)->where('depart', $user->depart)->exists();
 
-    if ($checkExist)     return redirect()->route('schedule-index')->with('status', 'Schedule already exist');
+    // if ($checkExist)     return redirect()->route('schedule-index')->with('status', 'Schedule already exist');
+    if ($checkExist)     return redirect()->route('schedule-index')->with('status', $request->month . $request->year . $user->depart);
 
 
     $request->validate([

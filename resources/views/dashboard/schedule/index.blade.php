@@ -19,20 +19,26 @@
           <a href="{{ route('schedule-create') }}" class="w-max px-3 flex items-center"><span
               class="pr-2 text-2xl">+</span>Добавить</a>
           <hr class="m-4">
-          @foreach ($data as $index => $row)
-            {{ Str::ucfirst(\Carbon\Carbon::createFromFormat('m', $index)->translatedFormat('F')) }}
-            <div class="border border-gray-300 p-3 my-3">
-              @foreach ($row as $item)
-                <p>
-                  {{ explode(' ', $item['worker_name'])[1] }}
-                  @foreach ($item['schedule_data'] as $day)
-                    {{ $day }}
+          @foreach ($data as $year => $data)
+            <div class="border border-red-500">
+              <p>{{ $year }}</p>
+              @foreach ($data as $month => $row)
+                {{ $month }}
+                <div class="border border-gray-300 p-3 my-3">
+                  @foreach ($row as $item)
+                    <p>
+                      {{ explode(' ', $item['worker_name'])[1] }}
+                      @foreach ($item['schedule_data'] as $day)
+                        {{ $day }}
+                      @endforeach
+                      {{ $item['is_active'] ? 'true' : 'false' }}
+                    </p>
                   @endforeach
-                  {{ $item['is_active'] ? 'true' : 'false' }}
-                </p>
+                </div>
               @endforeach
             </div>
           @endforeach
+
 
           <hr class="m-4">
 
