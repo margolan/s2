@@ -8,7 +8,7 @@ use App\Models\Schedule;
 use Illuminate\Support\Carbon;
 use PhpOffice\PhpSpreadsheet\IOFactory;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Str;
+
 
 class ScheduleController extends Controller
 {
@@ -16,7 +16,8 @@ class ScheduleController extends Controller
   public function index()
   {
 
-    $data = Schedule::orderBy('year')
+    $data = Schedule::orderBy('is_active', 'desc')
+      ->orderBy('year')
       ->orderBy('month')
       ->get()
       ->groupBy(['is_active', 'year', 'month'])
@@ -76,10 +77,26 @@ class ScheduleController extends Controller
       $user->depart,
     );
 
-    return redirect()->route('schedule-index');
+    return redirect()->route('schedule-index')->with('status', 'График добавлен. Подтвердите, чтобы он отображался на главной');
   }
 
-  public function activate(Request $request) {}
+  public function activate(Request $request)
+  {
 
-  public function delete(Request $request) {}
+    $selectedSchedule = Schedule::where('batch_id', $request->batch_id)->first();
+
+    Schedule::where('batch_id', $request->batch_id)->where('depart', Auth::user()->depart)->update(['is_active' => true]);
+
+    return redirect()->route('schedule-index')->with('status', 'График за ' . Carbon::create($selectedSchedule->year, $selectedSchedule->month)->translatedFormat('F Y') . ' подтвержден');
+  }
+
+  public function delete(Request $request)
+  {
+
+    $selectedSchedule = Schedule::where('batch_id', $request->batch_id)->first();
+
+    Schedule::where('batch_id', $request->batch_id)->where('depart', Auth::user()->depart)->delete();
+
+    return redirect()->route('schedule-index')->with('status', 'График за ' . Carbon::create($selectedSchedule->year, $selectedSchedule->month)->translatedFormat('F Y') . ' удален');
+  }
 }
