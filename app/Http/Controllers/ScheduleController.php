@@ -19,11 +19,13 @@ class ScheduleController extends Controller
     $data = Schedule::orderBy('year')
       ->orderBy('month')
       ->get()
-      ->groupBy(['year', 'month'])
-      ->map(function ($month, $year) {
-        return $month->mapWithKeys(function ($item, $key) {
-          $monthName = Carbon::create(null, $key)->translatedFormat('F');
-          return [$monthName => $item];
+      ->groupBy(['is_active', 'year', 'month'])
+      ->map(function ($isActive) {
+        return $isActive->map(function ($month) {
+          return $month->mapWithKeys(function ($data, $index) {
+            $monthName = Carbon::create(null, $index)->translatedFormat('F');
+            return [$monthName => $data];
+          });
         });
       });
 
@@ -55,9 +57,7 @@ class ScheduleController extends Controller
 
     $checkExist = Schedule::where('month', $request->month)->where('year', $request->year)->where('depart', $user->depart)->exists();
 
-    // if ($checkExist)     return redirect()->route('schedule-index')->with('status', 'Schedule already exist');
     if ($checkExist)     return redirect()->route('schedule-index')->with('status', $request->month . $request->year . $user->depart);
-
 
     $request->validate([
       'file' => ['required', 'file', 'mimes:xlsx,xls'],
@@ -69,18 +69,17 @@ class ScheduleController extends Controller
     $spreadsheet = IOFactory::load($request->file('file'));
     $import = new ScheduleImport();
 
-    // Передаем город и департамент пользователя в импорт
-    // $data = $import->store(
     $import->store(
       $spreadsheet,
       $request,
       $user->city,
-      $user->depart
+      $user->depart,
     );
 
-    // return view('dashboard.schedule.check', ['data' => $data]);
     return redirect()->route('schedule-index');
   }
+
+  public function activate(Request $request) {}
 
   public function delete(Request $request) {}
 }

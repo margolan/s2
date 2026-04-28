@@ -4,6 +4,7 @@ namespace App\Imports;
 
 use App\Models\Schedule;
 use Carbon\Carbon;
+use Illuminate\Support\Str;
 use PhpOffice\PhpSpreadsheet\RichText\RichText;
 use PhpOffice\PhpSpreadsheet\Cell\Coordinate;
 
@@ -19,6 +20,7 @@ class ScheduleImport
         // Входные данные из формы
         $month = (int)$request->input('month');
         $year = (int)$request->input('year');
+        $batch_id = Str::uuid();
 
         $daysInMonth = cal_days_in_month(CAL_GREGORIAN, $month, $year);
         $foundSchedules = [];
@@ -66,6 +68,7 @@ class ScheduleImport
                 'year'          => $year,
                 'schedule_data' => $monthlyStatuses, // Благодаря Cast в модели, станет JSON автоматически
                 'is_active'     => false,
+                'batch_id'      => $batch_id,
             ];
         }
 

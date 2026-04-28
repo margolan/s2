@@ -19,24 +19,31 @@
           <a href="{{ route('schedule-create') }}" class="w-max px-3 flex items-center"><span
               class="pr-2 text-2xl">+</span>Добавить</a>
           <hr class="m-4">
-          @foreach ($data as $year => $data)
-            <div class="border border-red-500">
-              <p>{{ $year }}</p>
-              @foreach ($data as $month => $row)
-                {{ $month }}
-                <div class="border border-gray-300 p-3 my-3">
-                  @foreach ($row as $item)
-                    <p>
-                      {{ explode(' ', $item['worker_name'])[1] }}
-                      @foreach ($item['schedule_data'] as $day)
-                        {{ $day }}
-                      @endforeach
-                      {{ $item['is_active'] ? 'true' : 'false' }}
-                    </p>
-                  @endforeach
-                </div>
-              @endforeach
-            </div>
+          @foreach ($data as $index => $isActive)
+            <p>{{ $index }}</p>
+            @foreach ($isActive as $year => $data)
+              <div class="border border-red-500">
+                {{-- <p>{{ $year }}</p> --}}
+                @foreach ($data as $month => $row)
+                  <p>{{ $year }} | {{ Str::ucfirst($month) }}</p>
+                  <form action="{{ route('schedule-activate') }}" method="post">
+                    {{ $row[0]['is_active'] ? 'Одобрено и видимо' : 'Требует одобрения для вывода на показ' }}
+                    <input type="hidden" name="batch_id" value="{{ $row[0]['batch_id'] }}">
+                    <button type="submit" class="px-2 border border-gray-700 ml-5">Одобрить</button>
+                  </form>
+                  <div class="border border-gray-300 p-3 my-3">
+                    @foreach ($row as $item)
+                      <p>
+                        {{ explode(' ', $item['worker_name'])[1] }}
+                        @foreach ($item['schedule_data'] as $day)
+                          {{ $day }}
+                        @endforeach
+                      </p>
+                    @endforeach
+                  </div>
+                @endforeach
+              </div>
+            @endforeach
           @endforeach
 
 

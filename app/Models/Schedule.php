@@ -14,6 +14,7 @@ class Schedule extends Model
         'city',
         'depart',
         'is_active',
+        'batch_id',
     ];
 
     protected $casts = [

@@ -21,6 +21,7 @@ return new class extends Migration
             $table->string('city');
             $table->string('depart');
             $table->boolean('is_active')->default(false);
+            $table->string('batch_id')->index();
             $table->timestamps();
         });
     }
