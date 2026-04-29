@@ -16,7 +16,7 @@ class ScheduleController extends Controller
   public function index()
   {
 
-    $data = Schedule::orderBy('is_active', 'desc')
+    $allSchedules = Schedule::orderBy('is_active', 'desc')
       ->orderBy('year')
       ->orderBy('month')
       ->get()
@@ -30,8 +30,19 @@ class ScheduleController extends Controller
         });
       });
 
+    $actualSchedule = Schedule::where('year', date('Y'))->where('month', date('n'))->where('depart', Auth::user()->depart)->get();
 
-    return view('dashboard.schedule.index', compact('data'));
+    $startOfMonth = Carbon::create(2026, 4, 1);
+
+    $daysInMonth = $startOfMonth->daysInMonth;
+
+    $calendar = [];
+    for ($i = 0; $i < $daysInMonth; $i++) {
+
+      $calendar[] = $startOfMonth->copy()->addDays($i)->translatedFormat('d D');
+    }
+
+    return view('dashboard.schedule.index', ['allSchedules' => $allSchedules, 'actualSchedule' => $actualSchedule, 'test' => $calendar]);
   }
 
   public function create()

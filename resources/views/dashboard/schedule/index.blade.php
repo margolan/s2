@@ -22,11 +22,42 @@
             </div>
           @endif
 
+          <hr class="m-5">
+
+            @dump($test)
+
+          <hr class="m-5">
+
+          <div class="WRAP max-w-max border border-red-500 text-sm flex">
+            <div class="NAMES w-24 flex flex-col">
+              <div class="px-2 h-10">Имя</div>
+              @foreach ($actualSchedule as $item)
+                <div class="px-2">
+                  {{ explode(' ', $item['worker_name'])[1] }}
+                </div>
+              @endforeach
+            </div>
+            <div class="DATA flex flex-col overflow-x-auto">
+              <div class="h-10">
+                <div>{{ \Carbon\Carbon::create(null, 2) }}</div>
+                <div>Lorem ipsum dolor sit amet.</div>
+              </div>
+              @foreach ($actualSchedule as $item)
+                <div class="RAW w-max flex">
+                  @foreach ($item['schedule_data'] as $day)
+                    <div class="CELL w-4 flex justify-center">{{ $day }}</div>
+                  @endforeach
+                </div>
+              @endforeach
+            </div>
+          </div>
+
+          <hr class="m-5">
 
           <a href="{{ route('schedule-create') }}" class="w-max px-3 flex items-center"><span
               class="pr-2 text-2xl">+</span>Добавить</a>
           <hr class="m-4">
-          @foreach ($data as $index => $isActive)
+          @foreach ($allSchedules as $index => $isActive)
             <p>{{ $index ? 'Подтвержденные графики' : 'Подтвердите графики' }} </p>
             @foreach ($isActive as $year => $data)
               <div class="border border-red-500">
