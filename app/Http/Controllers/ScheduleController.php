@@ -15,23 +15,20 @@ use Illuminate\Support\Str;
 class ScheduleController extends Controller
 {
 
-  public function index(Request $request)
+  public function index()
   {
 
-    if (!Cookie::get('settings')) {
-
-      $encode = json_encode(['grafik' => ['aktobe' => true]]);
-
-      Cookie::queue('settings', $encode, 2628000);
-    }
+    $this->checkCookie();
 
     $settings = json_decode(Cookie::get('settings'), true);
 
-    Cookie::get('settings')
-    $data = $this->getData(Auth::user()->depart);
+    $selectedDepart = array_keys($settings['grafik']['depart'] ?? [], true);
+
+    $data = $this->getData($selectedDepart);
+
     $data['settings'] = json_decode(Cookie::get('settings'), true) ?? Cookie::get();
 
-    return view('dashboard.schedule.index')->with($data);
+    return view('dashboard.schedule.index', ['test' => $settings])->with($data);
   }
 
   public function settings(Request $request)
@@ -39,10 +36,10 @@ class ScheduleController extends Controller
 
     $settings = json_decode(Cookie::get('settings'), true);
 
-    if (empty($settings['grafik'][$request->depart])) {
-      $settings['grafik'][$request->depart] = true;
+    if (empty($settings['grafik']['depart'][$request->depart])) {
+      $settings['grafik']['depart'][$request->depart] = true;
     } else {
-      $settings['grafik'][$request->depart] = false;
+      $settings['grafik']['depart'][$request->depart] = false;
     }
 
     $encode = json_encode($settings);
@@ -55,7 +52,9 @@ class ScheduleController extends Controller
   public function dashboard()
   {
 
-    $data = $this->getData(Auth::user()->depart);
+    $this->checkCookie();
+
+    $data = $this->getData([Auth::user()->depart]);
 
     return view('dashboard.schedule.dashboard')->with($data);
   }
@@ -126,10 +125,28 @@ class ScheduleController extends Controller
     return redirect()->route('schedule-dashboard')->with('status', 'График за ' . Carbon::create($selectedSchedule->year, $selectedSchedule->month)->translatedFormat('F Y') . ' удален');
   }
 
+  private function checkCookie()
+  {
+    if (!Cookie::get('settings')) {
+
+      $encode = json_encode(['grafik' => [
+        'city' => [
+          'aktobe' => true,
+        ],
+        'depart' => [
+          '' => '',
+        ],
+      ]]);
+
+      Cookie::queue('settings', $encode, 2628000);
+    }
+  }
+
   private function getData($depart)
   {
 
-    $allSchedules = Schedule::select('is_active', 'year', 'month')
+    $allSchedules = Schedule::select('is_active', 'year', 'month', 'batch_id')
+      ->where('depart', $depart)
       ->orderBy('is_active', 'asc')
       ->orderBy('year', 'desc')
       ->orderBy('month', 'desc')
@@ -147,8 +164,11 @@ class ScheduleController extends Controller
 
     $actualSchedule = Schedule::where('year', now()->year)
       ->where('month', now()->month)
-      ->where('depart', $depart)
-      ->get();
+      ->where('is_active', true)
+      ->whereIn('depart', $depart)
+      ->orderBy('depart', 'asc')
+      ->get()
+      ->groupBy('depart');
 
 
     $startOfMonth = Carbon::create(now()->year, now()->month, 1);

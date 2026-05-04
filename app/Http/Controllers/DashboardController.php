@@ -19,7 +19,7 @@ class DashboardController extends Controller
 
         if ($user->role === 'rg') {
 
-            return redirect()->route('schedule-index');
+            return redirect()->route('schedule-dashboard');
         }
     }
 }
