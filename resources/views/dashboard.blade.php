@@ -18,16 +18,9 @@
               <li><a href="{{ route('schedule-show') }}">Графики</a></li>
               <li><a href="{{ route('schedule-create') }}">Создать график</a></li>
             @endcan
-
           </ul>
 
-
-          {{-- @can('view-schedule')
-              @include('dashboard.schedule.show')
-          @endcan --}}
-
           @yield('dashboard-content')
-
 
         </div>
       </div>
