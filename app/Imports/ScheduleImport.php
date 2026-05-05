@@ -93,23 +93,32 @@ class ScheduleImport
             return 'D';
         }
 
-        // 2. Проверка по цвету (Оставляем как резерв)
+        if (str_contains($hours, '0.33')) {
+            return 'D';
+        }
+
+        // 2. Проверка на стандартную работу
+        if ($hours == '8:00' && $start == '9:00') {
+            return '+';
+        }
+
+        if (str_contains($hours, '=IF')) {
+            return '+';
+        }
+
+        // 3. Проверка на Отпуск или Выходной через регулярки
+        if (preg_match('/[ОоOo]/u', $hours)) return 'O';
+        if (preg_match('/[ВвBb]/u', $hours)) return '-';
+        if ($hours == '' && $start == '') return '-';
+
+        // 4. Проверка по цвету (Оставляем как резерв)
         // $color = $sheet->getStyle($cellHours->getCoordinate())->getFill()->getStartColor()->getRGB();
         // if ($color === 'FFC000') {
         //     return 'D';
         // }
 
-        // 3. Проверка на стандартную работу
-        if ($hours == '8:00' && $start == '9:00') {
-            return '+';
-        }
-
-        // 4. Проверка на Отпуск или Выходной через регулярки
-        if (preg_match('/[ОоOo]/u', $hours)) return 'O';
-        if (preg_match('/[ВвBb]/u', $hours)) return '-';
-
         // Если ничего не подошло, возвращаем исходное значение (или пустую строку)
-        return $hours ?? '?';
+        return $hours ?? $hours;
     }
 
     /**

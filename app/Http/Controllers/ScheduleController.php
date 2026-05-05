@@ -24,7 +24,9 @@ class ScheduleController extends Controller
 
     $selectedDepart = array_keys($settings['grafik']['depart'] ?? [], true);
 
-    $data = $this->getData($selectedDepart);
+    $sort = $settings['grafik']['depart']['sort'] ?? true;
+
+    $data = $this->getData($selectedDepart, $sort);
 
     $data['settings'] = json_decode(Cookie::get('settings'), true) ?? Cookie::get();
 
@@ -46,7 +48,9 @@ class ScheduleController extends Controller
 
     Cookie::queue('settings', $encode, 2628000);
 
-    return redirect()->route('schedule-index');
+    $test = $request->sort;
+
+    return redirect()->route('schedule-index', ['test' => $test]);
   }
 
   public function dashboard() // =============================== [ DASHBOARD ] ================================================
@@ -54,7 +58,7 @@ class ScheduleController extends Controller
 
     $this->checkCookie();
 
-    $data = $this->getData([Auth::user()->depart]);
+    $data = $this->getData([Auth::user()->depart], 'desc');
     $data['formData'] = $this->formData();
 
     return view('dashboard.schedule.dashboard')->with($data);
@@ -83,7 +87,7 @@ class ScheduleController extends Controller
 
     $checkExist = Schedule::where('month', $request->month)->where('year', $request->year)->where('depart', $user->depart)->exists();
 
-    if ($checkExist)     return redirect()->route('schedule-dashboard')->with('status', $request->month . $request->year . $user->depart);
+    if ($checkExist) return redirect()->route('schedule-dashboard')->with('status', $request->month . $request->year . $user->depart);
 
     $spreadsheet = IOFactory::load($request->file('file'));
     $import = new ScheduleImport();
@@ -148,16 +152,14 @@ class ScheduleController extends Controller
         'city' => [
           'aktobe' => true,
         ],
-        'depart' => [
-          '' => '',
-        ],
+        'depart' => [],
       ]]);
 
       Cookie::queue('settings', $encode, 2628000);
     }
   }
 
-  private function getData($depart) // =============================== [ GETDATA ] ================================================
+  private function getData($depart, $sort) // =============================== [ GETDATA ] ================================================
   {
 
     $allSchedules = Schedule::select('is_active', 'year', 'month', 'batch_id')
@@ -181,7 +183,7 @@ class ScheduleController extends Controller
       ->where('month', now()->month)
       ->where('is_active', true)
       ->whereIn('depart', $depart)
-      ->orderBy('depart', 'asc')
+      ->orderBy('depart', $sort ? 'asc' : 'desc')
       ->get()
       ->groupBy('depart');
 

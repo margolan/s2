@@ -64,37 +64,41 @@
           <hr class="my-5">
 
 
-          @foreach ($allSchedules as $is_activeIndex => $is_active)
-            <div class="max-w-lg pb-5">
-              <p class="font-semibold text-gray-800 dark:text-gray-200">
-                {{ $is_activeIndex ? 'Подтвержденные графики' : 'Неподтвержденные графики' }}</p>
-              <div class="py-2">
-                @foreach ($is_active as $yearIndex => $year)
-                  @foreach ($year as $monthIndex => $month)
-                    <div class="pl-1 flex gap-2">
-                      <p class="sm:w-40 min-w-32">• {{ $yearIndex }}, {{ $monthIndex }} </p>
-                      @if (!$is_activeIndex)
-                        <form action="{{ route('schedule-activate') }}" method="post" class="">
+          @if ($allSchedules->isEmpty())
+            <p>Графики отсутствуют</p>
+          @else
+            @foreach ($allSchedules as $is_activeIndex => $is_active)
+              <div class="max-w-lg pb-5">
+                <p class="font-semibold text-gray-800 dark:text-gray-200">
+                  {{ $is_activeIndex ? 'Подтвержденные графики' : 'Неподтвержденные графики' }}</p>
+                <div class="py-2">
+                  @foreach ($is_active as $yearIndex => $year)
+                    @foreach ($year as $monthIndex => $month)
+                      <div class="pl-1 flex gap-2">
+                        <p class="sm:w-40 min-w-32">• {{ $yearIndex }}, {{ $monthIndex }} </p>
+                        @if (!$is_activeIndex)
+                          <form action="{{ route('schedule-activate') }}" method="post" class="">
+                            @csrf
+                            @method('put')
+                            <input type="hidden" name="batch_id" value="{{ $month->first()->batch_id }}">
+                            <button type="submit"
+                              class="text-emerald-500 text-sm border border-emerald-500 px-2 hover:bg-emerald-500/20">Подтвердить</button>
+                          </form>
+                        @endif
+                        <form action="{{ route('schedule-delete') }}" method="post">
                           @csrf
-                          @method('put')
+                          @method('delete')
                           <input type="hidden" name="batch_id" value="{{ $month->first()->batch_id }}">
                           <button type="submit"
-                            class="text-emerald-500 text-sm border border-emerald-500 px-2 hover:bg-emerald-500/20">Подтвердить</button>
+                            class="text-red-500 text-sm border border-red-500 px-2 hover:bg-red-500/20">Удалить</button>
                         </form>
-                      @endif
-                      <form action="{{ route('schedule-delete') }}" method="post">
-                        @csrf
-                        @method('delete')
-                        <input type="hidden" name="batch_id" value="{{ $month->first()->batch_id }}">
-                        <button type="submit"
-                          class="text-red-500 text-sm border border-red-500 px-2 hover:bg-red-500/20">Удалить</button>
-                      </form>
-                    </div>
+                      </div>
+                    @endforeach
                   @endforeach
-                @endforeach
+                </div>
               </div>
-            </div>
-          @endforeach
+            @endforeach
+          @endif
 
 
           <hr class="my-5">
