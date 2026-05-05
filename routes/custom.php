@@ -10,7 +10,6 @@ Route::middleware(['auth', 'can:view-users'])->group(function () {
 
 Route::middleware(['auth', 'can:view-schedule'])->group(function () {
   Route::get('/dashboard/schedule', [ScheduleController::class, 'dashboard'])->name('schedule-dashboard');
-  Route::get('/dashboard/schedule/create', [ScheduleController::class, 'create'])->name('schedule-create');
   Route::post('/dashboard/schedule/store', [ScheduleController::class, 'store'])->name('schedule-store');
   Route::put('/dashboard/schedule/activate', [ScheduleController::class, 'activate'])->name('schedule-activate');
   Route::delete('/dashboard/schedule/delete', [ScheduleController::class, 'delete'])->name('schedule-delete');

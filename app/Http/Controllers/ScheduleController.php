@@ -15,7 +15,7 @@ use Illuminate\Support\Str;
 class ScheduleController extends Controller
 {
 
-  public function index()
+  public function index(Request $request) // =============================== [ INDEX ] ================================================
   {
 
     $this->checkCookie();
@@ -31,7 +31,7 @@ class ScheduleController extends Controller
     return view('dashboard.schedule.index', ['test' => $settings])->with($data);
   }
 
-  public function settings(Request $request)
+  public function settings(Request $request) // =============================== [ SETTINGS ] ================================================
   {
 
     $settings = json_decode(Cookie::get('settings'), true);
@@ -49,48 +49,41 @@ class ScheduleController extends Controller
     return redirect()->route('schedule-index');
   }
 
-  public function dashboard()
+  public function dashboard() // =============================== [ DASHBOARD ] ================================================
   {
 
     $this->checkCookie();
 
     $data = $this->getData([Auth::user()->depart]);
+    $data['formData'] = $this->formData();
 
     return view('dashboard.schedule.dashboard')->with($data);
   }
 
-  public function create()
+  public function store(Request $request) // =============================== [ STORE ] ================================================
   {
 
-    $months = collect(range(1, 12))->mapWithKeys(function ($month) {
-      return [$month => Carbon::now()->month($month)->translatedFormat('F')];
-    });
-
-    $years = range(date('Y'), date('Y') + 1);
-
-    $nextMonthDate = Carbon::now()->addMonth();
-
-    $currentMonth = $nextMonthDate->month;
-    $currentYear = $nextMonthDate->year;
-
-    return view('dashboard.schedule.create', compact('months', 'years', 'currentMonth', 'currentYear'));
-  }
-
-  public function store(Request $request)
-  {
+    $request->validate(
+      [
+        'file' => ['required', 'mimes:xlsx,xls'],
+        'month' => ['required', 'integer', 'between:1,12'],
+        'year' => ['required', 'integer'],
+      ],
+      [
+        'file.required' => 'Файл не выбран',
+        'file.mimes'    => 'Выбран неверный типа файла',
+        'month.between' => 'Месяц должен быть между 1-12',
+        'month.integer' => 'Месяц должен быть числом',
+        'year.required' => 'Укажите год',
+        'year.integer' => 'Год должен быть числом',
+      ]
+    );
 
     $user = Auth::user();
 
     $checkExist = Schedule::where('month', $request->month)->where('year', $request->year)->where('depart', $user->depart)->exists();
 
     if ($checkExist)     return redirect()->route('schedule-dashboard')->with('status', $request->month . $request->year . $user->depart);
-
-    $request->validate([
-      'file' => ['required', 'file', 'mimes:xlsx,xls'],
-      'month' => ['required', 'integer', 'between:1,12'],
-      'year' => ['required', 'integer'],
-    ]);
-
 
     $spreadsheet = IOFactory::load($request->file('file'));
     $import = new ScheduleImport();
@@ -105,7 +98,7 @@ class ScheduleController extends Controller
     return redirect()->route('schedule-dashboard')->with('status', 'График добавлен. Подтвердите, чтобы он отображался на главной');
   }
 
-  public function activate(Request $request)
+  public function activate(Request $request) // =============================== [ ACTIVATE ] ================================================
   {
 
     $selectedSchedule = Schedule::where('batch_id', $request->batch_id)->first();
@@ -115,7 +108,7 @@ class ScheduleController extends Controller
     return redirect()->route('schedule-dashboard')->with('status', 'График за ' . Carbon::create($selectedSchedule->year, $selectedSchedule->month)->translatedFormat('F Y') . ' подтвержден');
   }
 
-  public function delete(Request $request)
+  public function delete(Request $request) // =============================== [ DELETE ] ================================================
   {
 
     $selectedSchedule = Schedule::where('batch_id', $request->batch_id)->first();
@@ -125,7 +118,29 @@ class ScheduleController extends Controller
     return redirect()->route('schedule-dashboard')->with('status', 'График за ' . Carbon::create($selectedSchedule->year, $selectedSchedule->month)->translatedFormat('F Y') . ' удален');
   }
 
-  private function checkCookie()
+  private function formData() // =============================== [ FORMDATA ] ================================================
+  {
+
+    $months = collect(range(1, 12))->mapWithKeys(function ($month) {
+      return [$month => Carbon::now()->month($month)->translatedFormat('F')];
+    });
+
+    $years = range(date('Y'), date('Y') + 1);
+
+    $nextMonthDate = Carbon::now()->addMonth();
+
+    $currentMonth = $nextMonthDate->month;
+    $currentYear = $nextMonthDate->year;
+
+    return [
+      'months' => $months,
+      'years' => $years,
+      'currentMonth' => $currentMonth,
+      'currentYear' => $currentYear
+    ];
+  }
+
+  private function checkCookie() // =============================== [ COOKIE ] ================================================
   {
     if (!Cookie::get('settings')) {
 
@@ -142,7 +157,7 @@ class ScheduleController extends Controller
     }
   }
 
-  private function getData($depart)
+  private function getData($depart) // =============================== [ GETDATA ] ================================================
   {
 
     $allSchedules = Schedule::select('is_active', 'year', 'month', 'batch_id')
