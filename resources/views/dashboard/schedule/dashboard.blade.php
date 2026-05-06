@@ -3,13 +3,12 @@
     <h1 class="font-semibold text-gray-800 dark:text-gray-200 px-1">График работ</h1>
   </x-slot>
 
-
   <div class="py-12">
     <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
       <div class="bg-white dark:bg-gray-800 shadow-sm sm:rounded-lg ">
         <div class="py-6 sm:px-6 px-3 text-gray-900 dark:text-gray-100">
 
-          {{-- ======================================= [ NOTIFICATION start ] ======================================= --}}
+          {{-- ======================================= [ NOTIFICATION ] ======================================= --}}
 
           @if ($errors->any())
             <div class="w-full absolute py-2 top-0 left-0 flex items-center justify-center" x-data="{ show: true }"
@@ -37,31 +36,17 @@
             </div>
           @endif
 
-          {{-- ======================================= [ NOTIFICATION end ] ======================================= --}}
+          {{-- ======================================= [ ACTUAL SCHEDULE ] ======================================= --}}
 
 
           @if ($actualSchedule->isEmpty())
             <p>График на текущий месяц пока не добавлен или не выбран</p>
           @else
-            <div class="flex py-5">
-              <div class="flex items-center"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16"
-                  fill="currentColor" class="size-4">
-                  <path
-                    d="M5.75 7.5a.75.75 0 1 0 0 1.5.75.75 0 0 0 0-1.5ZM5 10.25a.75.75 0 1 1 1.5 0 .75.75 0 0 1-1.5 0ZM10.25 7.5a.75.75 0 1 0 0 1.5.75.75 0 0 0 0-1.5ZM7.25 8.25a.75.75 0 1 1 1.5 0 .75.75 0 0 1-1.5 0ZM8 9.5A.75.75 0 1 0 8 11a.75.75 0 0 0 0-1.5Z" />
-                  <path fill-rule="evenodd"
-                    d="M4.75 1a.75.75 0 0 0-.75.75V3a2 2 0 0 0-2 2v7a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2V5a2 2 0 0 0-2-2V1.75a.75.75 0 0 0-1.5 0V3h-5V1.75A.75.75 0 0 0 4.75 1ZM3.5 7a1 1 0 0 1 1-1h7a1 1 0 0 1 1 1v4.5a1 1 0 0 1-1 1h-7a1 1 0 0 1-1-1V7Z"
-                    clip-rule="evenodd" />
-                </svg></div>
-              <h1 class="font-semibold text-gray-800 dark:text-gray-200 px-1">
-                Актуальный график</h1>
-            </div>
-            <h2 class="border-l-4 border-orange-500 rounded semibold text-4xl px-3">
-              {{ Str::upper(\Carbon\Carbon::create(2026, 05)->translatedFormat('F Y')) }}</h2>
             @include('dashboard.schedule.element.table')
           @endif
 
 
-          <hr class="my-5">
+          <hr class="my-5"> {{-- ============================= [ SCHEDULES LIST ] ============================= --}}
 
 
           @if ($allSchedules->isEmpty())
@@ -75,7 +60,8 @@
                   @foreach ($is_active as $yearIndex => $year)
                     @foreach ($year as $monthIndex => $month)
                       <div class="pl-1 flex gap-2">
-                        <p class="sm:w-40 min-w-32">• {{ $yearIndex }}, {{ $monthIndex }} </p>
+                        <p class="sm:w-40 min-w-32">• {{ $yearIndex }},
+                          {{ Str::ucfirst(\Carbon\Carbon::create(null, $monthIndex)->translatedFormat('F')) }}</p>
                         @if (!$is_activeIndex)
                           <form action="{{ route('schedule-activate') }}" method="post" class="">
                             @csrf
@@ -101,7 +87,7 @@
           @endif
 
 
-          <hr class="my-5">
+          <hr class="my-5"> {{-- ============================= [ NEW SCHEDULE ADD FORM ] ============================= --}}
 
 
           <h1 class="font-semibold text-gray-800 dark:text-gray-200 px-1 py-4">Добавить график</h1>

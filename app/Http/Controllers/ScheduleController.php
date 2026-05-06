@@ -26,11 +26,13 @@ class ScheduleController extends Controller
 
     $sort = $settings['grafik']['depart']['sort'] ?? true;
 
-    $data = $this->getData($selectedDepart, $sort);
+    $data = $this->getData($selectedDepart, $sort, $request->query('y'), $request->query('m'));
 
     $data['settings'] = json_decode(Cookie::get('settings'), true) ?? Cookie::get();
 
-    return view('dashboard.schedule.index', ['test' => $settings])->with($data);
+    $test = $request->date;
+
+    return view('dashboard.schedule.index', ['test' => $test])->with($data);
   }
 
   public function settings(Request $request) // =============================== [ SETTINGS ] ================================================
@@ -48,9 +50,7 @@ class ScheduleController extends Controller
 
     Cookie::queue('settings', $encode, 2628000);
 
-    $test = $request->sort;
-
-    return redirect()->route('schedule-index', ['test' => $test]);
+    return redirect()->route('schedule-index');
   }
 
   public function dashboard() // =============================== [ DASHBOARD ] ================================================
@@ -159,34 +159,32 @@ class ScheduleController extends Controller
     }
   }
 
-  private function getData($depart, $sort) // =============================== [ GETDATA ] ================================================
+  private function getData($depart, $sort, $y = null, $m = null) // =============================== [ GETDATA ] ================================================
   {
 
     $allSchedules = Schedule::select('is_active', 'year', 'month', 'batch_id')
       ->where('depart', $depart)
-      ->orderBy('is_active', 'asc')
+      ->orderBy('is_active', 'desc')
       ->orderBy('year', 'desc')
       ->orderBy('month', 'desc')
       ->distinct()
       ->get()
-      ->groupBy(['is_active', 'year', 'month'])
-      ->map(function ($is_active) {
-        return $is_active->map(function ($year) {
-          return $year->mapWithKeys(function ($month, $index) {
-            $monthName = Str::ucfirst(Carbon::create()->month((int)$index)->translatedFormat('F'));
-            return [$monthName => $month];
-          });
-        });
-      });
+      ->groupBy(['is_active', 'year', 'month']);
 
-    $actualSchedule = Schedule::where('year', now()->year)
-      ->where('month', now()->month)
+    $query = Schedule::whereIn('depart', (array)$depart)
       ->where('is_active', true)
-      ->whereIn('depart', $depart)
-      ->orderBy('depart', $sort ? 'asc' : 'desc')
-      ->get()
-      ->groupBy('depart');
+      ->orderBy('depart', $sort ? 'asc' : 'desc');
 
+    if ($y & $m) {
+
+      $query->where('year', $y)
+        ->where('month', $m);
+    } else {
+      $query->where('year', now()->year)
+        ->where('month', now()->month);
+    }
+
+    $actualSchedule = $query->get()->groupBy('depart');
 
     $startOfMonth = Carbon::create(now()->year, now()->month, 1);
 
@@ -199,14 +197,17 @@ class ScheduleController extends Controller
       $calendar[] = [
         'date' => $date->translatedFormat('j'),
         'dow' => Str::substr($date->translatedFormat('D'), 0, 2),
-        'is_weekend' => $date->isWeekend()
+        'is_weekend' => $date->isWeekend(),
       ];
     };
+
+    $nextMonth = $allSchedules->first()[now()->year][now()->addMonth()->month][0] ?? [];
 
     return [
       'allSchedules' => $allSchedules,
       'actualSchedule' => $actualSchedule,
       'calendar' => $calendar,
+      'nextMonth' => $nextMonth,
     ];
   }
 }
