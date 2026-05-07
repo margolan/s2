@@ -98,7 +98,7 @@
               <select name="month">
                 @foreach ($formData['months'] as $value => $name)
                   <option value="{{ $value }}" @selected($formData['currentMonth'] == $value)>
-                    {{ $name }}
+                    {{ Str::ucfirst($name) }}
                   </option>
                 @endforeach
               </select>

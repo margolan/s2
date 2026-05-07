@@ -18,6 +18,8 @@ class ScheduleController extends Controller
   public function index(Request $request) // =============================== [ INDEX ] ================================================
   {
 
+    // ================= COOKIE =================
+
     $this->checkCookie();
 
     $settings = json_decode(Cookie::get('settings'), true);
@@ -26,13 +28,27 @@ class ScheduleController extends Controller
 
     $sort = $settings['grafik']['depart']['sort'] ?? true;
 
-    $data = $this->getData($selectedDepart, $sort, $request->query('y'), $request->query('m'));
+    // ================= ACTUAL SCHEDULE =================
 
-    $data['settings'] = json_decode(Cookie::get('settings'), true) ?? Cookie::get();
+    $actualSchedule = $this->actualSchedule($selectedDepart, $sort, $request->y, $request->m);
 
-    $test = $request->date;
+    // ================= NEXT MONTH SCHEDULE =================
 
-    return view('dashboard.schedule.index', ['test' => $test])->with($data);
+    $nextMonth = Carbon::create(now()->year, now()->month)->addMonth();
+
+    $nextMonthSchedule = Schedule::whereIn('depart', (array)$selectedDepart)
+      ->where('is_active', true)
+      ->where('year', $nextMonth->year)
+      ->where('month', $nextMonth->month)
+      ->orderBy('depart', $sort ? 'asc' : 'desc')
+      ->get()
+      ->groupBy('depart');
+
+    // ================= CALENDAR =================
+
+    $calendar = $this->calendar($request->y, $request->m);
+
+    return view('dashboard.schedule.index', compact('actualSchedule', 'settings', 'nextMonthSchedule', 'calendar'));
   }
 
   public function settings(Request $request) // =============================== [ SETTINGS ] ================================================
@@ -58,10 +74,51 @@ class ScheduleController extends Controller
 
     $this->checkCookie();
 
-    $data = $this->getData([Auth::user()->depart], 'desc');
-    $data['formData'] = $this->formData();
+    // ================= ACTUAL SCHEDULE =================
 
-    return view('dashboard.schedule.dashboard')->with($data);
+    $allSchedules = Schedule::select('is_active', 'year', 'month', 'batch_id')
+      ->where('depart', Auth::user()->depart)
+      ->orderBy('is_active', 'desc')
+      ->orderBy('year', 'desc')
+      ->orderBy('month', 'desc')
+      ->distinct()
+      ->get()
+      ->groupBy(['is_active', 'year', 'month']);
+
+    // ================= ACTUAL SCHEDULE =================
+
+    $actualSchedule = Schedule::where('depart', Auth::user()->depart)
+      ->where('is_active', true)
+      ->where('year', now()->year)
+      ->where('month', now()->month)
+      ->get()
+      ->groupBy('depart');
+
+    // ================= FORM DATA =================
+
+    $months = collect(range(1, 12))->mapWithKeys(function ($month) {
+      return [$month => Carbon::now()->month($month)->translatedFormat('F')];
+    });
+
+    $years = range(now()->year, now()->year + 1);
+
+    $nextMonthDate = Carbon::now()->addMonth();
+
+    $currentMonth = $nextMonthDate->month;
+    $currentYear = $nextMonthDate->year;
+
+    $formData = [
+      'months' => $months,
+      'years' => $years,
+      'currentMonth' => $currentMonth,
+      'currentYear' => $currentYear
+    ];
+
+    // ================= CALENDAR =================
+
+    $calendar = $this->calendar();
+
+    return view('dashboard.schedule.dashboard', compact('allSchedules', 'formData', 'actualSchedule', 'calendar', 'actualSchedule'));
   }
 
   public function store(Request $request) // =============================== [ STORE ] ================================================
@@ -122,28 +179,6 @@ class ScheduleController extends Controller
     return redirect()->route('schedule-dashboard')->with('status', 'График за ' . Carbon::create($selectedSchedule->year, $selectedSchedule->month)->translatedFormat('F Y') . ' удален');
   }
 
-  private function formData() // =============================== [ FORMDATA ] ================================================
-  {
-
-    $months = collect(range(1, 12))->mapWithKeys(function ($month) {
-      return [$month => Carbon::now()->month($month)->translatedFormat('F')];
-    });
-
-    $years = range(date('Y'), date('Y') + 1);
-
-    $nextMonthDate = Carbon::now()->addMonth();
-
-    $currentMonth = $nextMonthDate->month;
-    $currentYear = $nextMonthDate->year;
-
-    return [
-      'months' => $months,
-      'years' => $years,
-      'currentMonth' => $currentMonth,
-      'currentYear' => $currentYear
-    ];
-  }
-
   private function checkCookie() // =============================== [ COOKIE ] ================================================
   {
     if (!Cookie::get('settings')) {
@@ -159,21 +194,19 @@ class ScheduleController extends Controller
     }
   }
 
-  private function getData($depart, $sort, $y = null, $m = null) // =============================== [ GETDATA ] ================================================
+  private function actualSchedule($selectedDepart, $sort, $y = null, $m = null)
   {
-
-    $allSchedules = Schedule::select('is_active', 'year', 'month', 'batch_id')
-      ->where('depart', $depart)
-      ->orderBy('is_active', 'desc')
-      ->orderBy('year', 'desc')
-      ->orderBy('month', 'desc')
-      ->distinct()
-      ->get()
-      ->groupBy(['is_active', 'year', 'month']);
-
-    $query = Schedule::whereIn('depart', (array)$depart)
+    $query = Schedule::whereIn('depart', (array)$selectedDepart)
       ->where('is_active', true)
       ->orderBy('depart', $sort ? 'asc' : 'desc');
+
+    if (request()->routeIs('schedule-dashboard')) {
+
+      $query->where('depart', Auth::user()->depart);
+    } else {
+
+      $query->whereIn('depart', (array)$selectedDepart);
+    }
 
     if ($y & $m) {
 
@@ -184,13 +217,24 @@ class ScheduleController extends Controller
         ->where('month', now()->month);
     }
 
-    $actualSchedule = $query->get()->groupBy('depart');
+    return $query->get()->groupBy('depart');
+  }
 
-    $startOfMonth = Carbon::create(now()->year, now()->month, 1);
+  private function calendar($y = null, $m = null) // =============================== [ GETDATA ] ================================================
+  {
+
+    if (!$y && !$m) {
+
+      $y = now()->year;
+      $m = now()->month;
+    }
+
+    $startOfMonth = Carbon::create($y, $m, 1);
 
     $daysInMonth = $startOfMonth->daysInMonth;
 
     $calendar = [];
+
     for ($i = 0; $i < $daysInMonth; $i++) {
       $date = $startOfMonth->copy()->addDays($i);
 
@@ -201,13 +245,6 @@ class ScheduleController extends Controller
       ];
     };
 
-    $nextMonth = $allSchedules->first()[now()->year][now()->addMonth()->month][0] ?? [];
-
-    return [
-      'allSchedules' => $allSchedules,
-      'actualSchedule' => $actualSchedule,
-      'calendar' => $calendar,
-      'nextMonth' => $nextMonth,
-    ];
+    return $calendar;
   }
 }
