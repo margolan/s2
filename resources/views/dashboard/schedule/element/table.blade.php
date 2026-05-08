@@ -1,26 +1,38 @@
 <div>
 
+  @dump($data)
 
   <div class="flex items-center">
-    <h2 class="border-l-4 border-orange-500 rounded semibold text-4xl px-3">
-      {{ Str::upper(\Carbon\Carbon::create($actualSchedule->first()->first()->year, $actualSchedule->first()->first()->month)->translatedFormat('F Y')) }}
-    </h2>
     @isset($nextMonthSchedule)
       @if (!$nextMonthSchedule->isEmpty())
+        <h2 class="border-l-4 border-orange-500 rounded semibold text-4xl px-3">
+          @if ($month['isFuture'])
+            {{ Str::upper($month['next']->translatedFormat('F Y')) }}
+          @else
+            {{ Str::upper($month['current']->translatedFormat('F Y')) }}
+          @endif
+        </h2>
         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="size-5">
           <path fill-rule="evenodd"
             d="M15.28 9.47a.75.75 0 0 1 0 1.06l-4.25 4.25a.75.75 0 1 1-1.06-1.06L13.69 10 9.97 6.28a.75.75 0 0 1 1.06-1.06l4.25 4.25ZM6.03 5.22l4.25 4.25a.75.75 0 0 1 0 1.06l-4.25 4.25a.75.75 0 0 1-1.06-1.06L8.69 10 4.97 6.28a.75.75 0 0 1 1.06-1.06Z"
             clip-rule="evenodd" />
         </svg>
-        <h3 class="px-1 hover:text-rose-500"><a
-            href="?y={{ $nextMonthSchedule->first()->first()->year }}&m={{ $nextMonthSchedule->first()->first()->month }}">{{ Str::upper(\Carbon\Carbon::create(null, $nextMonthSchedule->first()->first()->month)->translatedFormat('F')) }}</a>
-        </h3>
+        @if ($month['isFuture'])
+          <h3 class="px-1 hover:text-rose-500">
+            <a href="/grafik">{{ Str::upper($month['current']->translatedFormat('F')) }}</a>
+          @else
+            <h3 class="px-1 hover:text-rose-500"><a
+                href="?y={{ $nextMonthSchedule->first()->first()->year }}&m={{ $nextMonthSchedule->first()->first()->month }}">
+                {{ Str::upper($month['next']->translatedFormat('F')) }}
+              </a>
+            </h3>
+        @endif
       @endif
     @endisset
   </div>
 
 
-  @foreach ($actualSchedule as $index => $depart)
+  @foreach ($requestedSchedule as $index => $depart)
     <div class="py-4 mb-5 cursor-default">
 
 
@@ -37,7 +49,7 @@
       </div>
 
 
-      <div class="WRAP SCHEDULE max-w-max text-sm flex text-gray-300 p-3 rounded-lg border border-gray-500"
+      <div class="WRAP SCHEDULE max-w-max text-sm flex text-gray-300 p-3 rounded-lg border border-gray-500 bg-gray-800"
         x-data="{ hoverIndex: null }">
         <div class="NAMES w-max flex flex-col">
           <div class="px-3 h-14 flex items-center">Имя</div>
@@ -90,13 +102,13 @@
 
       <div class="flex gap-2 text-sm px-3 py-2 w-full flex-wrap">
         <div class="w-max flex gap-1">
-          <div class="w-6 h-5 bg-gray-600 text-center text-emerald-400 rounded">+</div> - Рабочий день
+          <div class="w-6 h-5 bg-gray-800 text-center text-emerald-400 rounded">+</div> - Рабочий день
         </div>
         <div class="w-max flex gap-1">
-          <div class="w-6 h-5 bg-gray-600 text-center text-gray-200 rounded">О</div> - Отпуск
+          <div class="w-6 h-5 bg-gray-800 text-center text-gray-200 rounded">О</div> - Отпуск
         </div>
         <div class="w-max flex gap-1">
-          <div class="w-6 h-5 bg-gray-600 text-center text-white rounded">-</div> - Выходной день
+          <div class="w-6 h-5 bg-gray-800 text-center text-white rounded">-</div> - Выходной день
         </div>
         <div class="w-max flex gap-1">
           <div class="w-6 h-5 bg-orange-500/30 text-center text-orange-400 rounded">D</div> - Дежурство

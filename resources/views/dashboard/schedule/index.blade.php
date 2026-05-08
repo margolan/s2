@@ -14,6 +14,8 @@
 <body class="font-sans text-gray-900 antialiased">
 
 
+@dump($month)
+
   {{-- ======================================= [ NOTIFICATION start ] ======================================= --}}
 
 
@@ -64,7 +66,7 @@
         <div class="bg-white dark:bg-gray-800 shadow-sm sm:rounded-lg ">
           <div class="py-6 sm:px-6 px-3 text-gray-900 dark:text-gray-100">
 
-            @if ($actualSchedule->isEmpty())
+            @if ($requestedSchedule->isEmpty())
               <p>График на текущий месяц пока не добавлен или не выбран</p>
             @else
               @include('dashboard.schedule.element.table')
