@@ -1,7 +1,12 @@
 <x-app-layout>
   <x-slot name="header">
-    <h1 class="font-semibold text-gray-800 dark:text-gray-200 px-1">График работ</h1>
+    <div class="flex">
+      @include('dashboard.element.navbar')
+    </div>
   </x-slot>
+
+
+  {{-- @dd($data) --}}
 
   <div class="py-12">
     <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
@@ -36,10 +41,10 @@
             </div>
           @endif
 
-          {{-- ======================================= [ ACTUAL SCHEDULE ] ======================================= --}}
+          {{-- ======================================= [ REQUESTED SCHEDULE ] ======================================= --}}
 
 
-          @if ($actualSchedule->isEmpty())
+          @if ($requestedSchedule->isEmpty())
             <p>График на текущий месяц пока не добавлен или не выбран</p>
           @else
             @include('dashboard.schedule.element.table')

@@ -15,28 +15,28 @@ use Illuminate\Support\Str;
 class ScheduleController extends Controller
 {
 
+  // =============================================================
+  // 
+  // Privates: checkCookie, getData, calendar
+  // 
+  // Publics: index, settings, dashboard, store, activate, delete
+  // 
+  // =============================================================
+
+
   public function index(Request $request) // =============================== [ INDEX ] ================================================
   {
 
-    // ================= COOKIE =================
 
-    $this->checkCookie();
+    $settings = $this->checkCookie(); // Cookie
 
-    $data['settings'] = json_decode(Cookie::get('settings'), true);
+    $data = $this->getData($settings['selectedDepart'], $settings['sort'], $request->y, $request->m); // Month / Schedul Request / Next Month Schedule
 
-    $selectedDepart = array_keys($settings['grafik']['depart'] ?? [], true);
+    $data['calendar'] = $this->calendar($request->y, $request->m); // Calendar 
 
-    $sort = $settings['grafik']['depart']['sort'] ?? true;
+    $data['settings'] = $settings; // Settings 
 
-    // ================= ACTUAL SCHEDULE =================
-
-    $data = $this->getData($selectedDepart, $sort, $request->y, $request->m);
-
-    // ================= CALENDAR =================
-
-    $data['calendar'] = $this->calendar($request->y, $request->m);
-
-    return view('dashboard.schedule.index')->with($data);
+    return view('schedule')->with($data);
   }
 
   public function settings(Request $request) // =============================== [ SETTINGS ] ================================================
@@ -57,30 +57,16 @@ class ScheduleController extends Controller
     return redirect()->route('schedule-index');
   }
 
-  public function dashboard() // =============================== [ DASHBOARD ] ================================================
+  public function dashboard(Request $request) // =============================== [ DASHBOARD ] ================================================
   {
 
-    $this->checkCookie();
+    $settings = $this->checkCookie(); // Cookie
 
-    // ================= ALL SCHEDULES =================
+    $data = $this->getData($settings['selectedDepart'], $settings['sort'], $request->y, $request->m); // Month / Schedul Request / Next Month Schedule
 
-    $allSchedules = Schedule::select('is_active', 'year', 'month', 'batch_id')
-      ->where('depart', Auth::user()->depart)
-      ->orderBy('is_active', 'desc')
-      ->orderBy('year', 'desc')
-      ->orderBy('month', 'desc')
-      ->distinct()
-      ->get()
-      ->groupBy(['is_active', 'year', 'month']);
+    $data['calendar'] = $this->calendar($request->y, $request->m); // Calendar 
 
-    // ================= ACTUAL SCHEDULE =================
-
-    $actualSchedule = Schedule::where('depart', Auth::user()->depart)
-      ->where('is_active', true)
-      ->where('year', now()->year)
-      ->where('month', now()->month)
-      ->get()
-      ->groupBy('depart');
+    $data['settings'] = $settings; // Settings 
 
     // ================= FORM DATA =================
 
@@ -95,18 +81,25 @@ class ScheduleController extends Controller
     $currentMonth = $nextMonthDate->month;
     $currentYear = $nextMonthDate->year;
 
-    $formData = [
+    $data['formData'] = [
       'months' => $months,
       'years' => $years,
       'currentMonth' => $currentMonth,
       'currentYear' => $currentYear
     ];
 
-    // ================= CALENDAR =================
+    $data['allSchedules'] = Schedule::select('is_active', 'year', 'month', 'batch_id')
+      ->where('depart', Auth::user()->depart)
+      ->orderBy('is_active', 'desc')
+      ->orderBy('year', 'desc')
+      ->orderBy('month', 'desc')
+      ->distinct()
+      ->get()
+      ->groupBy(['is_active', 'year', 'month']);
 
-    $calendar = $this->calendar();
 
-    return view('dashboard.schedule.dashboard', compact('allSchedules', 'formData', 'actualSchedule', 'calendar', 'actualSchedule'));
+    // return view('dashboard.schedule.dashboard')->with('data', $data);
+    return view('dashboard.schedule.dashboard')->with($data);
   }
 
   public function store(Request $request) // =============================== [ STORE ] ================================================
@@ -180,6 +173,14 @@ class ScheduleController extends Controller
 
       Cookie::queue('settings', $encode, 2628000);
     }
+
+    $settings = json_decode(Cookie::get('settings'), true);
+
+    $settings['selectedDepart'] = array_keys($settings['grafik']['depart'] ?? [], true);
+
+    $settings['sort'] = $settings['grafik']['depart']['sort'] ?? true;
+
+    return $settings;
   }
 
   private function getData($selectedDepart, $sort, $y = null, $m = null)  // =============================== [ GET DATA ] ================================================
@@ -197,8 +198,7 @@ class ScheduleController extends Controller
 
     // ================= SCHEDULE REQUEST =================
 
-    $query = Schedule::whereIn('depart', (array)$selectedDepart)
-      ->where('is_active', true)
+    $query = Schedule::where('is_active', true)
       ->orderBy('depart', $sort ? 'asc' : 'desc');
 
     if (request()->routeIs('schedule-dashboard')) {
@@ -209,7 +209,7 @@ class ScheduleController extends Controller
       $query->whereIn('depart', (array)$selectedDepart);
     }
 
-    if ($y & $m) {
+    if ($y && $m) {
 
       $query->where('year', $y)
         ->where('month', $m);

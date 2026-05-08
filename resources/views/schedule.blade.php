@@ -14,8 +14,6 @@
 <body class="font-sans text-gray-900 antialiased">
 
 
-@dump($month)
-
   {{-- ======================================= [ NOTIFICATION start ] ======================================= --}}
 
 

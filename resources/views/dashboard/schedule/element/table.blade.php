@@ -1,10 +1,10 @@
 <div>
 
-  @dump($data)
+
 
   <div class="flex items-center">
     @isset($nextMonthSchedule)
-      @if (!$nextMonthSchedule->isEmpty())
+      @if ($nextMonthSchedule->isNotEmpty())
         <h2 class="border-l-4 border-orange-500 rounded semibold text-4xl px-3">
           @if ($month['isFuture'])
             {{ Str::upper($month['next']->translatedFormat('F Y')) }}
@@ -19,7 +19,7 @@
         </svg>
         @if ($month['isFuture'])
           <h3 class="px-1 hover:text-rose-500">
-            <a href="/grafik">{{ Str::upper($month['current']->translatedFormat('F')) }}</a>
+            <a href="{{ request()->url() }}">{{ Str::upper($month['current']->translatedFormat('F')) }}</a>
           @else
             <h3 class="px-1 hover:text-rose-500"><a
                 href="?y={{ $nextMonthSchedule->first()->first()->year }}&m={{ $nextMonthSchedule->first()->first()->month }}">
