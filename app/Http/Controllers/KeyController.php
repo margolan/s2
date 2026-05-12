@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use PhpOffice\PhpSpreadsheet\IOFactory;
 use App\Imports\KeyImport;
 use App\Models\Key;
+use Illuminate\Support\Str;
 
 class KeyController extends Controller
 {
@@ -18,9 +19,20 @@ class KeyController extends Controller
     public function dashboard()
     {
 
-        $data = Key::where('is_active', true)
-        ->orderBy('id')
-        ->get();
+        $districtNames = [
+            'ct' => 'Город',
+            '8' => '8 мкр',
+            '11' => '11 мкр',
+            '12' => '12 мкр',
+            'old' => 'Старый город',
+            'far' => 'Районы',
+        ];
+
+        $data = Key::orderBy('id')
+            ->get()
+            ->groupBy('district')->mapWithKeys(function ($data, $index) use ($districtNames) {
+                return [$districtNames[$index] ?? "Неизвестный район ($index)" => $data];
+            });
 
         return view('dashboard.key.dashboard')->with('data', $data);
     }

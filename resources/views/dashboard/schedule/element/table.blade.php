@@ -27,6 +27,10 @@
               </a>
             </h3>
         @endif
+      @else
+        <h2 class="border-l-4 border-orange-500 rounded semibold text-4xl px-3">
+          {{ Str::upper($month['current']->translatedFormat('F Y')) }}
+        </h2>
       @endif
     @endisset
   </div>
