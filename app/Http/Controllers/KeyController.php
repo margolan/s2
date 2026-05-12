@@ -34,7 +34,11 @@ class KeyController extends Controller
                 return [$districtNames[$index] ?? "Неизвестный район ($index)" => $data];
             });
 
-        return view('dashboard.key.dashboard')->with('data', $data);
+        $report = $data->map(function ($data, $index) {
+            return $data->count();
+        });
+
+        return view('dashboard.key.dashboard', compact('report'))->with('data', $data);
     }
 
     public function store(Request $request)

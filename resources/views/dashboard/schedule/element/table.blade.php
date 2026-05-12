@@ -104,18 +104,18 @@
       </div>
 
 
-      <div class="flex gap-2 text-sm px-3 py-2 w-full flex-wrap">
+      <div class="flex gap-3 text-sm px-3 py-2 w-full flex-wrap">
         <div class="w-max flex gap-1">
-          <div class="w-6 h-5 bg-gray-800 text-center text-emerald-400 rounded">+</div> - Рабочий день
+          <div class="w-6 h-5 bg-gray-700 text-center text-emerald-400 rounded">+</div> Рабочий день
         </div>
         <div class="w-max flex gap-1">
-          <div class="w-6 h-5 bg-gray-800 text-center text-gray-200 rounded">О</div> - Отпуск
+          <div class="w-6 h-5 bg-gray-700 text-center text-gray-200 rounded">О</div> Отпуск
         </div>
         <div class="w-max flex gap-1">
-          <div class="w-6 h-5 bg-gray-800 text-center text-white rounded">-</div> - Выходной день
+          <div class="w-6 h-5 bg-gray-700 text-center text-white rounded">-</div> Выходной день
         </div>
         <div class="w-max flex gap-1">
-          <div class="w-6 h-5 bg-orange-500/30 text-center text-orange-400 rounded">D</div> - Дежурство
+          <div class="w-6 h-5 bg-orange-500/30 text-center text-orange-400 rounded">D</div> Дежурство
         </div>
       </div>
 

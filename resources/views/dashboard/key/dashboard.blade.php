@@ -43,33 +43,20 @@
 
           {{-- ======================================= [ REQUESTED SCHEDULE ] ======================================= --}}
 
-
-          <form action="{{ route('key-store') }}" method="post" enctype="multipart/form-data">
-            @csrf
-            <input type="file" class="custom-file-input w-max text-gray-200" name="file">
-            <input type="submit"
-              class="w-max bg-white dark:text-gray-800 px-3 h-[42px] cursor-pointer border border-gray-800 mr-5"
-              value="Загрузить">
-          </form>
-
-          <hr class="my-5">
-
-          {{-- @dd($data) --}}
-
-          {{-- @if ($data->isNotEmpty()) --}}
+          @if ($data->isNotEmpty())
             @include('dashboard.key.element.table')
-          {{-- @endif --}}
-
-
+          @endif
 
           <hr class="my-5">
-
-
-          {{-- @isset($data)
-            @dump($data)
-          @endisset --}}
-
-
+          <div>
+            <form action="{{ route('key-store') }}" method="post" enctype="multipart/form-data">
+              @csrf
+              <input type="file" class="custom-file-input w-max text-gray-200" name="file">
+              <input type="submit"
+                class="w-max bg-white dark:text-gray-800 px-3 h-[42px] cursor-pointer border border-gray-800 mr-5"
+                value="Загрузить">
+            </form>
+          </div>
 
         </div>
       </div>
