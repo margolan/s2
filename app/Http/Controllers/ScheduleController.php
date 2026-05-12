@@ -98,7 +98,6 @@ class ScheduleController extends Controller
       ->groupBy(['is_active', 'year', 'month']);
 
 
-    // return view('dashboard.schedule.dashboard')->with('data', $data);
     return view('dashboard.schedule.dashboard')->with($data);
   }
 

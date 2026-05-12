@@ -27,6 +27,7 @@ Route::middleware(['auth', 'can:view-schedule'])->group(function () {
 Route::get('/key', [KeyController::class, 'index'])->name('key-index');
 
 Route::middleware(['auth', 'can:view-schedule'])->group(function () {
-  Route::get('/key/schedule', [KeyController::class, 'dashboard'])->name('key-dashboard');
+  Route::get('/dashboard/key', [KeyController::class, 'dashboard'])->name('key-dashboard');
+  Route::post('/dashboard/key/store', [KeyController::class, 'store'])->name('key-store');
 
 });
