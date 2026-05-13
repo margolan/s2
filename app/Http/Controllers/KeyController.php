@@ -6,7 +6,7 @@ use Illuminate\Http\Request;
 use PhpOffice\PhpSpreadsheet\IOFactory;
 use App\Imports\KeyImport;
 use App\Models\Key;
-use Illuminate\Support\Str;
+
 
 class KeyController extends Controller
 {
@@ -25,7 +25,7 @@ class KeyController extends Controller
             '11' => '11 мкр',
             '12' => '12 мкр',
             'old' => 'Старый город',
-            'far' => 'Районы',
+            'far' => 'Дальние',
         ];
 
         $data = Key::orderBy('id')
@@ -59,6 +59,14 @@ class KeyController extends Controller
 
         $data = $import->store($spreadsheet);
 
-        return view('dashboard.key.dashboard')->with('data', $data);
+        return redirect()->back()->with('status', 'Upload successfull');
+    }
+
+    public function edit(Request $request)
+    {
+
+        $retrievedData = Key::where('reg_number', $request->query('d'))->firstOrFail();
+
+        return view('dashboard.key.edit', compact('retrievedData'));
     }
 }

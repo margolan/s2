@@ -15,10 +15,10 @@ return new class extends Migration
         Schema::create('keys', function (Blueprint $table) {
             $table->id();
             $table->string('device_serial')->nullable()->unique();
-            $table->string('reg_number')->index();
-            $table->string('device_id')->nullable();
+            $table->string('reg_number')->unique();
+            $table->string('device_id')->nullable()->unique();
             $table->text('device_address');
-            $table->string('district');
+            $table->string('district')->index();
             $table->string('color');
             $table->string('model_name')->nullable();
             $table->string('os_version')->nullable();

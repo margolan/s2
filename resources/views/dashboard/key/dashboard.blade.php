@@ -41,13 +41,18 @@
             </div>
           @endif
 
-          {{-- ======================================= [ REQUESTED SCHEDULE ] ======================================= --}}
+          {{-- ======================================= [ KEYS ] ======================================= --}}
 
-          @if ($data->isNotEmpty())
-            @include('dashboard.key.element.table')
-          @endif
+          @isset($data)
+            @if ($data->isNotEmpty())
+              @include('dashboard.key.element.table')
+            @endif
+          @endisset
 
           <hr class="my-5">
+
+          {{-- ======================================= [ UPLOAD FORM ] ======================================= --}}
+
           <div>
             <form action="{{ route('key-store') }}" method="post" enctype="multipart/form-data">
               @csrf
