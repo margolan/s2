@@ -1,4 +1,4 @@
-<div>
+<div class="w-full">
 
   @php
     $bgColors = [
@@ -19,11 +19,11 @@
   </div>
 
 
-  <div class="CONTENT text-sm dark:text-gray-300" x-data="{ search: '' }">
+  <div class="WRAP max-w-max text-sm dark:text-gray-300" x-data="{ search: '' }">
 
     {{-- LEGEND --}}
 
-    <div class="LEGEND max-w-xl flex gap-3 bg-gray-900 text-gray-200 p-4 items-center">
+    <div class="LEGEND w-full flex gap-3 bg-gray-900 text-gray-200 p-4 items-center">
       @foreach ($report as $cityName => $count)
         <a href="#{{ $cityName }}" class="text-center">{{ $cityName }} <span
             class="text-xs">({{ $count }})</span></a>
@@ -33,7 +33,7 @@
     {{-- SEARCH --}}
 
     <div class="py-5">
-      <input type="search" class="max-w-xl w-full dark:bg-gray-600 dark:text-gray-200 rounded-md"
+      <input type="search" class="w-full dark:bg-gray-600 dark:text-gray-200 rounded-md"
         placeholder="Поис: адрес, PT, Q..." x-model="search">
     </div>
 
@@ -45,7 +45,7 @@
       </div>
 
       <div class="w-full overflow-x-auto mb-5 text-gray-200">
-        <div class="w-max" x-show="true">
+        <div class="min-w-max w-full" x-show="true">
           <div class="HEADER px-3 py-3 gap-2 flex bg-gray-600 rounded-t-lg">
             <div class="w-24">РЕГ. НОМЕР</div>
             <div class="">АДРЕС</div>
