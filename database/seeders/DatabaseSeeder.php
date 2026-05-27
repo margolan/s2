@@ -29,8 +29,8 @@ class DatabaseSeeder extends Seeder
                     'active' => '1',
                 ],
                 [
-                    'name' => 'Sharapat',
-                    'email' => 'sharapat@gmail.com',
+                    'name' => 'pos',
+                    'email' => 'pos@0x0.kz',
                     'password' => '$2y$12$sKwHRXEFp7YguWGpKefv4OB6Jif9u6eHQs5HF3xg4F9GOoPc2GZy6',
                     'role' => 'rg',
                     'depart' => 'pos',
@@ -38,9 +38,9 @@ class DatabaseSeeder extends Seeder
                     'active' => '1',
                 ],
                 [
-                    'name' => 'Sayasat',
-                    'email' => 'sayasat@gmail.com',
-                    'password' => '$2y$12$sKwHRXEFp7YguWGpKefv4OB6Jif9u6eHQs5HF3xg4F9GOoPc2GZy6',
+                    'name' => 'ter',
+                    'email' => 'ter@0x0.kz',
+                    'password' => '$2y$12$VN5jnyOWZphzxInfWUog2u6PPDO/QDtRDPQHTOUCtOC3inMCTVPcu',
                     'role' => 'se',
                     'depart' => 'ter',
                     'city' => 'aktobe',

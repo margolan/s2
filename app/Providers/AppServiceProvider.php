@@ -18,14 +18,5 @@ class AppServiceProvider extends ServiceProvider
     /**
      * Bootstrap any application services.
      */
-    public function boot(): void
-    {
-        Gate::define('view-schedule', function ($user) {
-            return in_array($user->role, ['rg','se', 'admin']);
-        });
-
-        Gate::define('view-users', function ($user) {
-            return in_array($user->role, ['admin']);
-        });
-    }
+    public function boot(): void {}
 }

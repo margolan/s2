@@ -163,12 +163,12 @@ class ScheduleController extends Controller
   {
     if (!Cookie::get('settings')) {
 
-      $encode = json_encode(['grafik' => [
-        'city' => [
-          'aktobe' => true,
+      $encode = json_encode([
+        'grafik' => [
+          'city' => ['aktobe' => true],
+          'depart' => [],
         ],
-        'depart' => [],
-      ]]);
+      ]);
 
       Cookie::queue('settings', $encode, 2628000);
     }
@@ -221,7 +221,7 @@ class ScheduleController extends Controller
 
     // ================= NEXT MONTH SCHEDULE =================
 
-    $nextMonthSchedule = Schedule::whereIn('depart', (array)$selectedDepart)
+    $nextMonthSchedule = Schedule::whereIn('depart', ['ter', 'pos'])
       ->where('is_active', true)
       ->where('year', $month['next']->year)
       ->where('month', $month['next']->month)

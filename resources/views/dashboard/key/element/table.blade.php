@@ -23,7 +23,7 @@
 
     {{-- LEGEND --}}
 
-    <div class="LEGEND w-full flex gap-3 bg-gray-900 text-gray-200 p-4 items-center">
+    <div class="LEGEND w-full flex gap-3 bg-gray-900 text-gray-200 p-4 items-center justify-center">
       @foreach ($report as $cityName => $count)
         <a href="#{{ $cityName }}" class="text-center">{{ $cityName }} <span
             class="text-xs">({{ $count }})</span></a>
@@ -33,7 +33,7 @@
     {{-- SEARCH --}}
 
     <div class="py-5">
-      <input type="search" class="w-full dark:bg-gray-600 dark:text-gray-200 rounded-md"
+      <input type="search" class="w-full dark:bg-gray-600 rounded-md"
         placeholder="Поис: адрес, PT, Q..." x-model="search">
     </div>
 

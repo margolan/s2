@@ -6,15 +6,39 @@ use Illuminate\Http\Request;
 use PhpOffice\PhpSpreadsheet\IOFactory;
 use App\Imports\KeyImport;
 use App\Models\Key;
+use Illuminate\Support\Facades\Auth;
 
 
 class KeyController extends Controller
 {
 
-    public function index()
+    public function pincode(Request $request)
     {
-        return view('key');
+        if ($request->isMethod('post')) {
+
+            $request->validate([
+                'pincode' => 'required|digits:4',
+            ]);
+
+            $credentials = [
+                'email'    => 'ter@0x0.kz',
+                'password' => $request->pincode
+            ];
+
+            if (Auth::attempt($credentials)) {
+                $request->session()->regenerate();
+
+                return redirect()->intended(route('key-dashboard'))->with('status', 'Вы авторизованы');
+            }
+
+            return back()->withErrors([
+                'pincode' => 'Неверный пин-код.',
+            ]);
+        }
+
+        return view('dashboard.key.pincode');
     }
+
 
     public function dashboard()
     {
@@ -66,6 +90,13 @@ class KeyController extends Controller
     {
 
         $retrievedData = Key::where('reg_number', $request->query('d'))->firstOrFail();
+
+        if ($request->isMethod('put')) {
+
+            $retrievedData->update($request->all());
+
+            return redirect()->route('key-dashboard')->with('status', 'Данные обновлены!');
+        }
 
         return view('dashboard.key.edit', compact('retrievedData'));
     }

@@ -48,30 +48,30 @@
 
 
           <div class="max-w-lg text-sm">
-            <form action="{{ route('key-edit') }}" method="post"
-              class="flex flex-col border border-red-500 px-3 py-5 gap-1">
+            <form action="{{ route('key-edit', ['d' => $retrievedData->reg_number]) }}" method="post" class="flex flex-col px-3 py-5 gap-1">
 
+              @method('put')
               @csrf
 
               <label for="device_serial"
-                class="w-max px-2 py-1 rounded-lg text-xs translate-y-4 translate-x-2 bg-white">Серийный номер</label>
-              <input type="text" name="device_serial" value="{{ $retrievedData->device_serial }}" class="text-sm">
+                class="w-max px-2 dark:bg-gray-800 py-1 rounded-lg text-xs translate-y-4 translate-x-2 bg-white">Заводской номер</label>
+              <input type="text" name="device_serial" value="{{ $retrievedData->device_serial }}" class="text-sm dark:bg-gray-800">
 
               <label for="reg_number"
-                class="w-max px-2 py-1 rounded-lg text-xs translate-y-4 translate-x-2 bg-white">Номер PT</label>
-              <input type="text" name="reg_number" value="{{ $retrievedData->reg_number }}" class="text-sm">
+                class="w-max px-2 dark:bg-gray-800 py-1 rounded-lg text-xs translate-y-4 translate-x-2 bg-white">Номер PT</label>
+              <input type="text" name="reg_number" value="{{ $retrievedData->reg_number }}" class="text-sm dark:bg-gray-800">
 
               <label for="device_id"
-                class="w-max px-2 py-1 rounded-lg text-xs translate-y-4 translate-x-2 bg-white">Номер ID</label>
-              <input type="text" name="device_id" value="{{ $retrievedData->device_id }}" class="text-sm">
+                class="w-max px-2 dark:bg-gray-800 py-1 rounded-lg text-xs translate-y-4 translate-x-2 bg-white">Номер ID</label>
+              <input type="text" name="device_id" value="{{ $retrievedData->device_id }}" class="text-sm dark:bg-gray-800">
 
               <label for="device_address"
-                class="w-max px-2 py-1 rounded-lg text-xs translate-y-4 translate-x-2 bg-white">Адрес</label>
-              <input type="text" name="device_address" value="{{ $retrievedData->device_address }}" class="text-sm">
+                class="w-max px-2 dark:bg-gray-800 py-1 rounded-lg text-xs translate-y-4 translate-x-2 bg-white">Адрес</label>
+              <input type="text" name="device_address" value="{{ $retrievedData->device_address }}" class="text-sm dark:bg-gray-800">
 
               <label for="district"
-                class="w-max px-2 py-1 rounded-lg text-xs translate-y-4 translate-x-2 bg-white">Район</label>
-              <select name="district" class="text-sm">
+                class="w-max px-2 dark:bg-gray-800 py-1 rounded-lg text-xs translate-y-4 translate-x-2 bg-white">Район</label>
+              <select name="district" class="text-sm dark:bg-gray-800">
                 <option value="ct" @selected($retrievedData->district == 'ct')>Город</option>
                 <option value="8" @selected($retrievedData->district == '8')>8 мкр</option>
                 <option value="11" @selected($retrievedData->district == '11')>11 мкр</option>
@@ -81,8 +81,8 @@
               </select>
 
               <label for="color"
-                class="w-max px-2 py-1 rounded-lg text-xs translate-y-4 translate-x-2 bg-white">Цвет</label>
-              <select name="color" class="text-sm">
+                class="w-max px-2 dark:bg-gray-800 py-1 rounded-lg text-xs translate-y-4 translate-x-2 bg-white">Цвет</label>
+              <select name="color" class="text-sm dark:bg-gray-800">
                 <option value="черный" @selected($retrievedData->color == 'черный')>Черный</option>
                 <option value="синий" @selected($retrievedData->color == 'синий')>Синий</option>
                 <option value="желтый" @selected($retrievedData->color == 'желтый')>Желтый</option>
@@ -90,29 +90,31 @@
               </select>
 
               <label for="model_name"
-                class="w-max px-2 py-1 rounded-lg text-xs translate-y-4 translate-x-2 bg-white">Модель</label>
-              <input type="text" name="model_name" value="{{ $retrievedData->model_name }}">
+                class="w-max px-2 dark:bg-gray-800 py-1 rounded-lg text-xs translate-y-4 translate-x-2 bg-white">Модель</label>
+              <input type="text" name="model_name" value="{{ $retrievedData->model_name }}" class="text-sm dark:bg-gray-800">
 
               <label for="os_version"
-                class="w-max px-2 py-1 rounded-lg text-xs translate-y-4 translate-x-2 bg-white">Операционная
+                class="w-max px-2 dark:bg-gray-800 py-1 rounded-lg text-xs translate-y-4 translate-x-2 bg-white">Операционная
                 система</label>
-              <input type="text" name="os_version" value="{{ $retrievedData->os_version }}">
+              <input type="text" name="os_version" value="{{ $retrievedData->os_version }}" class="text-sm dark:bg-gray-800">
 
-              <label for="ip_address" class="w-max px-2 py-1 rounded-lg text-xs translate-y-4 translate-x-2 bg-white">IP
+              <label for="ip_address" class="w-max px-2 dark:bg-gray-800 py-1 rounded-lg text-xs translate-y-4 translate-x-2 bg-white">IP
                 адрес</label>
-              <input type="text" name="ip_address" value="{{ $retrievedData->ip_address }}">
+              <input type="text" name="ip_address" value="{{ $retrievedData->ip_address }}" class="text-sm dark:bg-gray-800">
 
               <label for="sim_number"
-                class="w-max px-2 py-1 rounded-lg text-xs translate-y-4 translate-x-2 bg-white">Номер SIM</label>
-              <input type="text" name="sim_number" value="{{ $retrievedData->sim_number }}">
+                class="w-max px-2 dark:bg-gray-800 py-1 rounded-lg text-xs translate-y-4 translate-x-2 bg-white">Номер SIM</label>
+              <input type="text" name="sim_number" value="{{ $retrievedData->sim_number }}" class="text-sm dark:bg-gray-800">
 
               <label for="note"
-                class="w-max px-2 py-1 rounded-lg text-xs translate-y-4 translate-x-2 bg-white">Коментарий</label>
-              <textarea name="note"cols="30" rows="10">{{ $retrievedData->note }}</textarea>
+                class="w-max px-2 dark:bg-gray-800 py-1 rounded-lg text-xs translate-y-4 translate-x-2 bg-white">Коментарий</label>
+              <textarea name="note"cols="30" rows="10" class="text-sm dark:bg-gray-800">{{ $retrievedData->note }}</textarea>
 
               <div class="flex py-3 items-center gap-2"><label for="is_active">Терминал активен </label>
-                <input type="checkbox" name="is_active" @checked($retrievedData->is_active)>
+                <input type="checkbox" name="is_active" @checked($retrievedData->is_active) class="text-sm dark:bg-gray-800">
               </div>
+
+              <input type="submit" value="Изменить" class="border border-gray-100 py-3">
             </form>
           </div>
 

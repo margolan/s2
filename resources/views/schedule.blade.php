@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
+<html lang="{{ str_replace('_', '-', app()->getLocale()) }}" class="dark">
 
 <head>
   <meta charset="utf-8">
@@ -14,22 +14,35 @@
 <body class="font-sans text-gray-900 antialiased">
 
 
-  {{-- ======================================= [ NOTIFICATION start ] ======================================= --}}
+  {{-- ======================================= [ NOTIFICATION ] ======================================= --}}
 
+          @if ($errors->any())
+            <div class="w-full absolute py-2 top-0 left-0 flex items-center justify-center" x-data="{ show: true }"
+              x-show="show" x-transition x-init="setTimeout(() => show = false, 6000)">
+              <div class="min-w-32 bg-amber-500 text-sm px-5 py-2 flex items-center text-black rounded-lg mr-3">
+                <ul>
+                  @foreach ($errors->all() as $error)
+                    <li>{{ $error }}</li>
+                  @endforeach
+                </ul>
+              </div>
+              <div class="w-5 h-5 flex items-center justify-center bg-amber-500 cursor-pointer rounded-full"
+                @click="show = false">&#215;</div>
+            </div>
+          @endif
 
-  @if (session('status'))
-    <div class="w-full absolute py-2 top-0 left-0 flex items-center justify-center" x-data="{ show: true }"
-      x-show="show" x-transition x-init="setTimeout(() => show = false, 6000)">
-      <div class="min-w-32 bg-amber-500 text-sm px-5 py-2 flex items-center text-black rounded-lg mr-3">
-        <p>{{ session('status') }}</p>
-      </div>
-      <div class="w-5 h-5 flex items-center justify-center bg-amber-500 cursor-pointer rounded-full"
-        @click="show = false">&#215;</div>
-    </div>
-  @endif
+          @if (session('status'))
+            <div class="w-full absolute py-2 top-0 left-0 flex items-center justify-center" x-data="{ show: true }"
+              x-show="show" x-transition x-init="setTimeout(() => show = false, 6000)">
+              <div class="min-w-32 bg-amber-500 text-sm px-5 py-2 flex items-center text-black rounded-lg mr-3">
+                <p>{{ session('status') }}</p>
+              </div>
+              <div class="w-5 h-5 flex items-center justify-center bg-amber-500 cursor-pointer rounded-full"
+                @click="show = false">&#215;</div>
+            </div>
+          @endif
 
-
-  {{-- ======================================= [ NOTIFICATION end ] ======================================= --}}
+          {{-- ======================================= [ REQUESTED SCHEDULE ] ======================================= --}}
 
 
   <div class="CONTENT min-h-screen flex flex-col bg-gray-100 dark:bg-gray-900 dark:text-gray-100">
