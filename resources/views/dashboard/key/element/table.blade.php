@@ -57,7 +57,7 @@
           </div>
 
           @foreach ($district as $cell)
-            <div class="CONTENT flex gap-3 items-center px-3 py-1 hover:bg-gray-700/50 even:bg-gray-800 odd:bg-gray-700"
+            <div class="CONTENT flex gap-3 {{ $cell->is_active ? '' : 'line-through'}} items-center px-3 py-1 hover:bg-gray-700/50 even:bg-gray-800 odd:bg-gray-700"
               x-show="search === '' || 
                 String({{ \Illuminate\Support\Js::from($cell->device_address) }}).toLowerCase().includes(search.toLowerCase()) || 
                 String({{ \Illuminate\Support\Js::from($cell->reg_number) }}).toLowerCase().includes(search.toLowerCase())">

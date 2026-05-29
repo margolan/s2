@@ -95,10 +95,10 @@
 
           <h1 class="font-semibold text-gray-800 dark:text-gray-200 px-1 py-4">Добавить график</h1>
           <form action="{{ route('schedule-store') }}" enctype="multipart/form-data" method="POST"
-            class="max-w-[327px] flex flex-col gap-5 dark:text-gray-800 ">
+            class="max-w-81 flex flex-col gap-5 dark:text-gray-800">
             @csrf
             <div class="flex gap-5 ">
-              <select name="month">
+              <select name="month" class="text-sm">
                 @foreach ($formData['months'] as $value => $name)
                   <option value="{{ $value }}" @selected($formData['currentMonth'] == $value)>
                     {{ Str::ucfirst($name) }}
@@ -106,7 +106,7 @@
                 @endforeach
               </select>
 
-              <select name="year">
+              <select name="year" class="text-sm">
                 @foreach ($formData['years'] as $year)
                   <option value="{{ $year }}" @selected($formData['currentYear'] == $year)>
                     {{ $year }}
@@ -114,9 +114,8 @@
                 @endforeach
               </select>
             </div>
-            <input type="file" class="custom-file-input w-max text-gray-200" name="file">
-            <input type="submit" value="Отправить"
-              class="w-max bg-white px-3 h-[42px] cursor-pointer border border-gray-800 mr-5">
+            <input type="file" class="custom-file-input w-max text-sm" name="file">
+            <input type="submit" value="Отправить" class="w-max bg-white px-3 h-10 text-sm cursor-pointer border border-gray-800 mr-5">
           </form>
 
 

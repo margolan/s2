@@ -93,6 +93,10 @@ class KeyController extends Controller
 
         if ($request->isMethod('put')) {
 
+            $request->merge([
+                'is_active' => $request->has('is_active')
+            ]);
+
             $retrievedData->update($request->all());
 
             return redirect()->route('key-dashboard')->with('status', 'Данные обновлены!');

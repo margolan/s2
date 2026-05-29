@@ -36,6 +36,8 @@ class ScheduleController extends Controller
 
     $data['settings'] = $settings; // Settings 
 
+    $data['today'] = now()->day;
+
     return view('schedule')->with($data);
   }
 
@@ -67,6 +69,8 @@ class ScheduleController extends Controller
     $data['calendar'] = $this->calendar($request->y, $request->m); // Calendar 
 
     $data['settings'] = $settings; // Settings 
+
+    $data['today'] = now()->day;
 
     // ================= FORM DATA =================
 
