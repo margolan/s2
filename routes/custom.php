@@ -6,9 +6,10 @@ use App\Http\Controllers\KeyController;
 use App\Http\Controllers\ScheduleController;
 use Illuminate\Support\Facades\Route;
 
-// ====================== ADMIN DASHBOARD ======================
+// ====================== INDEX  ======================
 
 Route::get('', [IndexController::class, 'index'])->name('index');
+Route::get('/about', [IndexController::class, 'about'])->name('about');
 
 // ====================== ADMIN DASHBOARD ======================
 

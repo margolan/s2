@@ -12,11 +12,22 @@
 <body>
 
 
-  <div class="dark:bg-gray-800 h-screen dark:text-gray-300 flex justify-center items-center flex-wrap">
-    <div class="w-1/2 h-1/2 bg-grad"></div>
-    <div class="w-1/2 h-1/2 "></div>
-    <div class="w-1/2 h-1/2 "></div>
-    <div class="w-1/2 h-1/2 "></div>
+  <div class="h-screen dark:text-gray-300 bg-[url(/public/bg_index.jpg)] bg-center bg-cover">
+    <div class="w-full h-full dark:bg-neutral-900/80 flex justify-center items-center">
+      <div class="w-2xl p-5 md:text-left text-center">
+        <h1 class="font-mono tracking-wider text-3xl py-3">DIGITAL CORE</h1>
+        <p class="py-3">Привет. Я Маргулан, и это хаб моих проектов. Если вы ищете конкретный инструмент или моё
+          резюме — воспользуйтесь ссылками ниже.</p>
+        <div class="flex gap-5 justify-center md:justify-normal">
+          <p><a href="{{ route('schedule-index') }}" class="text-gray-400 hover:text-teal-400 transition-colors">//
+              Grafik</a></p>
+          <p><a href="{{ route('key-dashboard') }}" class="text-gray-400 hover:text-teal-400 transition-colors">//
+              Keys</a></p>
+          <p> <a href="{{ route('about') }}" class="text-gray-400 hover:text-teal-400 transition-colors">// About</a>
+          </p>
+        </div>
+      </div>
+    </div>
   </div>
 
 

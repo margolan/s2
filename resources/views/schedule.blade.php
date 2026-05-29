@@ -46,7 +46,7 @@
 
 
   <div class="CONTENT min-h-screen flex flex-col bg-gray-100 dark:bg-gray-900 dark:text-gray-100">
-    <div class="bg-white dark:bg-gray-800 border-b border-gray-100 dark:border-gray-700 shadow">
+    <div class="bg-white dark:bg-gray-800 border-b border-gray-100 dark:border-gray-700 shadow-sm">
       <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div class="flex justify-between items-center h-16">
           <h1> <a href="/grafik" class="font-semibold text-gray-800 dark:text-gray-200">График работ</a> </h1>
@@ -74,7 +74,7 @@
 
     <div class="py-12">
       <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
-        <div class="bg-white dark:bg-gray-800 shadow-sm sm:rounded-lg ">
+        <div class="bg-white dark:bg-gray-800 shadow-xs sm:rounded-lg ">
           <div class="py-6 sm:px-6 px-3 text-gray-900 dark:text-gray-100">
 
             @if ($requestedSchedule->isEmpty())
