@@ -1,0 +1,25 @@
+{
+  "public/bg_index.jpg": {
+    "file": "assets/bg_index-neSRKmu3.jpg",
+    "src": "public/bg_index.jpg"
+  },
+  "public/person.jpg": {
+    "file": "assets/person-DLxPFvXo.jpg",
+    "src": "public/person.jpg"
+  },
+  "resources/css/app.css": {
+    "file": "assets/app-CLKGN6Ii.css",
+    "src": "resources/css/app.css",
+    "isEntry": true,
+    "name": "app",
+    "names": [
+      "app.css"
+    ]
+  },
+  "resources/js/app.js": {
+    "file": "assets/app-CJy8ASEk.js",
+    "name": "app",
+    "src": "resources/js/app.js",
+    "isEntry": true
+  }
+}
