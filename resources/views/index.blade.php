@@ -24,6 +24,7 @@
           <p><a href="{{ route('key-dashboard') }}" class="text-gray-400 hover:text-teal-400 transition-colors">//
               Keys</a></p>
           <p> <a href="{{ route('about') }}" class="text-gray-400 hover:text-teal-400 transition-colors">// About</a>
+          <p> <a href="{{ route('login') }}" class="text-gray-400 hover:text-teal-400 transition-colors">// Login</a>
           </p>
         </div>
       </div>

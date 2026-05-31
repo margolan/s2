@@ -18,10 +18,10 @@
         </svg>
         @if ($month['isFuture'])
           <h3 class="px-1 hover:text-rose-500">
-            <a href="{{ request()->url() }}">{{ Str::upper($month['current']->translatedFormat('F')) }}</a>
+            <a href="{{ request()->url() }}" class="underline underline-offset-3">{{ Str::upper($month['current']->translatedFormat('F')) }}</a>
           @else
             <h3 class="px-1 hover:text-rose-500"><a
-                href="?y={{ $nextMonthSchedule->first()->first()->year }}&m={{ $nextMonthSchedule->first()->first()->month }}">
+                href="?y={{ $nextMonthSchedule->first()->first()->year }}&m={{ $nextMonthSchedule->first()->first()->month }}" class="underline underline-offset-3">
                 {{ Str::upper($month['next']->translatedFormat('F')) }}
               </a>
             </h3>
@@ -67,7 +67,7 @@
             <div class="ROW ROW_DATE w-max flex">
               @foreach ($calendar as $index => $item)
                 <div
-                  class="CELL w-7 py-1 text-gray-300 font-mono flex justify-center {{ $index === $today ? 'border-x-2 border-red-500 shadow-[0_0_10px] shadow-red-500' : '' }} {{ $item['is_weekend'] ? 'text-red-600 bg-red-500/10' : '' }}"
+                  class="CELL w-7 py-1 text-gray-300 font-mono flex justify-center {{ $index+1 === $today ? 'border-x-2 border-red-500 shadow-[0_0_10px] shadow-red-500' : '' }} {{ $item['is_weekend'] ? 'text-red-600 bg-red-500/10' : '' }}"
                   @mouseenter="hoverIndex={{ $index }}" @mouseleave="hoverIndex = null"
                   :class="{ 'bg-gray-700/50': hoverIndex === {{ $index }} }">
                   {{ $item['date'] }}</div>
@@ -76,7 +76,7 @@
             <div class="ROW ROW_DOW w-max flex">
               @foreach ($calendar as $index => $item)
                 <div
-                  class="CELL w-7 py-1 text-gray-300 uppercase font-mono flex justify-center {{ $index === $today ? 'border-x-2 border-red-500 shadow-[0_0_10px] shadow-red-500' : '' }} {{ $item['is_weekend'] ? 'text-red-600 bg-red-500/10' : '' }}"
+                  class="CELL w-7 py-1 text-gray-300 uppercase font-mono flex justify-center {{ $index+1 === $today ? 'border-x-2 border-red-500 shadow-[0_0_10px] shadow-red-500' : '' }} {{ $item['is_weekend'] ? 'text-red-600 bg-red-500/10' : '' }}"
                   @mouseenter="hoverIndex={{ $index }}" @mouseleave="hoverIndex = null"
                   :class="{ 'bg-gray-700/50': hoverIndex === {{ $index }} }">
                   {{ $item['dow'] }}</div>
@@ -88,7 +88,8 @@
               @foreach ($item['schedule_data'] as $index => $day)
                 <div
                   class="CELL w-7 py-1 flex justify-center 
-                        {{ $index === $today ? ' border-x-2 border-red-500 shadow-[0_0_10px] shadow-red-500 rounded-none' : '' }}
+                  {{ $index }} {{ $today }}
+                        {{ $index+1 === $today ? ' border-x-2 border-red-500 shadow-[0_0_10px] shadow-red-500 rounded-none' : '' }}
                         {{ $day === 'O' ? 'text-gray-400' : '' }}
                         {{ $day === '?' ? 'text-gray-400' : '' }}
                         {{ $day === '+' ? 'text-emerald-400' : '' }}

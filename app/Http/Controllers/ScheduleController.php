@@ -75,7 +75,7 @@ class ScheduleController extends Controller
     // ================= FORM DATA =================
 
     $months = collect(range(1, 12))->mapWithKeys(function ($month) {
-      return [$month => Carbon::now()->month($month)->translatedFormat('F')];
+      return [$month => Carbon::now()->day(1)->month($month)->translatedFormat('F')];
     });
 
     $years = range(now()->year, now()->year + 1);
