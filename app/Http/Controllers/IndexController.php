@@ -15,4 +15,9 @@ class IndexController extends Controller
     {
         return view('about');
     }
+
+    public function help()
+    {
+        return view('help');
+    }
 }

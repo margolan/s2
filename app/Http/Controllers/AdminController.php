@@ -32,8 +32,14 @@ class AdminController extends Controller
             'currentYear' => $currentYear
         ];
 
-        $visitor = Visitor::get();
+        $query = Visitor::orderBy('id', 'desc')->take(100)->get();
+        
+        $visitors['allRows'] = $query;
+        $visitors['byResources'] = $query->groupBy('url')->map(function ($item) {
+            return $item->count();
+        });
+        $test['b'] = '';
 
-        return view('dashboard.admin.dashboard', compact('allSchedules', 'formData', 'visitor'));
+        return view('dashboard.admin.dashboard', compact('allSchedules', 'formData', 'visitors', 'test'));
     }
 }

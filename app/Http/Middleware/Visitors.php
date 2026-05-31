@@ -23,7 +23,7 @@ class Visitors
     public function terminate(Request $request, Response $response)
     {
 
-        if(Auth::check() && Auth::user()->role === 'admin') return;
+        if (Auth::check() && Auth::user()->role === 'admin') return;
 
         if (
             $request->expectsJson() ||
@@ -37,8 +37,8 @@ class Visitors
         $visitor = [
             'ip'         => $request->ip(),
             'user'       => Auth::user()->name ?? 'NR',
-            'userAgent'    => $request->userAgent(),
-            'url' => $request->path(),
+            'userAgent'  => $request->userAgent(),
+            'url'        => $request->path(),
         ];
 
         Visitor::create($visitor);

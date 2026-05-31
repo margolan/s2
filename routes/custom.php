@@ -10,6 +10,7 @@ use Illuminate\Support\Facades\Route;
 
 Route::get('', [IndexController::class, 'index'])->name('index');
 Route::get('/about', [IndexController::class, 'about'])->name('about');
+Route::get('/help', [IndexController::class, 'help'])->name('help');
 
 // ====================== ADMIN DASHBOARD ======================
 

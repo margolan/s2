@@ -94,10 +94,32 @@
           </form>
 
 
-          <hr class="my-5"> {{-- ============================= [ NEW SCHEDULE ADD FORM ] ============================= --}}
+          <hr class="my-5"> {{-- ============================= [ VISITORS ] ============================= --}}
 
-          <div x-data="{ show: false }" class="w-full ">
-            <h1 class="font-semibold text-gray-800 dark:text-gray-200 py-4 border border-gray-300 dark:border-gray-600 px-2" @click="show = !show">Посетители</h1>
+
+          <div class="w-full my-5">
+            <h1 class="font-semibold text-gray-800 dark:text-gray-200 py-4 px-2">Посетители по ресурсам</h1>
+            <table class="w-full border-collapse border border-gray-400 dark:border-gray-700 text-sm">
+              <thead>
+                <th class="border border-gray-300 dark:border-gray-600 px-2">URL</td>
+                <th class="border border-gray-300 dark:border-gray-600 px-2">Кол-во</td>
+              </thead>
+              @foreach ($visitors['byResources'] as $index => $item)
+                <tr>
+                  <td class="border border-gray-300 dark:border-gray-600 px-2">{{ $index }}</td>
+                  <td class="border border-gray-300 dark:border-gray-600 px-2">{{ $item }}</td>
+                </tr>
+              @endforeach
+            </table>
+          </div>
+
+
+          <hr class="my-5"> {{-- ============================= [ VISITORS ] ============================= --}}
+
+
+          <div x-data="{ show: false }" class="w-full my-5">
+            <h1 class="font-semibold text-gray-800 dark:text-gray-200 py-4 border dark:border-gray-600 px-2"
+              @click="show = !show">Посетители</h1>
             <div x-show="show" class="w-full overflow-x-scroll">
               <table class="border-collapse border border-gray-400 dark:border-gray-700 text-sm">
                 <thead>
@@ -110,7 +132,7 @@
                     <th class="border border-gray-300 dark:border-gray-600 px-2">Date</th>
                   </tr>
                 </thead>
-                @foreach ($visitor as $index => $visitor)
+                @foreach ($visitors['allRows'] as $index => $visitor)
                   <tr class="odd:bg-gray-700 hover:bg-gray-900 text-gray-300">
                     <td class="border border-gray-300 dark:border-gray-600 px-2">{{ $visitor->id }}</td>
                     <td class="border border-gray-300 dark:border-gray-600 px-2">{{ $visitor->ip }}</td>
