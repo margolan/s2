@@ -96,9 +96,9 @@
 
           <hr class="my-5"> {{-- ============================= [ NEW SCHEDULE ADD FORM ] ============================= --}}
 
-          <div x-data="{ show: false }">
+          <div x-data="{ show: false }" class="w-full ">
             <h1 class="font-semibold text-gray-800 dark:text-gray-200 py-4 border border-gray-300 dark:border-gray-600 px-2" @click="show = !show">Посетители</h1>
-            <div x-show="show">
+            <div x-show="show" class="w-full overflow-x-scroll">
               <table class="border-collapse border border-gray-400 dark:border-gray-700 text-sm">
                 <thead>
                   <tr>
