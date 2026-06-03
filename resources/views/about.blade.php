@@ -51,7 +51,7 @@
           <div class="font-semibold py-3">Резюме:
             <ul class="list-disc pl-5 text-neutral-400">
               <li><a href="https://aktobe.hh.kz/applicant/resumes/view?resume=8caa6c69ff01f0a1860039ed1f4533597a4b74"
-                  class="hover:text-teal-400 transition-colors">hh.kz</a>
+                  class="hover:text-teal-400 transition-colors underline underline-offset-3">hh.kz</a>
               </li>
             </ul>
           </div>
