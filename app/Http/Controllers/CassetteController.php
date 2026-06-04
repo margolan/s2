@@ -31,7 +31,7 @@ class CassetteController extends Controller
             }
         }
 
-        $cassettes = Cassette::orderBy('id', 'desc')->get()->groupBy(function ($item) {
+        $cassettes = Cassette::orderBy('created_at', 'desc')->get()->groupBy(function ($item) {
             return $item->created_at->format('Y-m-d');
         });
 

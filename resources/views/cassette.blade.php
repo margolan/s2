@@ -38,9 +38,9 @@
   @endif
 
 
-  <div class="h-screen dark:text-gray-300 bg-[url(/public/bg_index.jpg)] bg-center bg-cover overflow-y-scroll">
-    <div class="w-full h-full dark:bg-neutral-900/80 flex justify-center">
-      <div class="w-2xl p-5 md:text-left text-center">
+  <div class="h-screen dark:text-gray-300 bg-[url(/public/bg_index.jpg)] bg-center bg-cover">
+    <div class="w-full h-full dark:bg-neutral-900/80 flex justify-center overflow-y-scroll">
+      <div class="w-2xl h-max py-10 md:text-left text-center">
 
 
         <h1 class="w-max text-3xl font-semibold mx-auto my-10">КАССЕТЫ</h1>
@@ -72,15 +72,15 @@
             <table class="w-full border-collapse border border-gray-400 dark:border-gray-700 text-sm mb-5">
               <thead>
                 <tr>
-                  <th class="w-8 border border-gray-400 dark:border-gray-700 py-1 text-center">ID</td>
-                  <th class="border border-gray-400 dark:border-gray-700 px-2 py-1 text-center">Номер кассеты</td>
-                  <th class="w-23 border border-gray-400 dark:border-gray-700 py-1 text-center">Дата и время</td>
-                  <th class="w-22 border border-gray-400 dark:border-gray-700 py-1 text-center">Действие</td>
+                  <th class="w-8 border border-gray-400 dark:border-gray-700 py-3 text-center">#</td>
+                  <th class="border border-gray-400 dark:border-gray-700 px-2 py-3 text-center">Номер кассеты</td>
+                  <th class="w-23 border border-gray-400 dark:border-gray-700 py-3 text-center">Время</td>
+                  <th class="w-22 border border-gray-400 dark:border-gray-700 py-3 text-center">Действие</td>
                 </tr>
               </thead>
-              @foreach ($date as $item)
+              @foreach ($date as $index => $item)
                 <tr class="hover:bg-emerald-800/50 odd:bg-neutral-700/50">
-                  <td class="border border-gray-400 dark:border-gray-700 px-2 py-1 text-center">{{ $item->id }}</td>
+                  <td class="border border-gray-400 dark:border-gray-700 px-2 py-1 text-center">{{ $loop->count - $loop->index }}</td>
                   <td class="border border-gray-400 dark:border-gray-700 px-2 py-1">{{ $item->number }}</td>
                   <td class="border border-gray-400 dark:border-gray-700 px-2 py-1 text-center">
                     {{ $item->created_at->format('H:i:s') }}
