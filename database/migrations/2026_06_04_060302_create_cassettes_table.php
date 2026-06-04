@@ -14,6 +14,10 @@ return new class extends Migration
         Schema::create('cassettes', function (Blueprint $table) {
             $table->id();
             $table->string('number');
+            $table->string('type');
+            $table->string('var1')->nullable();
+            $table->string('var2')->nullable();
+            $table->string('var3')->nullable();
             $table->timestamps();
         });
     }

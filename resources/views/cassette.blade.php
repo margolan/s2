@@ -49,12 +49,18 @@
 
         <form action="{{ route('cassette-index') }}" method="post" class="flex gap-3 my-10">
           @csrf
+          <select name="type" class="rounded-md text-sm dark:bg-neutral-600 dark:text-neutral-300">
+            <option value="repaired">Закрытие</option>
+            <option value="incoming">Приход</option>
+          </select>
           <input type="text" name="number" class="w-full dark:bg-neutral-600 dark:text-neutral-300 rounded-md">
           <input type="submit" value="Добавить"
             class="px-5 py-2 dark:bg-neutral-200 dark:text-neutral-800 text-sm rounded-md">
         </form>
 
         {{-- =================== CASSETTES LIST =================== --}}
+
+        {{-- @dump($cassettes) --}}
 
         @if ($cassettes)
 
@@ -78,9 +84,10 @@
                   <th class="w-22 border border-gray-400 dark:border-gray-700 py-3 text-center">Действие</td>
                 </tr>
               </thead>
-              @foreach ($date as $index => $item)
+              @foreach ($date['repaired'] as $index => $item)
                 <tr class="hover:bg-emerald-800/50 odd:bg-neutral-700/50">
-                  <td class="border border-gray-400 dark:border-gray-700 px-2 py-1 text-center">{{ $loop->count - $loop->index }}</td>
+                  <td class="border border-gray-400 dark:border-gray-700 px-2 py-1 text-center">
+                    {{ $loop->count - $loop->index }}</td>
                   <td class="border border-gray-400 dark:border-gray-700 px-2 py-1">{{ $item->number }}</td>
                   <td class="border border-gray-400 dark:border-gray-700 px-2 py-1 text-center">
                     {{ $item->created_at->format('H:i:s') }}
@@ -100,9 +107,8 @@
                 </tr>
               @endforeach
             </table>
+            <p>{{ $date['incoming'] }}</p>
           @endforeach
-
-
         @endif
 
       </div>

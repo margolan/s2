@@ -12,28 +12,32 @@ class CassetteController extends Controller
 
         if ($request->isMethod('post')) {
 
-            $request->validate([
-                'number' => ['required']
+            $validated = $request->validate([
+                'number' => 'required',
+                'type' => 'required|in:repaired,incoming',
             ], [
-                'number.required' => 'Поле пустое'
+                'number.required' => 'Поле пустое',
+                'type.in' => 'Неверный тип записи'
             ]);
 
             $searchingRow = Cassette::where('number', $request->number)->first();
 
-            if ($searchingRow = Cassette::where('number', $request->number)->first() && $searchingRow->created_at->format('Y-m-d') === now()->format('Y-m-d')) {
+            if ($searchingRow && $searchingRow->created_at->isToday()) {
 
                 return redirect()->back()->with('status', 'Кассета ' . $request->number . ' уже существует');
             } else {
 
-                Cassette::create(['number' => $request->number]);
+                Cassette::create($validated);
 
                 return redirect()->back()->with('status', 'Кассета ' . $request->number . ' добавлена');
             }
         }
 
-        $cassettes = Cassette::orderBy('created_at', 'desc')->get()->groupBy(function ($item) {
-            return $item->created_at->format('Y-m-d');
-        });
+
+        $cassettes = Cassette::orderBy('created_at', 'desc')->get()
+            ->groupBy([function ($item) {
+                return $item->created_at->format('Y-m-d');
+            }, 'type']);
 
         return view('cassette', ['cassettes' => $cassettes]);
     }
