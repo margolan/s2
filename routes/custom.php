@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\AdminController;
+use App\Http\Controllers\CassetteController;
 use App\Http\Controllers\IndexController;
 use App\Http\Controllers\KeyController;
 use App\Http\Controllers\ScheduleController;
@@ -39,3 +40,9 @@ Route::middleware('check.pin')->group(function () { // Middleware : Check pincod
   Route::post('/dashboard/key/store', [KeyController::class, 'store'])->name('key-store');
   Route::match(['get', 'put'], '/dashboard/key/edit', [KeyController::class, 'edit'])->name('key-edit');
 });
+
+
+// ====================== CASSETTE PROJECT ======================
+
+Route::match(['get', 'post'], '/cassette', [CassetteController::class, 'index'])->name('cassette-index');
+Route::delete('/cassette/delete', [CassetteController::class, 'delete'])->name('cassette-delete');
