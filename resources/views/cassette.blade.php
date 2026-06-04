@@ -83,7 +83,7 @@
                   <td class="border border-gray-400 dark:border-gray-700 px-2 py-1 text-center">{{ $item->id }}</td>
                   <td class="border border-gray-400 dark:border-gray-700 px-2 py-1">{{ $item->number }}</td>
                   <td class="border border-gray-400 dark:border-gray-700 px-2 py-1 text-center">
-                    {{ $item->created_at->format('h:m:s') }}
+                    {{ $item->created_at->format('H:i:s') }}
                   </td>
                   <td class="border border-gray-400 dark:border-gray-700 px-2 py-1 text-center">
                     @if ($item->created_at->format('Y-m-d') === now()->format('Y-m-d'))
