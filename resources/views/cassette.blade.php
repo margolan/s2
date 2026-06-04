@@ -42,9 +42,6 @@
     <div class="w-full h-full dark:bg-neutral-900/80 flex justify-center">
       <div class="w-2xl p-5 md:text-left text-center">
 
-        @isset($data)
-          @dump($data)
-        @endisset
 
         <h1 class="w-max text-3xl font-semibold mx-auto my-10">КАССЕТЫ</h1>
 

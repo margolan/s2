@@ -20,7 +20,7 @@ class CassetteController extends Controller
 
             $searchingRow = Cassette::where('number', $request->number)->first();
 
-            if ($searchingRow->created_at->format('Y-m-d') === now()->format('Y-m-d')) {
+            if ($searchingRow = Cassette::where('number', $request->number)->first() && $searchingRow->created_at->format('Y-m-d') === now()->format('Y-m-d')) {
 
                 return redirect()->back()->with('status', 'Кассета ' . $request->number . ' уже существует');
             } else {
