@@ -65,49 +65,61 @@
         @if ($cassettes)
 
           @foreach ($cassettes as $index => $date)
-            <div class="flex items-center py-2 justify-center">
-              <span class="mr-1">
-                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="size-5">
-                  <path fill-rule="evenodd"
-                    d="M5.75 2a.75.75 0 0 1 .75.75V4h7V2.75a.75.75 0 0 1 1.5 0V4h.25A2.75 2.75 0 0 1 18 6.75v8.5A2.75 2.75 0 0 1 15.25 18H4.75A2.75 2.75 0 0 1 2 15.25v-8.5A2.75 2.75 0 0 1 4.75 4H5V2.75A.75.75 0 0 1 5.75 2Zm-1 5.5c-.69 0-1.25.56-1.25 1.25v6.5c0 .69.56 1.25 1.25 1.25h10.5c.69 0 1.25-.56 1.25-1.25v-6.5c0-.69-.56-1.25-1.25-1.25H4.75Z"
-                    clip-rule="evenodd" />
-                </svg>
-              </span>
-              {{ \Carbon\Carbon::create($index)->format('j.m.Y') }} ( {{ count($date) }} )
+            <div class="pb-10">
+              <div class="flex items-center py-2 justify-center">
+                <span class="mr-1">
+                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="size-5">
+                    <path fill-rule="evenodd"
+                      d="M5.75 2a.75.75 0 0 1 .75.75V4h7V2.75a.75.75 0 0 1 1.5 0V4h.25A2.75 2.75 0 0 1 18 6.75v8.5A2.75 2.75 0 0 1 15.25 18H4.75A2.75 2.75 0 0 1 2 15.25v-8.5A2.75 2.75 0 0 1 4.75 4H5V2.75A.75.75 0 0 1 5.75 2Zm-1 5.5c-.69 0-1.25.56-1.25 1.25v6.5c0 .69.56 1.25 1.25 1.25h10.5c.69 0 1.25-.56 1.25-1.25v-6.5c0-.69-.56-1.25-1.25-1.25H4.75Z"
+                      clip-rule="evenodd" />
+                  </svg>
+                </span>
+                {{ \Carbon\Carbon::create($index)->format('j.m.Y') }} ( {{ count($date) }} )
+              </div>
+              <table class="w-full border-collapse border border-gray-400 dark:border-gray-700 text-sm">
+                <thead>
+                  <tr>
+                    <th class="w-8 border border-gray-400 dark:border-gray-700 py-3 text-center">#</td>
+                    <th class="border border-gray-400 dark:border-gray-700 px-2 py-3 text-center">Номер кассеты</td>
+                    <th class="w-23 border border-gray-400 dark:border-gray-700 py-3 text-center">Время</td>
+                    <th class="w-22 border border-gray-400 dark:border-gray-700 py-3 text-center">Действие</td>
+                  </tr>
+                </thead>
+                @foreach ($date['repaired'] as $index => $item)
+                  <tr class="hover:bg-emerald-800/50 odd:bg-neutral-700/50">
+                    <td class="border border-gray-400 dark:border-gray-700 px-2 py-1 text-center">
+                      {{ $loop->count - $loop->index }}</td>
+                    <td class="border border-gray-400 dark:border-gray-700 px-2 py-1">{{ $item->number }}</td>
+                    <td class="border border-gray-400 dark:border-gray-700 px-2 py-1 text-center">
+                      {{ $item->created_at->format('H:i:s') }}
+                    </td>
+                    <td class="border border-gray-400 dark:border-gray-700 px-2 py-1 text-center">
+                      @if ($item->created_at->format('Y-m-d') === now()->format('Y-m-d'))
+                        <form action="{{ route('cassette-delete') }}" method="post">
+                          @method('delete')
+                          @csrf
+                          <input type="hidden" name="number" value="{{ $item->number }}">
+                          <input type="submit" value="Удалить">
+                        </form>
+                      @else
+                        -
+                      @endif
+                    </td>
+                  </tr>
+                @endforeach
+              </table>
+              @isset($date['incoming'])
+                <table class="w-full border-collapse border border-gray-400 dark:border-gray-700 text-sm mb-5">
+                  <tr>
+                    @foreach ($date['incoming'] ?? [] as $index => $item)
+                      <td class="w-8 border border-gray-400 dark:border-gray-700 px-2 py-1 text-center">*</td>
+                      <td class="border border-gray-400 dark:border-gray-700 px-2 py-1">Приход {{ $item->number }}
+                      </td>
+                    @endforeach
+                  </tr>
+                </table>
+              @endisset
             </div>
-            <table class="w-full border-collapse border border-gray-400 dark:border-gray-700 text-sm mb-5">
-              <thead>
-                <tr>
-                  <th class="w-8 border border-gray-400 dark:border-gray-700 py-3 text-center">#</td>
-                  <th class="border border-gray-400 dark:border-gray-700 px-2 py-3 text-center">Номер кассеты</td>
-                  <th class="w-23 border border-gray-400 dark:border-gray-700 py-3 text-center">Время</td>
-                  <th class="w-22 border border-gray-400 dark:border-gray-700 py-3 text-center">Действие</td>
-                </tr>
-              </thead>
-              @foreach ($date['repaired'] as $index => $item)
-                <tr class="hover:bg-emerald-800/50 odd:bg-neutral-700/50">
-                  <td class="border border-gray-400 dark:border-gray-700 px-2 py-1 text-center">
-                    {{ $loop->count - $loop->index }}</td>
-                  <td class="border border-gray-400 dark:border-gray-700 px-2 py-1">{{ $item->number }}</td>
-                  <td class="border border-gray-400 dark:border-gray-700 px-2 py-1 text-center">
-                    {{ $item->created_at->format('H:i:s') }}
-                  </td>
-                  <td class="border border-gray-400 dark:border-gray-700 px-2 py-1 text-center">
-                    @if ($item->created_at->format('Y-m-d') === now()->format('Y-m-d'))
-                      <form action="{{ route('cassette-delete') }}" method="post">
-                        @method('delete')
-                        @csrf
-                        <input type="hidden" name="number" value="{{ $item->number }}">
-                        <input type="submit" value="Удалить">
-                      </form>
-                    @else
-                      -
-                    @endif
-                  </td>
-                </tr>
-              @endforeach
-            </table>
-            <p>{{ $date['incoming'] }}</p>
           @endforeach
         @endif
 
