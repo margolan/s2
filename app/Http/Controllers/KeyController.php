@@ -108,6 +108,8 @@ class KeyController extends Controller
     public function test()
     {
 
+        if (Auth::user()->role !== 'admin') return redirect()->route('index');
+
         $districtNames = [
             'ct' => 'Город',
             '8' => '8 мкр',

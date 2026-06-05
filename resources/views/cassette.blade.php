@@ -60,7 +60,7 @@
 
         {{-- =================== CASSETTES LIST =================== --}}
 
-        {{-- @dump($cassettes) --}}
+        @dump($cassettes)
 
         @if ($cassettes)
 
@@ -74,7 +74,7 @@
                       clip-rule="evenodd" />
                   </svg>
                 </span>
-                {{ \Carbon\Carbon::create($index)->format('j.m.Y') }} ( {{ count($date) }} )
+                {{ \Carbon\Carbon::create($index)->format('j.m.Y') }} ( {{ count($date['repaired']) }} )
               </div>
               <table class="w-full border-collapse border border-gray-400 dark:border-gray-700 text-sm">
                 <thead>
@@ -108,17 +108,21 @@
                   </tr>
                 @endforeach
               </table>
+
+
               @isset($date['incoming'])
                 <table class="w-full border-collapse border border-gray-400 dark:border-gray-700 text-sm mb-5">
-                  <tr>
-                    @foreach ($date['incoming'] ?? [] as $index => $item)
+                  @foreach ($date['incoming'] ?? [] as $index => $item)
+                    <tr>
                       <td class="w-8 border border-gray-400 dark:border-gray-700 px-2 py-1 text-center">*</td>
                       <td class="border border-gray-400 dark:border-gray-700 px-2 py-1">Приход {{ $item->number }}
                       </td>
-                    @endforeach
-                  </tr>
+                    </tr>
+                  @endforeach
                 </table>
               @endisset
+
+
             </div>
           @endforeach
         @endif

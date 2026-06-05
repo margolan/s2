@@ -46,3 +46,5 @@ Route::middleware('check.pin')->group(function () { // Middleware : Check pincod
 
 Route::match(['get', 'post'], '/cassette', [CassetteController::class, 'index'])->name('cassette-index');
 Route::delete('/cassette/delete', [CassetteController::class, 'delete'])->name('cassette-delete');
+
+Route::get('/test', [KeyController::class, 'test'])->middleware('auth');
