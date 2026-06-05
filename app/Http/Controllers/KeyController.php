@@ -104,4 +104,25 @@ class KeyController extends Controller
 
         return view('dashboard.key.edit', compact('retrievedData'));
     }
+
+    public function test()
+    {
+
+        $districtNames = [
+            'ct' => 'Город',
+            '8' => '8 мкр',
+            '11' => '11 мкр',
+            '12' => '12 мкр',
+            'old' => 'Старый город',
+            'far' => 'Дальние',
+        ];
+
+        $data = Key::orderBy('id')
+            ->get()
+            ->groupBy('district')->mapWithKeys(function ($data, $index) use ($districtNames) {
+                return [$districtNames[$index] ?? "Неизвестный район ($index)" => $data];
+            });
+
+        return view('test', compact('data'));
+    }
 }
