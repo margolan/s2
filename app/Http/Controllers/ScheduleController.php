@@ -4,12 +4,16 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Imports\ScheduleImport;
+use App\Models\Key;
 use App\Models\Schedule;
 use Illuminate\Support\Carbon;
 use PhpOffice\PhpSpreadsheet\IOFactory;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Cookie;
 use Illuminate\Support\Str;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Http;
+
 
 
 class ScheduleController extends Controller
@@ -267,5 +271,38 @@ class ScheduleController extends Controller
     };
 
     return $calendar;
+  }
+
+  public function tgTest(Request $request)
+  {
+    $chatId = $request->input('message.chat.id');
+    $text = $request->input('message.text'); // Например: "4891"
+
+    // 1. Получаем ВСЕ совпадения из базы данных
+    $foundKeys = Key::where('reg_number', 'like', '%' . $text . '%')->get();
+
+    // 2. Проверяем, нашлось ли хоть что-нибудь
+    if ($foundKeys->isEmpty()) {
+      $replyText = "По запросу '{$text}' ничего не найдено.";
+    } else {
+      // 3. Если совпадения есть, собираем их в один текстовый блок
+      $replyText = "Найдено совпадений: " . $foundKeys->count() . "\n\n";
+
+      foreach ($foundKeys as $key) {
+        $replyText .= "⚡ PT: " . $key->reg_number . "\n";
+        $replyText .= "📍 Адрес: " . $key->device_address . "\n";
+        $replyText .= "🔑 Цвет: " . $key->color . "\n";
+        $replyText .= "-----------------------\n"; // Разделитель между ключами
+      }
+    }
+
+    // 4. Отправляем итоговый текст в Telegram
+    $botToken = env('TELEGRAM_BOT_TOKEN');
+    Http::withoutVerifying()->post("https://api.telegram.org/bot{$botToken}/sendMessage", [
+      'chat_id' => $chatId,
+      'text'    => $replyText,
+    ]);
+
+    return response()->json(['status' => 'success']);
   }
 }

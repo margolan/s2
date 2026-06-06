@@ -12,11 +12,42 @@
 <body>
 
   <div class="h-screen dark:text-gray-300 bg-[url(/public/bg_index.jpg)] bg-center bg-cover overflow-scroll">
-    <div class="w-full dark:bg-neutral-900/80 flex justify-center">
-      <div class="w-6xl border border-red-500 p-5 md:text-left text-center">
+    <div class="w-6xl px-5 py-10 dark:bg-neutral-900/80 mx-auto">
 
+      <div class="">
+        <h1 class="text-3xl font-semibold"><a href="{{ route('help') }}">Help</a></h1>
+      </div>
 
-        <h2 class="text-xl font-bold text-gray-900 dark:text-gray-100 mt-6 mb-2">1. Методы выборки (Получение данных /
+      {{-- Table of Contents --}}
+
+      <div class="p-5">
+        <p class="py-3">Содержание</p>
+        <ol class="list-decimal list-inside">
+          <li><a href="#select">Методы выборки (Получение данных / Поиск)</a></li>
+          <ol class="list-[lower-alpha] list-inside ml-5">
+            <li><a href="#where">Все варианты фильтрации (WHERE условия)</a></li>
+            <li><a href="#sort">Сортировка, Группировка и Лимиты</a></li>
+            <li><a href="#count">Агрегатные методы (Запросы, возвращающие числа) </a></li>
+            <li><a href="#pagination">Постраничный вывод (Пагинация)</a></li>
+            <li><a href="#when">Условные запросы (По ЛП)</a></li>
+            <li><a href="#query">Переход от Модели к Конструктору</a></li>
+          </ol>
+          <li><a href="#create">Методы создания и сохранения (Insert / Update)</a></li>
+          <li><a href="#searchAndCreate">Умные методы «Найди или Создай / Обнови»</a></li>
+          <li><a href="#delete">Методы удаления (Delete)</a></li>
+          <li><a href="#softDelete">Методы работы с Мягким удалением (Soft Deletes)</a></li>
+          <li><a href="#property">Проверка состояния модели (Dirty, Clean, Original)</a></li>
+          <li><a href="#relations">Методы отношений (Relationships / Загрузка связей)</a></li>
+          <li><a href="#serialization">Преобразование данных (Сериализация)</a></li>
+          <li><a href="#other">Прочее</a></li>
+        </ol>
+      </div>
+
+      {{-- Model --}}
+
+      <div>
+        <h2 id="select" class="text-xl font-bold text-gray-900 dark:text-gray-100 mt-6 mb-2">1. Методы выборки
+          (Получение данных /
           Поиск)</h2>
         <p class="text-gray-600 dark:text-gray-400 mb-4">
           Эти методы используются для извлечения записей из базы данных. Почти все они возвращают либо объект модели,
@@ -49,14 +80,16 @@
           <tr>
             <td class="border border-gray-300 dark:border-gray-600 px-3 py-2 bg-gray-50 dark:bg-gray-900/50"><code
                 class="text-indigo-600 dark:text-indigo-400">findOrFail($id)</code></td>
-            <td class="border border-gray-300 dark:border-gray-600 px-3 py-2">Ищет по id. Если записи нет — выбрасывает
+            <td class="border border-gray-300 dark:border-gray-600 px-3 py-2">Ищет по id. Если записи нет —
+              выбрасывает
               исключение <code class="text-xs">ModelNotFoundException</code> (автоматически отдает ошибку 404 на
               фронтенд).</td>
           </tr>
           <tr>
             <td class="border border-gray-300 dark:border-gray-600 px-3 py-2 bg-gray-50 dark:bg-gray-900/50"><code
                 class="text-indigo-600 dark:text-indigo-400">first()</code></td>
-            <td class="border border-gray-300 dark:border-gray-600 px-3 py-2">Возвращает первую запись, соответствующую
+            <td class="border border-gray-300 dark:border-gray-600 px-3 py-2">Возвращает первую запись,
+              соответствующую
               условиям запроса.</td>
           </tr>
           <tr>
@@ -75,44 +108,48 @@
           <tr>
             <td class="border border-gray-300 dark:border-gray-600 px-3 py-2 bg-gray-50 dark:bg-gray-900/50"><code
                 class="text-indigo-600 dark:text-indigo-400">value($column)</code></td>
-            <td class="border border-gray-300 dark:border-gray-600 px-3 py-2">Получает значение только одной конкретной
+            <td class="border border-gray-300 dark:border-gray-600 px-3 py-2">Получает значение только одной
+              конкретной
               колонки из первой найденной записи (минуя создание объекта модели).</td>
           </tr>
           <tr>
             <td class="border border-gray-300 dark:border-gray-600 px-3 py-2 bg-gray-50 dark:bg-gray-900/50"><code
                 class="text-indigo-600 dark:text-indigo-400">pluck($column, $key)</code></td>
-            <td class="border border-gray-300 dark:border-gray-600 px-3 py-2">Возвращает коллекцию, состоящую только из
-              значений указанной колонки. Если передан $key, то коллекция будет ассоциированной (ключ => значение).</td>
+            <td class="border border-gray-300 dark:border-gray-600 px-3 py-2">Возвращает коллекцию, состоящую только
+              из
+              значений указанной колонки. Если передан $key, то коллекция будет ассоциированной (ключ => значение).
+            </td>
           </tr>
         </table>
 
         <h3 class="text-lg font-semibold text-gray-900 dark:text-gray-100 mt-4 mb-1">Подробный поиск</h3>
-        <p class="text-gray-600 dark:text-gray-400 text-sm mb-2">а. Все варианты фильтрации (WHERE условия)</p>
+        <p id="where" class="text-gray-600 dark:text-gray-400 text-sm mb-2">а. Все варианты фильтрации (WHERE
+          условия)</p>
         <table
           class="w-full border-collapse border border-gray-400 dark:border-gray-700 text-sm mb-6 text-gray-800 dark:text-gray-200">
           <tr>
-            <td class="w-1/3 border border-gray-300 dark:border-gray-600 px-3 py-2 bg-gray-50 dark:bg-gray-900/50"><code
-                class="text-indigo-600 dark:text-indigo-400">where($col, $op, $val)</code></td>
+            <td class="w-1/3 border border-gray-300 dark:border-gray-600 px-3 py-2 bg-gray-50 dark:bg-gray-900/50">
+              <code class="text-indigo-600 dark:text-indigo-400">where($col, $op, $val)</code>
+            </td>
             <td class="border border-gray-300 dark:border-gray-600 px-3 py-2">
               Базовый метод. <br>
               <span class="text-xs text-gray-500"><code
                   class="bg-gray-100 dark:bg-gray-800 px-1 rounded">where('status', 'active')</code>
                 (равенство)</span><br>
               <span class="text-xs text-gray-500"><code class="bg-gray-100 dark:bg-gray-800 px-1 rounded">where('votes',
-                  '>=', 100)</code> (с оператором)</span>
-        </td>
-    </tr>
-    <tr>
-        <td class="border border-gray-300 dark:border-gray-600 px-3 py-2 bg-gray-50 dark:bg-gray-900/50"><code class="text-indigo-600 dark:text-indigo-400">orWhere($col, $op, $val)</code></td>
-        <td class="border border-gray-300 dark:border-gray-600 px-3 py-2">Добавляет условие OR (ИЛИ).</td>
-    </tr>
-    <tr>
-        <td class="border border-gray-300 ask-dark border-gray-600 px-3 py-2 bg-gray-50 dark:bg-gray-900/50"><code class="text-indigo-600 dark:text-indigo-400">whereNot($col, $op, $val)</code></td>
-        <td class="border border-gray-300 dark:border-gray-600 px-3 py-2">Инвертирует условие (отрицание NOT).</td>
-    </tr>
-    <tr>
-        <td class="border border-gray-300 dark:border-gray-600 px-3 py-2 bg-gray-50 dark:bg-gray-900/50"><code class="text-indigo-600 dark:text-indigo-400">whereIn() / whereNotIn()</code></td>
-        <td class="border border-gray-300 dark:border-gray-600 px-3 py-2">Проверяет, входит ли значение в массив: <code class="text-xs bg-gray-100 dark:bg-gray-800 px-1 rounded">whereIn('id',
+                  '>=', 100)</code> (с оператором)</span>        </td>
+            </tr>
+            <tr>
+                <td class="border border-gray-300 dark:border-gray-600 px-3 py-2 bg-gray-50 dark:bg-gray-900/50"><code class="text-indigo-600 dark:text-indigo-400">orWhere($col, $op, $val)</code></td>
+                <td class="border border-gray-300 dark:border-gray-600 px-3 py-2">Добавляет условие OR (ИЛИ).</td>
+            </tr>
+            <tr>
+                <td class="border border-gray-300 ask-dark border-gray-600 px-3 py-2 bg-gray-50 dark:bg-gray-900/50"><code class="text-indigo-600 dark:text-indigo-400">whereNot($col, $op, $val)</code></td>
+                <td class="border border-gray-300 dark:border-gray-600 px-3 py-2">Инвертирует условие (отрицание NOT).</td>
+            </tr>
+            <tr>
+                <td class="border border-gray-300 dark:border-gray-600 px-3 py-2 bg-gray-50 dark:bg-gray-900/50"><code class="text-indigo-600 dark:text-indigo-400">whereIn() / whereNotIn()</code></td>
+                <td class="border border-gray-300 dark:border-gray-600 px-3 py-2">Проверяет, входит ли значение в массив: <code class="text-xs bg-gray-100 dark:bg-gray-800 px-1 rounded">whereIn('id',
                   [1, 2, 3])</code>.
             </td>
           </tr>
@@ -147,12 +184,13 @@
           </tr>
         </table>
 
-        <p class="text-gray-600 dark:text-gray-400 text-sm mb-2">b. Сортировка, Группировка и Лимиты</p>
+        <p id="sort" class="text-gray-600 dark:text-gray-400 text-sm mb-2">b. Сортировка, Группировка и Лимиты</p>
         <table
           class="w-full border-collapse border border-gray-400 dark:border-gray-700 text-sm mb-6 text-gray-800 dark:text-gray-200">
           <tr>
-            <td class="w-1/3 border border-gray-300 dark:border-gray-600 px-3 py-2 bg-gray-50 dark:bg-gray-900/50"><code
-                class="text-indigo-600 dark:text-indigo-400">orderBy($col, $direction)</code></td>
+            <td class="w-1/3 border border-gray-300 dark:border-gray-600 px-3 py-2 bg-gray-50 dark:bg-gray-900/50">
+              <code class="text-indigo-600 dark:text-indigo-400">orderBy($col, $direction)</code>
+            </td>
             <td class="border border-gray-300 dark:border-gray-600 px-3 py-2">Сортировка по полю (<code
                 class="text-xs">asc</code> — по возрастанию, <code class="text-xs">desc</code> — по убыванию).</td>
           </tr>
@@ -183,7 +221,8 @@
           <tr>
             <td class="border border-gray-300 dark:border-gray-600 px-3 py-2 bg-gray-50 dark:bg-gray-900/50"><code
                 class="text-indigo-600 dark:text-indigo-400">take($val) / limit($val)</code></td>
-            <td class="border border-gray-300 dark:border-gray-600 px-3 py-2">Ограничивает количество возвращаемых строк
+            <td class="border border-gray-300 dark:border-gray-600 px-3 py-2">Ограничивает количество возвращаемых
+              строк
               (на уровне SQL конструкции LIMIT).</td>
           </tr>
           <tr>
@@ -194,7 +233,9 @@
           </tr>
         </table>
 
-        <p class="text-gray-600 dark:text-gray-400 text-sm mb-2">c. Агрегатные методы (Запросы, возвращающие числа)</p>
+        <p id="count" class="text-gray-600 dark:text-gray-400 text-sm mb-2">c. Агрегатные методы (Запросы,
+          возвращающие числа)
+        </p>
         <p class="text-xs text-gray-500 mb-2">Эти методы завершают цепочку запроса (как и метод get()), но возвращают
           не коллекции, а число или булево значение.</p>
         <table
@@ -227,7 +268,8 @@
           <tr>
             <td class="border border-gray-300 dark:border-gray-600 px-3 py-2 bg-gray-50 dark:bg-gray-900/50"><code
                 class="text-indigo-600 dark:text-indigo-400">exists()</code></td>
-            <td class="border border-gray-300 dark:border-gray-600 px-3 py-2">Возвращает true, если в базе есть хотя бы
+            <td class="border border-gray-300 dark:border-gray-600 px-3 py-2">Возвращает true, если в базе есть хотя
+              бы
               одна строка, удовлетворяющая условиям (работает быстрее, чем проверка count() > 0).</td>
           </tr>
           <tr>
@@ -238,7 +280,7 @@
           </tr>
         </table>
 
-        <p class="text-gray-600 dark:text-gray-400 text-sm mb-2">d. Постраничный вывод (Пагинация)</p>
+        <p id="pagination" class="text-gray-600 dark:text-gray-400 text-sm mb-2">d. Постраничный вывод (Пагинация)</p>
         <p class="text-xs text-gray-500 mb-2">Используются вместо метода get() в самом конце цепочки условий.</p>
         <table
           class="w-full border-collapse border border-gray-400 dark:border-gray-700 text-sm mb-6 text-gray-800 dark:text-gray-200">
@@ -253,13 +295,14 @@
           <tr>
             <td class="border border-gray-300 dark:border-gray-600 px-3 py-2 bg-gray-50 dark:bg-gray-900/50"><code
                 class="text-indigo-600 dark:text-indigo-400">simplePaginate($perPage)</code></td>
-            <td class="border border-gray-300 dark:border-gray-600 px-3 py-2">Упрощенная пагинация (в шаблоне выводятся
+            <td class="border border-gray-300 dark:border-gray-600 px-3 py-2">Упрощенная пагинация (в шаблоне
+              выводятся
               только кнопки «Назад» и «Вперед», без номеров страниц). Работает значительно быстрее на огромных объемах
               данных.</td>
           </tr>
         </table>
 
-        <p class="text-gray-600 dark:text-gray-400 text-sm mb-2">e. Условные запросы (По ЛП)</p>
+        <p id="when" class="text-gray-600 dark:text-gray-400 text-sm mb-2">e. Условные запросы (По ЛП)</p>
         <table
           class="w-full border-collapse border border-gray-400 dark:border-gray-700 text-sm mb-4 text-gray-800 dark:text-gray-200">
           <tr>
@@ -288,21 +331,25 @@
           &nbsp;&nbsp;&nbsp;&nbsp;-&gt;get();
         </div>
 
-        <p class="text-gray-600 dark:text-gray-400 text-sm mb-2">f. Переход от Модели к Конструктору</p>
+        <p id="query" class="text-gray-600 dark:text-gray-400 text-sm mb-2">f. Переход от Модели к Конструктору
+        </p>
         <table
           class="w-full border-collapse border border-gray-400 dark:border-gray-700 text-sm mb-8 text-gray-800 dark:text-gray-200">
           <tr>
             <td class="w-1/3 border border-gray-300 dark:border-gray-600 px-3 py-2 bg-gray-50 dark:bg-gray-900/50">
               <code class="text-indigo-600 dark:text-indigo-400">query()</code>
             </td>
-            <td class="border border-gray-300 dark:border-gray-600 px-3 py-2">Хорошая практика начинать сложные цепочки
-              запросов с этого метода: <code class="text-xs">Visitor::query()->where(...)->get();</code>. Помогает IDE
+            <td class="border border-gray-300 dark:border-gray-600 px-3 py-2">Хорошая практика начинать сложные
+              цепочки
+              запросов с этого метода: <code class="text-xs">Visitor::query()->where(...)->get();</code>. Помогает
+              IDE
               лучше понимать контекст и автодополнение методов Eloquent.</td>
           </tr>
         </table>
 
 
-        <h2 class="text-xl font-bold text-gray-900 dark:text-gray-100 mt-6 mb-2">2. Методы создания и сохранения
+        <h2 id="create" class="text-xl font-bold text-gray-900 dark:text-gray-100 mt-6 mb-2">2. Методы создания и
+          сохранения
           (Insert / Update)</h2>
         <p class="text-gray-600 dark:text-gray-400 mb-4">Методы для добавления новых данных в таблицы или обновления
           уже существующих записей.</p>
@@ -312,7 +359,8 @@
             <td class="w-1/3 border border-gray-300 dark:border-gray-600 px-3 py-2 bg-gray-50 dark:bg-gray-900/50">
               <code class="text-indigo-600 dark:text-indigo-400">save(array $options)</code>
             </td>
-            <td class="border border-gray-300 dark:border-gray-600 px-3 py-2">Универсальный метод объекта. Если модель
+            <td class="border border-gray-300 dark:border-gray-600 px-3 py-2">Универсальный метод объекта. Если
+              модель
               новая — выполняет INSERT. Если объект был ранее подгружен из базы — выполняет UPDATE измененных полей.
             </td>
           </tr>
@@ -346,15 +394,18 @@
           <tr>
             <td class="border border-gray-300 dark:border-gray-600 px-3 py-2 bg-gray-50 dark:bg-gray-900/50"><code
                 class="text-indigo-600 dark:text-indigo-400">touch()</code></td>
-            <td class="border border-gray-300 dark:border-gray-600 px-3 py-2">Принудительно обновляет только временную
+            <td class="border border-gray-300 dark:border-gray-600 px-3 py-2">Принудительно обновляет только
+              временную
               метку (таймстэмп) <code class="text-xs">updated_at</code> текущей записи в базе.</td>
           </tr>
         </table>
 
 
-        <h2 class="text-xl font-bold text-gray-900 dark:text-gray-100 mt-6 mb-2">3. Умные методы «Найди или Создай /
+        <h2 id="searchAndCreate" class="text-xl font-bold text-gray-900 dark:text-gray-100 mt-6 mb-2">3. Умные методы
+          «Найди или Создай /
           Обнови»</h2>
-        <p class="text-gray-600 dark:text-gray-400 mb-4">Помогают избавиться от написания лишних конструкций условий с
+        <p class="text-gray-600 dark:text-gray-400 mb-4">Помогают избавиться от написания лишних конструкций условий
+          с
           ветвлением if/else.</p>
         <table
           class="w-full border-collapse border border-gray-400 dark:border-gray-700 text-sm mb-8 text-gray-800 dark:text-gray-200">
@@ -377,26 +428,30 @@
           <tr>
             <td class="border border-gray-300 dark:border-gray-600 px-3 py-2 bg-gray-50 dark:bg-gray-900/50"><code
                 class="text-indigo-600 dark:text-indigo-400">updateOrCreate(array $attr, array $values)</code></td>
-            <td class="border border-gray-300 dark:border-gray-600 px-3 py-2">Ищет строку по $attributes. Если находит
+            <td class="border border-gray-300 dark:border-gray-600 px-3 py-2">Ищет строку по $attributes. Если
+              находит
               — обновляет её поля данными из массива $values. Если не находит — создает новую запись.</td>
           </tr>
         </table>
 
 
-        <h2 class="text-xl font-bold text-gray-900 dark:text-gray-100 mt-6 mb-2">4. Методы удаления (Delete)</h2>
+        <h2 id="delete" class="text-xl font-bold text-gray-900 dark:text-gray-100 mt-6 mb-2">4. Методы удаления
+          (Delete)</h2>
         <table
           class="w-full border-collapse border border-gray-400 dark:border-gray-700 text-sm mb-8 text-gray-800 dark:text-gray-200">
           <tr>
             <td class="w-1/3 border border-gray-300 dark:border-gray-600 px-3 py-2 bg-gray-50 dark:bg-gray-900/50">
               <code class="text-indigo-600 dark:text-indigo-400">delete()</code>
             </td>
-            <td class="border border-gray-300 dark:border-gray-600 px-3 py-2">Удаляет текущую выбранную запись из базы
+            <td class="border border-gray-300 dark:border-gray-600 px-3 py-2">Удаляет текущую выбранную запись из
+              базы
               данных (вызывается строго на объекте модели).</td>
           </tr>
           <tr>
             <td class="border border-gray-300 dark:border-gray-600 px-3 py-2 bg-gray-50 dark:bg-gray-900/50"><code
                 class="text-indigo-600 dark:text-indigo-400">destroy($ids)</code></td>
-            <td class="border border-gray-300 dark:border-gray-600 px-3 py-2">Статический метод. Быстро удаляет записи
+            <td class="border border-gray-300 dark:border-gray-600 px-3 py-2">Статический метод. Быстро удаляет
+              записи
               по их ID без предварительной загрузки моделей в память. Принимает один ID, массив идентификаторов <code
                 class="text-xs">destroy([1, 2, 3])</code> или коллекцию.</td>
           </tr>
@@ -404,15 +459,18 @@
             <td class="border border-gray-300 dark:border-gray-600 px-3 py-2 bg-gray-50 dark:bg-gray-900/50"><code
                 class="text-indigo-600 dark:text-indigo-400">forceDelete()</code></td>
             <td class="border border-gray-300 dark:border-gray-600 px-3 py-2">Принудительно и безвозвратно удаляет
-              запись из таблицы физически, если в текущей модели активирован функционал мягкого удаления (SoftDeletes).
+              запись из таблицы физически, если в текущей модели активирован функционал мягкого удаления
+              (SoftDeletes).
             </td>
           </tr>
         </table>
 
 
-        <h2 class="text-xl font-bold text-gray-900 dark:text-gray-100 mt-6 mb-2">5. Методы работы с Мягким удалением
+        <h2 id="softDelete" class="text-xl font-bold text-gray-900 dark:text-gray-100 mt-6 mb-2">5. Методы работы с
+          Мягким удалением
           (Soft Deletes)</h2>
-        <p class="text-gray-600 dark:text-gray-400 text-sm mb-4">Данные методы доступны только при условии подключения
+        <p class="text-gray-600 dark:text-gray-400 text-sm mb-4">Данные методы доступны только при условии
+          подключения
           в классе модели трейта: <code class="text-xs font-mono bg-gray-100 dark:bg-gray-800 px-1 rounded">use
             Illuminate\Database\Eloquent\SoftDeletes;</code>.</p>
         <table
@@ -436,7 +494,8 @@
           <tr>
             <td class="border border-gray-300 dark:border-gray-600 px-3 py-2 bg-gray-50 dark:bg-gray-900/50"><code
                 class="text-indigo-600 dark:text-indigo-400">restore()</code></td>
-            <td class="border border-gray-300 dark:border-gray-600 px-3 py-2">Восстанавливает мягко удаленную запись на
+            <td class="border border-gray-300 dark:border-gray-600 px-3 py-2">Восстанавливает мягко удаленную запись
+              на
               уровне БД (полностью очищает значение поля <code class="text-xs">deleted_at</code>).</td>
           </tr>
           <tr>
@@ -449,7 +508,8 @@
         </table>
 
 
-        <h2 class="text-xl font-bold text-gray-900 dark:text-gray-100 mt-6 mb-2">6. Проверка состояния модели (Dirty,
+        <h2 id="property" class="text-xl font-bold text-gray-900 dark:text-gray-100 mt-6 mb-2">6. Проверка состояния
+          модели (Dirty,
           Clean, Original)</h2>
         <p class="text-gray-600 dark:text-gray-400 text-sm mb-4">Используются в логике, когда необходимо отследить
           изменения полей модели до момента фиксации данных в БД.</p>
@@ -459,7 +519,8 @@
             <td class="w-1/3 border border-gray-300 dark:border-gray-600 px-3 py-2 bg-gray-50 dark:bg-gray-900/50">
               <code class="text-indigo-600 dark:text-indigo-400">isDirty($attributes)</code>
             </td>
-            <td class="border border-gray-300 dark:border-gray-600 px-3 py-2">Возвращает true, если какие-либо свойства
+            <td class="border border-gray-300 dark:border-gray-600 px-3 py-2">Возвращает true, если какие-либо
+              свойства
               модели (или конкретное поле) были изменены в коде, но изменения еще не сохранены в базу данных.</td>
           </tr>
           <tr>
@@ -472,7 +533,8 @@
           <tr>
             <td class="border border-gray-300 dark:border-gray-600 px-3 py-2 bg-gray-50 dark:bg-gray-900/50"><code
                 class="text-indigo-600 dark:text-indigo-400">wasChanged($attributes)</code></td>
-            <td class="border border-gray-300 dark:border-gray-600 px-3 py-2">Возвращает true, если указанные поля были
+            <td class="border border-gray-300 dark:border-gray-600 px-3 py-2">Возвращает true, если указанные поля
+              были
               изменены во время выполнения последнего сохранения (<code class="text-xs">save()</code> или <code
                 class="text-xs">update()</code>) в текущем цикле выполнения скрипта.</td>
           </tr>
@@ -486,7 +548,8 @@
         </table>
 
 
-        <h2 class="text-xl font-bold text-gray-900 dark:text-gray-100 mt-6 mb-2">7. Методы отношений (Relationships /
+        <h2 id="relations" class="text-xl font-bold text-gray-900 dark:text-gray-100 mt-6 mb-2">7. Методы отношений
+          (Relationships /
           Загрузка связей)</h2>
         <p class="text-gray-600 dark:text-gray-400 text-sm mb-4">Применяются для оптимизации структуры запросов к
           связанным таблицам БД.</p>
@@ -517,7 +580,8 @@
           <tr>
             <td class="border border-gray-300 dark:border-gray-600 px-3 py-2 bg-gray-50 dark:bg-gray-900/50"><code
                 class="text-indigo-600 dark:text-indigo-400">loadMissing($relations)</code></td>
-            <td class="border border-gray-300 dark:border-gray-600 px-3 py-2">Дополнительно подгружает указанную связь
+            <td class="border border-gray-300 dark:border-gray-600 px-3 py-2">Дополнительно подгружает указанную
+              связь
               для модели только в том случае, если она не была загружена у этого объекта ранее.</td>
           </tr>
           <tr>
@@ -542,12 +606,14 @@
                 class="text-indigo-600 dark:text-indigo-400">whereHas($rel, Closure)</code></td>
             <td class="border border-gray-300 dark:border-gray-600 px-3 py-2">Более мощная вариация метода <code
                 class="text-xs">has</code>. Позволяет наложить специфические условия фильтрации на связанную таблицу
-              внутри замыкания (Например: выбрать пользователей, имеющих посты, созданные строго в текущем месяце).</td>
+              внутри замыкания (Например: выбрать пользователей, имеющих посты, созданные строго в текущем месяце).
+            </td>
           </tr>
         </table>
 
 
-        <h2 class="text-xl font-bold text-gray-900 dark:text-gray-100 mt-6 mb-2">8. Преобразование данных
+        <h2 id="serialization" class="text-xl font-bold text-gray-900 dark:text-gray-100 mt-6 mb-2">8. Преобразование
+          данных
           (Сериализация)</h2>
         <table
           class="w-full border-collapse border border-gray-400 dark:border-gray-700 text-sm mb-6 text-gray-800 dark:text-gray-200">
@@ -555,7 +621,8 @@
             <td class="w-1/3 border border-gray-300 dark:border-gray-600 px-3 py-2 bg-gray-50 dark:bg-gray-900/50">
               <code class="text-indigo-600 dark:text-indigo-400">toArray()</code>
             </td>
-            <td class="border border-gray-300 dark:border-gray-600 px-3 py-2">Превращает объект модели (включая все её
+            <td class="border border-gray-300 dark:border-gray-600 px-3 py-2">Превращает объект модели (включая все
+              её
               предварительно загруженные связи) в стандартный ассоциативный массив PHP.</td>
           </tr>
           <tr>
@@ -567,12 +634,27 @@
           <tr>
             <td class="border border-gray-300 dark:border-gray-600 px-3 py-2 bg-gray-50 dark:bg-gray-900/50"><code
                 class="text-indigo-600 dark:text-indigo-400">replicate()</code></td>
-            <td class="border border-gray-300 dark:border-gray-600 px-3 py-2">Клонирует текущую модель. Создает точную
+            <td class="border border-gray-300 dark:border-gray-600 px-3 py-2">Клонирует текущую модель. Создает
+              точную
               копию существующего объекта в оперативной памяти, очищая поля первичного ключа (<code
                 class="text-xs">id</code>) и временных меток, полностью подготавливая объект к сохранению в качестве
               новой независимой записи.</td>
           </tr>
         </table>
+
+
+        <h2 id="serialization" class="text-xl font-bold text-gray-900 dark:text-gray-100 mt-6 mb-2">Прочее</h2>
+        <table
+          class="w-full border-collapse border border-gray-400 dark:border-gray-700 text-sm mb-6 text-gray-800 dark:text-gray-200">
+          <tr>
+            <td class="w-1/3 border border-gray-300 dark:border-gray-600 px-3 py-2 bg-gray-50 dark:bg-gray-900/50">Telegram</td>
+            <td class="border border-gray-300 dark:border-gray-600 px-3 py-2 bg-gray-50 dark:bg-gray-900/50">
+              Register - https://api.telegram.org/bot{API-key}/setWebhook?url=https://{your-web-site.com}/api/tg <br>
+              Check - https://api.telegram.org/bot{API-key}/getWebhookInfo
+            </td>
+          </tr>
+        </table>
+
 
       </div>
     </div>
