@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use PhpOffice\PhpSpreadsheet\IOFactory;
 use App\Imports\KeyImport;
 use App\Models\Key;
+use App\Models\Schedule;
 use Illuminate\Support\Facades\Auth;
 
 
@@ -108,22 +109,40 @@ class KeyController extends Controller
     public function test()
     {
 
-        if (Auth::user()->role !== 'admin') return redirect()->route('index');
+        // if (Auth::user()->role !== 'admin') return redirect()->route('index');
 
-        $districtNames = [
-            'ct' => 'Город',
-            '8' => '8 мкр',
-            '11' => '11 мкр',
-            '12' => '12 мкр',
-            'old' => 'Старый город',
-            'far' => 'Дальние',
-        ];
+        // $districtNames = [
+        //     'ct' => 'Город',
+        //     '8' => '8 мкр',
+        //     '11' => '11 мкр',
+        //     '12' => '12 мкр',
+        //     'old' => 'Старый город',
+        //     'far' => 'Дальние',
+        // ];
 
-        $data = Key::orderBy('id')
-            ->get()
-            ->groupBy('district')->mapWithKeys(function ($data, $index) use ($districtNames) {
-                return [$districtNames[$index] ?? "Неизвестный район ($index)" => $data];
-            });
+        // $data = Key::orderBy('id')
+        //     ->get()
+        //     ->groupBy('district')->mapWithKeys(function ($data, $index) use ($districtNames) {
+        //         return [$districtNames[$index] ?? "Неизвестный район ($index)" => $data];
+        //     });
+
+        $data0 = Schedule::where('year', now()->year)
+            ->where('month', now()->month)
+            ->get();
+
+        // $data['worker_name'] = $data0->pluck('worker_name');
+
+
+        $data = [];
+
+        foreach ($data0 as $index => $item) {
+            if ($item['schedule_data'][now()->day - 1] === '+') {
+                $data['working'][] = explode(' ', $item['worker_name'])[1];
+            }
+            if ($item['schedule_data'][now()->day - 1] === 'D') {
+                $data['onDuty'][] = explode(' ', $item['worker_name'])[1];
+            }
+        }
 
         return view('test', compact('data'));
     }

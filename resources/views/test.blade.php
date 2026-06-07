@@ -11,9 +11,13 @@
 <body>
 
   <div class="CONTENT min-h-screen flex flex-col bg-gray-100 dark:bg-gray-900 dark:text-gray-100">
+    <div class="w-6xl mx-auto py-10">
 
 
-    <table class="w-full border-collapse border border-gray-400 dark:border-gray-700 text-sm">
+
+    @dump($data)
+
+    {{-- <table class="w-full border-collapse border border-gray-400 dark:border-gray-700 text-sm">
       @foreach ($data as $index => $district)
         @foreach ($district as $item)
           <tr>
@@ -24,9 +28,9 @@
           </tr>
         @endforeach
       @endforeach
-    </table>
+    </table> --}}
 
-
+    </div>
   </div>
 
 </body>

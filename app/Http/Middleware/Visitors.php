@@ -36,8 +36,8 @@ class Visitors
 
         $visitor = [
             'ip'         => $request->ip(),
-            'user'       => Auth::user()->name ?? 'NR',
-            'userAgent'  => $request->userAgent(),
+            'user'       => Auth::user()->name ?? 'NotReg',
+            'userAgent'  => $request->userAgent() ?? 'NoUsAg',
             'url'        => $request->path(),
         ];
 

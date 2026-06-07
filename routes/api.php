@@ -1,6 +1,6 @@
 <?php
 
-use App\Http\Controllers\ScheduleController;
+use App\Http\Controllers\TgController;
 use Illuminate\Support\Facades\Route;
 
-Route::post('tg', [ScheduleController::class, 'tgTest']);
+Route::post('tg', [TgController::class, 'tgTest']);
