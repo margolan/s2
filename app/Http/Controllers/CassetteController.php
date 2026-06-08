@@ -10,7 +10,10 @@ class CassetteController extends Controller
     public function index(Request $request)
     {
 
+
         if ($request->isMethod('post')) {
+
+            $searchingRow = Cassette::where('number', $request->number)->latest()->first();
 
             $validated = $request->validate([
                 'number' => 'required',
@@ -20,7 +23,6 @@ class CassetteController extends Controller
                 'type.in' => 'Неверный тип записи'
             ]);
 
-            $searchingRow = Cassette::where('number', $request->number)->first();
 
             if ($searchingRow && $searchingRow->created_at->isToday()) {
 
@@ -31,6 +33,7 @@ class CassetteController extends Controller
 
                 return redirect()->back()->with('status', 'Кассета ' . $request->number . ' добавлена');
             }
+
         }
 
 
@@ -45,7 +48,7 @@ class CassetteController extends Controller
     public function delete(Request $request)
     {
 
-        $row = Cassette::where('number', $request->number)->first();
+        $row = Cassette::where('id', $request->id)->first();
 
         $row->delete();
 
