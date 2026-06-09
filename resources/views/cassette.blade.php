@@ -22,6 +22,8 @@
     </div>
   @endif
 
+
+
   @if ($errors->any())
     <div class="w-full absolute top-0 left-0 flex items-center justify-center" x-data="{ show: true }" x-show="show"
       x-transition x-init="setTimeout(() => show = false, 1000)">
@@ -53,7 +55,8 @@
             <option value="repaired">Закрытие</option>
             <option value="incoming">Приход</option>
           </select>
-          <input type="text" name="number" class="w-full dark:bg-neutral-600 dark:text-neutral-300 rounded-md">
+          <input type="text" name="number" class="w-full dark:bg-neutral-600 dark:text-neutral-300 rounded-md"
+            autofocus>
           <input type="submit" value="Добавить"
             class="px-5 py-2 dark:bg-neutral-200 dark:text-neutral-800 text-sm rounded-md">
         </form>
@@ -73,7 +76,7 @@
                       clip-rule="evenodd" />
                   </svg>
                 </span>
-                {{ \Carbon\Carbon::create($index)->format('j.m.Y') }} ( {{ count($date['repaired']?? []) }} )
+                {{ \Carbon\Carbon::create($index)->format('j.m.Y') }} ( {{ count($date['repaired'] ?? []) }} )
               </div>
               <table class="w-full border-collapse border border-gray-400 dark:border-gray-700 text-sm">
                 <thead>
@@ -88,7 +91,8 @@
                   <tr class="hover:bg-emerald-800/50 odd:bg-neutral-700/50">
                     <td class="border border-gray-400 dark:border-gray-700 px-2 py-1 text-center">
                       {{ $loop->count - $loop->index }}</td>
-                    <td class="border border-gray-400 dark:border-gray-700 px-2 py-1">{{ $item->number }}</td>
+                    <td class="border border-gray-400 dark:border-gray-700 px-2 py-1">
+                      {{ $item->number }}{{ $item->var1 ? ", повтор от $item->var1" : '' }}</td>
                     <td class="border border-gray-400 dark:border-gray-700 px-2 py-1 text-center">
                       {{ $item->created_at->format('H:i:s') }}
                     </td>

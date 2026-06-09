@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Cassette;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 
 class CassetteController extends Controller
@@ -13,7 +14,7 @@ class CassetteController extends Controller
 
         if ($request->isMethod('post')) {
 
-            $searchingRow = Cassette::where('number', $request->number)->latest()->first();
+            $searchingRow = Cassette::where('number', $request->number)->orderBy('created_at', 'desc')->get();
 
             $validated = $request->validate([
                 'number' => 'required',
@@ -24,25 +25,37 @@ class CassetteController extends Controller
             ]);
 
 
-            if ($searchingRow && $searchingRow->created_at->isToday()) {
+            if ($searchingRow->isNotEmpty()) {
 
-                return redirect()->back()->with('status', 'Кассета ' . $request->number . ' уже существует');
+                if ($searchingRow->first()->created_at->format('Y-m-d') !== now()->format('Y-m-d')) {
+
+                    $validated['var1'] = $searchingRow->first()->created_at->format('d.m.Y');
+
+                    Cassette::create($validated);
+
+                    return redirect()->back()->with('status', 'Кассета ' . $request->number . ' добавлена');
+                } else {
+
+                    return redirect()->back()->with('status', 'Кассета ' . $request->number . ' уже существует');
+                }
             } else {
 
                 Cassette::create($validated);
 
                 return redirect()->back()->with('status', 'Кассета ' . $request->number . ' добавлена');
             }
-
         }
 
+        $startPerion = now()->subMonth();
 
-        $cassettes = Cassette::orderBy('created_at', 'desc')->get()
+        $endPerion = now()->endOfDay();
+
+        $cassettes = Cassette::whereBetween('created_at', [$startPerion, $endPerion])->orderBy('created_at', 'desc')->get()
             ->groupBy([function ($item) {
                 return $item->created_at->format('Y-m-d');
             }, 'type']);
 
-        return view('cassette', ['cassettes' => $cassettes]);
+        return view('cassette', ['cassettes' => $cassettes, 'test' => $startPerion]);
     }
 
     public function delete(Request $request)
