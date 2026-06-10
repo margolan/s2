@@ -31,7 +31,7 @@
           @endif
 
           @if (session('status'))
-            <div class="w-full absolute py-2 top-0 flex items-center justify-center" x-data="{ show: true }"
+            <div class="w-full absolute py-2 top-0 left-0 flex items-center justify-center" x-data="{ show: true }"
               x-show="show" x-transition x-init="setTimeout(() => show = false, 6000)">
               <div class="min-w-32 bg-amber-500 text-sm px-5 py-2 flex items-center text-black rounded-lg mr-3">
                 <p>{{ session('status') }}</p>
