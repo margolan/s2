@@ -46,6 +46,15 @@ class DatabaseSeeder extends Seeder
                     'city' => 'aktobe',
                     'active' => '1',
                 ],
+                [
+                    'name' => 'ter1',
+                    'email' => 'ter1@0x0.kz',
+                    'password' => '$2y$12$sWesmOPpy7qM/5pJzmk9TeEKfiqAx1PI9pL2fGdzglLLinYxJ7WjK',
+                    'role' => 'se',
+                    'depart' => 'ter',
+                    'city' => 'aktobe',
+                    'active' => '1',
+                ],
             ]
         );
     }

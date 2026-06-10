@@ -33,8 +33,8 @@
     {{-- SEARCH --}}
 
     <div class="py-5">
-      <input type="search" class="w-full dark:bg-gray-600 rounded-md"
-        placeholder="Поис: адрес, PT, Q..." x-model="search">
+      <input type="search" class="w-full dark:bg-gray-600 rounded-md" placeholder="Поис: адрес, PT, Q..."
+        x-model="search">
     </div>
 
     {{-- TABLE --}}
@@ -57,13 +57,19 @@
           </div>
 
           @foreach ($district as $cell)
-            <div class="CONTENT flex gap-3 {{ $cell->is_active ? '' : 'line-through'}} items-center px-3 py-1 hover:bg-gray-700/50 even:bg-gray-800 odd:bg-gray-700"
+            <div
+              class="CONTENT flex gap-3 {{ $cell->is_active ? '' : 'line-through' }} items-center px-3 py-1 hover:bg-gray-700/50 even:bg-gray-800 odd:bg-gray-700"
               x-show="search === '' || 
                 String({{ \Illuminate\Support\Js::from($cell->device_address) }}).toLowerCase().includes(search.toLowerCase()) || 
                 String({{ \Illuminate\Support\Js::from($cell->reg_number) }}).toLowerCase().includes(search.toLowerCase())">
               <div class="w-28 flex items-center">
                 <div class="w-3 h-3 border border-white mr-1 {{ $bgColors[$cell->color] ?? '' }}"></div>
-                <a href="key/edit?d={{ $cell->reg_number}}" class="underline underline-offset-3">{{ $cell->reg_number }}</a>
+                @if (Auth::user()->name === 'ter1')
+                  <a href="key/edit?d={{ $cell->reg_number }}"
+                    class="underline underline-offset-3">{{ $cell->reg_number }}</a>
+                @else
+                  {{ $cell->reg_number }}
+                @endif
               </div>
               <div class="">{{ $cell->device_address }}</div>
               <div class="text-indigo-500">{{ $cell->ip_address ?? 'x' }}</div>

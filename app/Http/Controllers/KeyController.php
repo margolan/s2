@@ -22,19 +22,22 @@ class KeyController extends Controller
                 'pincode' => 'required|digits:4',
             ]);
 
-            $credentials = [
-                'email'    => 'ter@0x0.kz',
-                'password' => $request->pincode
-            ];
+            $users = User::whereIn('email', ['ter@0x0.kz', 'ter1@0x0.kz'])->get();
 
-            if (Auth::attempt($credentials)) {
-                $request->session()->regenerate();
+            foreach ($users as $user) {
+                if (Hash::check($request->pincode, $user->password)) {
 
-                return redirect()->intended(route('key-dashboard'))->with('status', 'Вы авторизованы');
+                    Auth::login($user);
+                    $request->session()->regenerate();
+
+                    return redirect()->intended(route('key-dashboard'))->with('status', 'Вы авторизованы');
+                }
             }
 
             return back()->withErrors([
+
                 'pincode' => 'Неверный пин-код.',
+
             ]);
         }
 
@@ -112,7 +115,7 @@ class KeyController extends Controller
     public function delete(Request $request)
     {
 
-        $pin = User::where('email', 'ter@0x0.kz')->first()->password;
+        $pin = User::where('email', 'ter1@0x0.kz')->first()->password;
 
         if (Hash::check($request->pin, $pin)) {
 

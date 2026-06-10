@@ -31,7 +31,7 @@
           @endif
 
           @if (session('status'))
-            <div class="w-full absolute py-2 top-0 left-0 flex items-center justify-center" x-data="{ show: true }"
+            <div class="w-full absolute py-2 top-0 flex items-center justify-center" x-data="{ show: true }"
               x-show="show" x-transition x-init="setTimeout(() => show = false, 6000)">
               <div class="min-w-32 bg-amber-500 text-sm px-5 py-2 flex items-center text-black rounded-lg mr-3">
                 <p>{{ session('status') }}</p>
@@ -49,38 +49,41 @@
             @endif
           @endisset
 
-          <hr class="my-5">
 
-          {{-- ======================================= [ UPLOAD FORM ] ======================================= --}}
+          {{-- ======================================= [ DELETION FORM ] ======================================= --}}
 
+          @if (Auth::user()->name === 'ter1')
+            @if (!empty($availableKeys))
+              <hr class="my-5">
+              <div>
+                <h2 class="my-5 text-lg">Удалить все ключи</h2>
+                <form action="{{ route('key-delete') }}" method="post">
+                  @method('delete')
+                  @csrf
+                  <input type="hidden" name="batch_id" value="{{ $availableKeys->batch_id }}">
+                  <input type="text" name="pin" class="text-sm dark:bg-gray-800" placeholder="Введите PIN">
+                  <input type="submit"
+                    class="w-max bg-white text-sm dark:text-gray-800 px-3 h-10 cursor-pointer border border-gray-800 mr-5"
+                    value="Удалить">
+                </form>
+              </div>
+              <hr class="my-5">
+            @endif
 
-          @if (!empty($availableKeys))
+            {{-- ======================================= [ UPLOAD FORM ] ======================================= --}}
+
             <div>
-              <h2 class="my-5 text-lg">Удалить все ключи</h2>
-              <form action="{{ route('key-delete') }}" method="post">
-                @method('delete')
+              <h2 class="my-5 text-lg">Добавить данные с Excel</h2>
+              <form action="{{ route('key-store') }}" method="post" enctype="multipart/form-data">
                 @csrf
-                <input type="hidden" name="batch_id" value="{{ $availableKeys->batch_id }}">
-                <input type="text" name="pin" class="text-sm dark:bg-gray-800" placeholder="Введите PIN">
+                <input type="file" class="custom-file-input text-sm w-max dark:text-gray-800" name="file">
                 <input type="submit"
                   class="w-max bg-white text-sm dark:text-gray-800 px-3 h-10 cursor-pointer border border-gray-800 mr-5"
-                  value="Удалить">
+                  value="Загрузить">
               </form>
             </div>
-            <hr class="my-5">
           @endif
 
-
-          <div>
-            <h2 class="my-5 text-lg">Добавить данные с Excel</h2>
-            <form action="{{ route('key-store') }}" method="post" enctype="multipart/form-data">
-              @csrf
-              <input type="file" class="custom-file-input text-sm w-max dark:text-gray-800" name="file">
-              <input type="submit"
-                class="w-max bg-white text-sm dark:text-gray-800 px-3 h-10 cursor-pointer border border-gray-800 mr-5"
-                value="Загрузить">
-            </form>
-          </div>
 
         </div>
       </div>
