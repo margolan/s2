@@ -31,7 +31,7 @@ class TgController extends Controller
         }
 
         $botToken = env('TELEGRAM_BOT_TOKEN');
-        Http::withoutVerifying()->post("https://api.telegram.org/bot{$botToken}/sendMessage", [
+        Http::post("https://api.telegram.org/bot{$botToken}/sendMessage", [
             'chat_id' => $chatId,
             'text'    => $replyText,
         ]);

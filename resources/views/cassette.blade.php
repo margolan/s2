@@ -13,7 +13,7 @@
 
   @if (session('status'))
     <div class="w-full absolute top-0 left-0 flex items-center justify-center" x-data="{ show: true }" x-show="show"
-      x-transition>
+      x-transition x-init="setTimeout(() => show = false, 10000)">
       <div class="min-w-32 bg-amber-500 text-sm px-5 py-2 flex items-center text-black rounded-b-lg mr-3 gap-3">
         <p>{{ session('status') }}</p>
         <div class="w-5 h-5 flex items-center justify-center cursor-pointer rounded-full border border-orange-900"
@@ -22,9 +22,11 @@
     </div>
   @endif
 
+
+
   @if ($errors->any())
     <div class="w-full absolute top-0 left-0 flex items-center justify-center" x-data="{ show: true }" x-show="show"
-      x-transition>
+      x-transition x-init="setTimeout(() => show = false, 1000)">
       <div class="min-w-32 bg-amber-500 text-sm px-5 py-2 flex items-center text-black rounded-b-lg mr-3 gap-3">
         <ul>
           @foreach ($errors->all() as $error)
@@ -53,14 +55,14 @@
             <option value="repaired">Закрытие</option>
             <option value="incoming">Приход</option>
           </select>
-          <input type="text" name="number" class="w-full dark:bg-neutral-600 dark:text-neutral-300 rounded-md">
+          <input type="text" name="number" class="w-full dark:bg-neutral-600 dark:text-neutral-300 rounded-md"
+            autofocus>
           <input type="submit" value="Добавить"
             class="px-5 py-2 dark:bg-neutral-200 dark:text-neutral-800 text-sm rounded-md">
         </form>
 
         {{-- =================== CASSETTES LIST =================== --}}
 
-        @dump($cassettes)
 
         @if ($cassettes)
 
@@ -74,7 +76,7 @@
                       clip-rule="evenodd" />
                   </svg>
                 </span>
-                {{ \Carbon\Carbon::create($index)->format('j.m.Y') }} ( {{ count($date['repaired']) }} )
+                {{ \Carbon\Carbon::create($index)->format('j.m.Y') }} ( {{ count($date['repaired'] ?? []) }} )
               </div>
               <table class="w-full border-collapse border border-gray-400 dark:border-gray-700 text-sm">
                 <thead>
@@ -85,11 +87,12 @@
                     <th class="w-22 border border-gray-400 dark:border-gray-700 py-3 text-center">Действие</td>
                   </tr>
                 </thead>
-                @foreach ($date['repaired'] as $index => $item)
+                @foreach ($date['repaired'] ?? [] as $index => $item)
                   <tr class="hover:bg-emerald-800/50 odd:bg-neutral-700/50">
                     <td class="border border-gray-400 dark:border-gray-700 px-2 py-1 text-center">
                       {{ $loop->count - $loop->index }}</td>
-                    <td class="border border-gray-400 dark:border-gray-700 px-2 py-1">{{ $item->number }}</td>
+                    <td class="border border-gray-400 dark:border-gray-700 px-2 py-1">
+                      {{ $item->number }}{{ $item->var1 ? ", повтор от $item->var1" : '' }}</td>
                     <td class="border border-gray-400 dark:border-gray-700 px-2 py-1 text-center">
                       {{ $item->created_at->format('H:i:s') }}
                     </td>
@@ -98,7 +101,7 @@
                         <form action="{{ route('cassette-delete') }}" method="post">
                           @method('delete')
                           @csrf
-                          <input type="hidden" name="number" value="{{ $item->number }}">
+                          <input type="hidden" name="id" value="{{ $item->id }}">
                           <input type="submit" value="Удалить">
                         </form>
                       @else

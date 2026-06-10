@@ -643,14 +643,120 @@
         </table>
 
 
-        <h2 id="serialization" class="text-xl font-bold text-gray-900 dark:text-gray-100 mt-6 mb-2">Прочее</h2>
+        <h2 id="other" class="text-xl font-bold text-gray-900 dark:text-gray-100 mt-6 mb-2">Прочее</h2>
         <table
           class="w-full border-collapse border border-gray-400 dark:border-gray-700 text-sm mb-6 text-gray-800 dark:text-gray-200">
           <tr>
-            <td class="w-1/3 border border-gray-300 dark:border-gray-600 px-3 py-2 bg-gray-50 dark:bg-gray-900/50">Telegram</td>
+            <td class="w-1/8 border border-gray-300 dark:border-gray-600 px-3 py-2 bg-gray-50 dark:bg-gray-900/50">
+              Telegram</td>
             <td class="border border-gray-300 dark:border-gray-600 px-3 py-2 bg-gray-50 dark:bg-gray-900/50">
-              Register - https://api.telegram.org/bot{API-key}/setWebhook?url=https://{your-web-site.com}/api/tg <br>
-              Check - https://api.telegram.org/bot{API-key}/getWebhookInfo
+              <p>Register - https://api.telegram.org/bot{API-key}/setWebhook?url=https://{your-web-site.com}/api/tg</p>
+              <p>Check - https://api.telegram.org/bot{API-key}/getWebhookInfo</p>
+
+              <hr class="my-3">
+
+              <h3>1. Базовые данные обычного сообщения (message)</h3>
+              <p>Данные отправителя:</p>
+              <ul class="list-disc pl-5 pb-5">
+                <li> $request->input('message.from.id') — уникальный ID самого человека (не чата, а именно
+                  пользователя).
+                </li>
+                <li>
+                  $request->input('message.from.first_name') — имя (например, Margulan).
+                </li>
+                <li>
+                  $request->input('message.from.username') — никнейм без собачки (например, margulan0x0). Если у юзера
+                  нет юзернейма, вернет null.
+                </li>
+                <li>
+                  $request->input('message.from.language_code') — язык интерфейса (например, ru или en).
+                </li>
+              </ul>
+
+              <p>Данные чата:</p>
+              <ul class="list-disc pl-5 pb-5">
+                <li>
+                  $request->input('message.chat.type') — тип чата. Может быть private (личка с ботом), group или
+                  supergroup(групповые чаты), channel (канал).
+                </li>
+                <li>
+                  По ЛП: Если бот работает и в личке, и в группах, проверка типа чата помогает понять, нужно ли отвечать
+                  конкретному человеку или флудить в общую группу.
+                </li>
+              </ul>
+
+              <h3>2. Различные типы контента (Медиа и файлы)</h3>
+
+              <p>Фотографии (photo):</p>
+              <ul class="list-disc pl-5 pb-5">
+                <li>
+                  $request->input('message.photo') — возвращает массив картинок в разных разрешениях (от превью до
+                  оригинала).
+                </li>
+                <li>
+                  Чтобы взять самую четкую (последнюю в массиве) и узнать её ID: $request->input('message.photo.' .
+                  (count($request->input('message.photo', [])) - 1) . '.file_id').
+                </li>
+              </ul>
+
+              <p>Документы и файлы (document):</p>
+              <ul class="list-disc pl-5 pb-5">
+                <li>
+                  $request->input('message.document.file_id') — ID файла для скачивания.
+                </li>
+                <li>
+                  $request->input('message.document.file_name') — реальное имя файла (например, report.pdf).
+                </li>
+                <li>
+                  $request->input('message.document.mime_type') — тип файла (application/pdf, image/png).
+                </li>
+              </ul>
+
+              <p>Голосовые сообщения (voice) и Аудио (audio):</p>
+              <ul class="list-disc pl-5 pb-5">
+                <li>
+                  $request->input('message.voice.file_id') — ID голосовухи.
+                </li>
+                <li>
+                  $request->input('message.voice.duration') — длительность в секундах.
+                </li>
+              </ul>
+
+              <h3>3. Служебные триггеры (Когда в чате что-то происходит)</h3>
+
+              <p>Новый участник в группе (например, бота добавили в чат к геймерам):</p>
+              <ul class="list-disc pl-5 pb-5">
+                <li>
+                  $request->input('message.new_chat_members') — массив с данными пользователей, которые вошли в чат.
+                  Если
+                  там есть is_bot: true и это твой бот, можно отправить в чат приветствие: "Всем привет, я ваш новый
+                  бот!".
+                </li>
+                <li>
+                  Кто-то вышел или кикнули:
+                  $request->input('message.left_chat_member') — данные ушедшего юзера.
+                </li>
+              </ul>
+
+              <h3>4. Нажатия на инлайн-кнопки (callback_query)</h3>
+
+              <ul class="list-disc pl-5 pb-5">
+                <li>
+                  $request->input('callback_query.id') — ID самого клика (нужен, чтобы подтвердить Telegram, что кнопка
+                  нажата).
+                </li>
+                <li>
+                  $request->input('callback_query.from.id') — кто нажал на кнопку.
+                </li>
+                <li>
+                  $request->input('callback_query.data') — самое главное поле. Это секретная строка-команда, которую ты
+                  сам зашил в кнопку при её создании (например, delete_record_5 или accept_pincode).
+                </li>
+                <li>
+                  $request->input('callback_query.message.message_id') — ID сообщения, под которым находилась кнопка
+                  (чтобы твой бот мог, например, отредактировать или удалить это сообщение после нажатия).
+                </li>
+              </ul>
             </td>
           </tr>
         </table>
