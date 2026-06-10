@@ -26,11 +26,13 @@ class KeyImport
             if (empty(array_filter($cells))) continue;
 
             $data[] = [
-                'reg_number'  => $cells[0] ?? null,
-                'device_address' => $cells[1] ?? null,
-                'color'      => $cells[2] ?? 'null',
-                'district'       => $cells[3] ?? null,
-                'batch_id'       => $batch_id,
+                'reg_number'        => $cells[0] ?? null,
+                'device_address'    => $cells[1] ?? null,
+                'color'             => $cells[2] ?? null,
+                'district'          => $cells[3] ?? null,
+                'device_serial'     => $cells[4] ?? null,
+                'device_id'         => $cells[5] ?? null,
+                'batch_id'          => $batch_id,
             ];
         }
 

@@ -53,7 +53,26 @@
 
           {{-- ======================================= [ UPLOAD FORM ] ======================================= --}}
 
+
+          @if (!empty($availableKeys))
+            <div>
+              <h2 class="my-5 text-lg">Удалить все ключи</h2>
+              <form action="{{ route('key-delete') }}" method="post">
+                @method('delete')
+                @csrf
+                <input type="hidden" name="batch_id" value="{{ $availableKeys->batch_id }}">
+                <input type="text" name="pin" class="text-sm dark:bg-gray-800" placeholder="Введите PIN">
+                <input type="submit"
+                  class="w-max bg-white text-sm dark:text-gray-800 px-3 h-10 cursor-pointer border border-gray-800 mr-5"
+                  value="Удалить">
+              </form>
+            </div>
+            <hr class="my-5">
+          @endif
+
+
           <div>
+            <h2 class="my-5 text-lg">Добавить данные с Excel</h2>
             <form action="{{ route('key-store') }}" method="post" enctype="multipart/form-data">
               @csrf
               <input type="file" class="custom-file-input text-sm w-max dark:text-gray-800" name="file">

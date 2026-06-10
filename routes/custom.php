@@ -39,6 +39,7 @@ Route::middleware('check.pin')->group(function () { // Middleware : Check pincod
   Route::get('/dashboard/key', [KeyController::class, 'dashboard'])->name('key-dashboard');
   Route::post('/dashboard/key/store', [KeyController::class, 'store'])->name('key-store');
   Route::match(['get', 'put'], '/dashboard/key/edit', [KeyController::class, 'edit'])->name('key-edit');
+  Route::delete('/dashboard/key/delete', [KeyController::class, 'delete'])->name('key-delete');
 });
 
 
