@@ -61,7 +61,7 @@
               x-show="search === '' || 
                 String({{ \Illuminate\Support\Js::from($cell->device_address) }}).toLowerCase().includes(search.toLowerCase()) || 
                 String({{ \Illuminate\Support\Js::from($cell->reg_number) }}).toLowerCase().includes(search.toLowerCase())">
-              <div class="w-24 flex items-center">
+              <div class="w-28 flex items-center">
                 <div class="w-3 h-3 border border-white mr-1 {{ $bgColors[$cell->color] ?? '' }}"></div>
                 <a href="key/edit?d={{ $cell->reg_number}}" class="underline underline-offset-3">{{ $cell->reg_number }}</a>
               </div>
