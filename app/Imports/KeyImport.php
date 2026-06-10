@@ -30,8 +30,8 @@ class KeyImport
                 'device_address'    => $cells[1] ?? 'null',
                 'color'             => $cells[2] ?? 'null',
                 'district'          => $cells[3] ?? 'null',
-                'device_serial'     => $cells[4] ?? 'null',
-                'device_id'         => $cells[5] ?? 'null',
+                'device_serial'     => $cells[4] ?? null,
+                'device_id'         => $cells[5] ?? null,
                 'batch_id'          => $batch_id,
             ];
         }
