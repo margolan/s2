@@ -129,7 +129,18 @@
                   @foreach ($date['incoming'] ?? [] as $index => $item)
                     <tr>
                       <td class="w-8 border border-gray-400 dark:border-gray-700 px-2 py-1 text-center">*</td>
-                      <td class="border border-gray-400 dark:border-gray-700 px-2 py-1">Приход {{ $item->number }}
+                      <td class="border border-gray-400 dark:border-gray-700 px-2 py-1">Приход {{ $item->number }}</td>
+                      <td class="w-20 border border-gray-400 dark:border-gray-700 px-2 py-1 text-center">
+                        @if ($item->created_at->format('Y-m-d') === now()->format('Y-m-d'))
+                          <form action="{{ route('cassette-delete') }}" method="post">
+                            @method('delete')
+                            @csrf
+                            <input type="hidden" name="id" value="{{ $item->id }}">
+                            <input type="submit" value="Удалить">
+                          </form>
+                        @else
+                          -
+                        @endif
                       </td>
                     </tr>
                   @endforeach
