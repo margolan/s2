@@ -144,7 +144,7 @@
                 <td class="border border-gray-300 dark:border-gray-600 px-3 py-2">Добавляет условие OR (ИЛИ).</td>
             </tr>
             <tr>
-                <td class="border border-gray-300 ask-dark border-gray-600 px-3 py-2 bg-gray-50 dark:bg-gray-900/50"><code class="text-indigo-600 dark:text-indigo-400">whereNot($col, $op, $val)</code></td>
+                <td class="border border-gray-300 dark:border-gray-600 px-3 py-2 bg-gray-50 dark:bg-gray-900/50"><code class="text-indigo-600 dark:text-indigo-400">whereNot($col, $op, $val)</code></td>
                 <td class="border border-gray-300 dark:border-gray-600 px-3 py-2">Инвертирует условие (отрицание NOT).</td>
             </tr>
             <tr>

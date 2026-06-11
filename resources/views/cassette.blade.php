@@ -42,7 +42,7 @@
 
   <div class="h-screen dark:text-gray-300 bg-[url(/public/bg_index.jpg)] bg-center bg-cover">
     <div class="w-full h-full dark:bg-neutral-900/80 flex justify-center overflow-y-scroll">
-      <div class="w-2xl h-max py-10 md:text-left text-center">
+      <div class="w-2xl h-max py-10 md:text-left text-center px-2 md:px-0">
 
 
         <h1 class="w-max text-3xl font-semibold mx-auto my-10">КАССЕТЫ</h1>
@@ -60,6 +60,17 @@
           <input type="submit" value="Добавить"
             class="px-5 py-2 dark:bg-neutral-200 dark:text-neutral-800 text-sm rounded-md">
         </form>
+
+        <div class="text-sm my-10 flex justify-center items-center font-mono">
+          <div class="py-1">
+            <div class="py-1 text-right">С {{ $startPerion->format('d.m.Y') }}</div>
+            <div class="py-1 text-right">По {{ $endPerion->format('d.m.Y') }}</div>
+          </div>
+          <div class="flex">
+            <div class="text-6xl font-extralight -translate-y-2 px-2">}</div>
+            <div class="flex items-center -translate-y-1">{{ $report }} кассет</div>
+          </div>
+        </div>
 
         {{-- =================== CASSETTES LIST =================== --}}
 
@@ -83,8 +94,8 @@
                   <tr>
                     <th class="w-8 border border-gray-400 dark:border-gray-700 py-3 text-center">#</td>
                     <th class="border border-gray-400 dark:border-gray-700 px-2 py-3 text-center">Номер кассеты</td>
-                    <th class="w-23 border border-gray-400 dark:border-gray-700 py-3 text-center">Время</td>
-                    <th class="w-22 border border-gray-400 dark:border-gray-700 py-3 text-center">Действие</td>
+                    <th class="w-20 border border-gray-400 dark:border-gray-700 py-3 text-center">Время</td>
+                    <th class="w-20 border border-gray-400 dark:border-gray-700 py-3 text-center">Действие</td>
                   </tr>
                 </thead>
                 @foreach ($date['repaired'] ?? [] as $index => $item)

@@ -46,6 +46,7 @@ class CassetteController extends Controller
             }
         }
 
+
         $startPerion = now()->subMonth();
 
         $endPerion = now()->endOfDay();
@@ -55,7 +56,15 @@ class CassetteController extends Controller
                 return $item->created_at->format('Y-m-d');
             }, 'type']);
 
-        return view('cassette', ['cassettes' => $cassettes, 'test' => $startPerion]);
+        $report = 0;
+
+        foreach ($cassettes->pluck('incoming') as $cassette) {
+            foreach ($cassette ?? [] as $item) {
+                $report += $item->number ?? 0;
+            }
+        }
+
+        return view('cassette', compact('cassettes', 'report', 'startPerion', 'endPerion'));
     }
 
     public function delete(Request $request)

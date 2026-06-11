@@ -8,7 +8,7 @@
     "src": "public/person.jpg"
   },
   "resources/css/app.css": {
-    "file": "assets/app-CnZ4Z8-U.css",
+    "file": "assets/app-BZVrq2Aq.css",
     "src": "resources/css/app.css",
     "isEntry": true,
     "name": "app",
@@ -17,7 +17,7 @@
     ]
   },
   "resources/js/app.js": {
-    "file": "assets/app-CJy8ASEk.js",
+    "file": "assets/app-BjMeHjpC.js",
     "name": "app",
     "src": "resources/js/app.js",
     "isEntry": true
