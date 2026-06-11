@@ -17,10 +17,8 @@ class CheckPincode
     public function handle(Request $request, Closure $next): Response
     {
 
-        $user = $request->user();
-
-        if (!$user || ($user->depart != 'ter')) {
-            return redirect()->route('key-pincode');
+        if (!Auth::check()) {
+            return redirect()->route('pincode');
         }
 
         return $next($request);

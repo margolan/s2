@@ -5,19 +5,24 @@ use App\Http\Controllers\CassetteController;
 use App\Http\Controllers\IndexController;
 use App\Http\Controllers\KeyController;
 use App\Http\Controllers\ScheduleController;
+use App\Http\Controllers\ServiceController;
 use Illuminate\Support\Facades\Route;
 
-// ====================== INDEX  ======================
+// ====================== COMMON  ======================
 
 Route::get('', [IndexController::class, 'index'])->name('index');
 Route::get('/about', [IndexController::class, 'about'])->name('about');
 Route::get('/help', [IndexController::class, 'help'])->name('help');
+
+
 
 // ====================== ADMIN DASHBOARD ======================
 
 Route::middleware('auth')->group(function () {
   Route::get('/dashboard/admin', [AdminController::class, 'index'])->name('admin-index');
 });
+
+
 
 // ====================== SCHEDULES PROJECT ======================
 
@@ -31,6 +36,8 @@ Route::middleware('auth')->group(function () {
   Route::delete('/dashboard/schedule/delete', [ScheduleController::class, 'delete'])->name('schedule-delete');
 });
 
+
+
 // ====================== KEYS PROJECT ======================
 
 Route::match(['get', 'post'], '/dashboard/key/pincode', [KeyController::class, 'pincode'])->name('key-pincode');
@@ -43,9 +50,20 @@ Route::middleware('check.pin')->group(function () { // Middleware : Check pincod
 });
 
 
+
 // ====================== CASSETTE PROJECT ======================
 
-Route::match(['get', 'post'], '/cassette', [CassetteController::class, 'index'])->name('cassette-index');
-Route::delete('/cassette/delete', [CassetteController::class, 'delete'])->name('cassette-delete');
+Route::middleware('check.pin')->group(function () {
+  Route::match(['get', 'post'], '/cassette', [CassetteController::class, 'index'])->name('cassette-index');
+  Route::delete('/cassette/delete', [CassetteController::class, 'delete'])->name('cassette-delete');
+});
+
+
+
+
+// ====================== SERVICE ROUTES ======================
+
+Route::match(['get', 'post'], '/dashboard/pincode', [ServiceController::class, 'pincode'])->name('pincode');
+
 
 Route::get('/test', [KeyController::class, 'test'])->middleware('auth');

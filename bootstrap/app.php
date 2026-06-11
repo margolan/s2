@@ -12,7 +12,7 @@ return Application::configure(basePath: dirname(__DIR__))
         api: __DIR__ . '/../routes/api.php',
     )
     ->withMiddleware(function (Middleware $middleware): void {
-        $middleware->append(\App\Http\Middleware\Visitors::class);
+        // $middleware->append(\App\Http\Middleware\Visitors::class);
         $middleware->alias([
             'check.pin' => \App\Http\Middleware\CheckPincode::class,
         ]);

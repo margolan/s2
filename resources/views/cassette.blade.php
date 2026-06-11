@@ -11,6 +11,7 @@
 
 <body>
 
+
   @if (session('status'))
     <div class="w-full absolute top-0 left-0 flex items-center justify-center" x-data="{ show: true }" x-show="show"
       x-transition x-init="setTimeout(() => show = false, 10000)">
@@ -67,7 +68,7 @@
             <div class="py-1 text-right">По {{ $endPerion->format('d.m.Y') }}</div>
           </div>
           <div class="flex">
-            <div class="text-6xl font-extralight -translate-y-2 px-2">}</div>
+            <div class="text-6xl -translate-y-2 px-2">}</div>
             <div class="flex items-center -translate-y-1">{{ $report }} кассет</div>
           </div>
         </div>
