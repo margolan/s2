@@ -1,6 +1,11 @@
 <x-app-layout>
 
 
+  <div class="w-full h-screen flex items-center justify-center absolute top-0 overflow-hidden">
+    <div id="qr-reader" class=""></div>
+  </div>
+
+
   <div class="py-12">
     <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
       <div class="bg-white dark:bg-gray-800 shadow-xs sm:rounded-lg ">
@@ -42,6 +47,8 @@
           {{-- ======================================= [ NOTIFICATION ] ======================================= --}}
 
 
+
+
           <h1 class="w-max text-3xl font-semibold mx-auto my-10">КАССЕТЫ</h1>
 
           {{-- =================== ADD FORM =================== --}}
@@ -53,10 +60,10 @@
               <option value="incoming">Приход</option>
             </select>
 
-            <input type="text" id="qr-reader-results" name="number" class="w-full dark:bg-neutral-600 dark:text-neutral-300 rounded-md"
-              autofocus>
+            <input type="text" id="qr-reader-results" name="number"
+              class="w-full dark:bg-neutral-600 dark:text-neutral-300 rounded-md" autofocus>
 
-            <div id="qr-reader" class="w-10 h-10 overflow-hidden border border-red-500"></div>
+
 
             <input type="submit" value="Добавить"
               class="px-5 py-2 dark:bg-neutral-200 dark:text-neutral-800 text-sm rounded-md">
