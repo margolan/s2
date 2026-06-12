@@ -14,12 +14,17 @@ class DashboardController extends Controller
 
         if ($user->role === 'admin') {
 
-            return redirect()->route('admin-index');
+            return redirect()->route('admin-dashboard');
         }
 
-        if ($user->role === 'rg' || $user->role === 'se') {
+        if ($user->depart === 'ter' || $user->depart === 'pos') {
 
             return redirect()->route('schedule-dashboard');
+        }
+
+        if ($user->depart === 'upr') {
+
+            return redirect()->route('cassette-dashboard');
         }
     }
 }

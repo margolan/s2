@@ -52,7 +52,7 @@
 
           {{-- ======================================= [ DELETION FORM ] ======================================= --}}
 
-          @if (Auth::user()->name === 'ter1')
+          @if (Auth::user()->role === 'rg')
             @if (!empty($availableKeys))
               <hr class="my-5">
               <div>

@@ -8,7 +8,7 @@ use Illuminate\Http\Request;
 
 class CassetteController extends Controller
 {
-    public function index(Request $request)
+    public function dashboard(Request $request)
     {
 
 
@@ -64,7 +64,7 @@ class CassetteController extends Controller
             }
         }
 
-        return view('cassette', compact('cassettes', 'report', 'startPerion', 'endPerion'));
+        return view('dashboard.cassette.dashboard', compact('cassettes', 'report', 'startPerion', 'endPerion'));
     }
 
     public function delete(Request $request)

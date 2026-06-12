@@ -48,6 +48,8 @@
               class="text-gray-400 hover:text-teal-400 transition-colors underline underline-offset-3">Grafik</a></p>
           <p>// <a href="{{ route('key-dashboard') }}"
               class="text-gray-400 hover:text-teal-400 transition-colors underline underline-offset-3"> Keys</a></p>
+          <p>// <a href="{{ route('cassette-dashboard') }}"
+              class="text-gray-400 hover:text-teal-400 transition-colors underline underline-offset-3"> Cassette</a></p>
           <p>// <a href="{{ route('about') }}"
               class="text-gray-400 hover:text-teal-400 transition-colors underline underline-offset-3">For
               HeadHunters</a>
