@@ -87,6 +87,7 @@
                 <option value="синий" @selected($retrievedData->color == 'синий')>Синий</option>
                 <option value="желтый" @selected($retrievedData->color == 'желтый')>Желтый</option>
                 <option value="красный" @selected($retrievedData->color == 'красный')>Красный</option>
+                <option value="красный" @selected($retrievedData->color == 'зеленый')>Зеленый</option>
               </select>
 
               <label for="model_name"
