@@ -1,5 +1,6 @@
 <x-app-layout>
 
+
   <div class="py-12">
     <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
       <div class="bg-white dark:bg-gray-800 shadow-xs sm:rounded-lg ">
@@ -51,8 +52,12 @@
               <option value="repaired">Закрытие</option>
               <option value="incoming">Приход</option>
             </select>
-            <input type="text" name="number" class="w-full dark:bg-neutral-600 dark:text-neutral-300 rounded-md"
+
+            <input type="text" id="qr-reader-results" name="number" class="w-full dark:bg-neutral-600 dark:text-neutral-300 rounded-md"
               autofocus>
+
+            <div id="qr-reader" class="w-10 h-10 overflow-hidden border border-red-500"></div>
+
             <input type="submit" value="Добавить"
               class="px-5 py-2 dark:bg-neutral-200 dark:text-neutral-800 text-sm rounded-md">
           </form>
@@ -154,5 +159,45 @@
       </div>
     </div>
   </div>
+
+
+  <script src="https://unpkg.com/html5-qrcode" type="text/javascript"></script>
+
+  <script>
+    function onScanSuccess(decodedText, decodedResult) {
+      // Этот код сработает, когда QR-код успешно отсканирован
+      document.getElementById('qr-reader-results').innerText = `Успешно отсканировано: ${decodedText}`;
+
+      // Перенаправляем пользователя на отсканированный URL, или делаем AJAX-запрос
+      // window.location.href = decodedText;
+
+      // Останавливаем сканер после успешного считывания (опционально)
+      html5QrcodeScanner.clear();
+    }
+
+    function onScanFailure(error) {
+      // Срабатывает при каждом кадре, если QR-код не найден в объективе.
+      // Оставляем пустым, чтобы не спамить в консоль.
+    }
+
+    // Настройка сканера
+    let html5QrcodeScanner = new Html5QrcodeScanner(
+      "qr-reader", {
+        fps: 10, // Кол-во кадров в секунду для анализа
+        qrbox: {
+          width: 250,
+          height: 250
+        }, // Размер рамки прицела
+        rememberLastUsedCamera: true, // Запоминать выбранную камеру
+        supportedScanTypes: [Html5QrcodeScanType.SCAN_TYPE_CAMERA] // Только камера
+      },
+      /* verbose= */
+      false
+    );
+
+    // Запуск
+    html5QrcodeScanner.render(onScanSuccess, onScanFailure);
+  </script>
+
 
 </x-app-layout>
