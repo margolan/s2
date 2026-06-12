@@ -53,10 +53,10 @@ Route::middleware('check.pin')->group(function () { // Middleware : Check pincod
 
 // ====================== CASSETTE PROJECT ======================
 
-Route::middleware('check.pin')->group(function () {
+// Route::middleware('check.pin')->group(function () {
   Route::match(['get', 'post'], '/cassette', [CassetteController::class, 'index'])->name('cassette-index');
   Route::delete('/cassette/delete', [CassetteController::class, 'delete'])->name('cassette-delete');
-});
+// });
 
 
 
