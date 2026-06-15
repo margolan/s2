@@ -21,7 +21,7 @@ Route::get('/test', [ServiceController::class, 'test']);
 
 
 
-Route::domain('0x0.kz')->group(function () {
+// Route::domain('0x0.kz')->group(function () {
 
   // ====================== COMMON  ======================
 
@@ -80,7 +80,7 @@ Route::domain('0x0.kz')->group(function () {
 
 
   // Route::get('/test', [ServiceController::class, 'test']);
-});
+// });
 
 
 

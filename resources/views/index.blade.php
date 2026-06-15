@@ -43,15 +43,15 @@
         <h1 class="font-mono tracking-wider text-3xl py-3">DIGITAL CORE</h1>
         <p class="py-3">Привет. Я Маргулан, и это хаб моих проектов. Если вы ищете конкретный инструмент или моё
           резюме — воспользуйтесь ссылками ниже.</p>
-        <div class="flex gap-5 justify-center md:justify-normal">
-          <p>// <a href="{{ route('schedule-index') }}"
-              class="text-gray-400 hover:text-teal-400 transition-colors underline underline-offset-3">Grafik</a></p>
-          <p>// <a href="{{ route('key-dashboard') }}"
-              class="text-gray-400 hover:text-teal-400 transition-colors underline underline-offset-3"> Keys</a></p>
-          <p>// <a href="{{ route('cassette-dashboard') }}"
-              class="text-gray-400 hover:text-teal-400 transition-colors underline underline-offset-3"> Cassette</a></p>
-          <p>// <a href="{{ route('about') }}"
-              class="text-gray-400 hover:text-teal-400 transition-colors underline underline-offset-3">For
+        <div class="flex gap-5 justify-around md:justify-normal flex-wrap">
+          <p class="flex flex-nowrap">//<a href="{{ route('schedule-index') }}"
+              class="text-gray-400 hover:text-teal-400 transition-colors underline underline-offset-3 pl-1"> Grafik</a></p>
+          <p class="flex flex-nowrap">//<a href="{{ route('key-dashboard') }}"
+              class="text-gray-400 hover:text-teal-400 transition-colors underline underline-offset-3 pl-1"> Keys</a></p>
+          <p class="flex flex-nowrap">//<a href="{{ route('cassette-dashboard') }}"
+              class="text-gray-400 hover:text-teal-400 transition-colors underline underline-offset-3 pl-1"> Cassette</a></p>
+          <p class="flex flex-nowrap">//<a href="{{ route('about') }}"
+              class="text-gray-400 hover:text-teal-400 transition-colors underline underline-offset-3 pl-1">For
               HeadHunters</a>
         </div>
       </div>
