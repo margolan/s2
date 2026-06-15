@@ -100,6 +100,6 @@ Route::domain('aper.kz')->group(function () {
 
   Route::any('{any}', function () {
 
-    return back();
+    abort(404);
   })->where('any', '.*');
 });
