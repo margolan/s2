@@ -1,9 +1,9 @@
 <x-app-layout>
 
-
+{{-- 
   <div class="w-full h-screen flex items-center justify-center absolute top-0 overflow-hidden">
     <div id="qr-reader" class=""></div>
-  </div>
+  </div> --}}
 
 
   <div class="py-12">
