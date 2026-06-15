@@ -57,33 +57,34 @@
 
 
 
-          <h1 class="w-max text-3xl font-semibold mx-auto my-10">КАССЕТЫ</h1>
+          <h1 class="w-max text-3xl font-semibold font-serif mx-auto my-10 tracking-widest">КАССЕТЫ</h1>
 
           {{-- =================== ADD FORM =================== --}}
 
           <form action="{{ route('cassette-dashboard') }}" method="post" class="flex gap-3 my-10">
             @csrf
-            <select name="type" class="rounded-md text-sm dark:bg-neutral-600 dark:text-neutral-300 px-1 md:px-5">
+            <select name="type" class="rounded-md text-sm dark:bg-neutral-600 dark:text-neutral-300">
               <option value="repaired">Закрытие</option>
               <option value="incoming">Приход</option>
             </select>
 
-            <input type="text" id="qr-result" name="number"
-              class="w-full dark:bg-neutral-600 dark:text-neutral-300 rounded-md" autofocus>
+            <div class="w-full relative">
+              <input type="text" id="qr-result" name="number"
+                class="w-full dark:bg-neutral-600 dark:text-neutral-300 rounded-md" autofocus>
 
-            <button type="button" onclick="openScanner()"
-              class="text-gray-500 hover:text-blue-600 focus:outline-none">
-              <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                  d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z" />
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                  d="M15 13a3 3 0 11-6 0 3 3 0 016 0z" />
-              </svg>
-            </button>
-
+              <button type="button" onclick="openScanner()"
+                class="text-gray-500 hover:text-blue-600 focus:outline-none absolute top-2 md:right-5 right-3">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                    d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z" />
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                    d="M15 13a3 3 0 11-6 0 3 3 0 016 0z" />
+                </svg>
+              </button>
+            </div>
 
             <input type="submit" value="Добавить"
-              class="px-1 md:px-5 py-2 dark:bg-neutral-200 dark:text-neutral-800 text-sm rounded-md">
+              class="px-3 py-2 dark:bg-neutral-200 dark:text-neutral-800 text-sm rounded-md">
           </form>
 
           <div class="text-sm my-10 flex justify-center items-center font-mono">
