@@ -19,7 +19,7 @@
       <div class="flex flex-col items-center my-5 py-3 px-10 bg-white rounded-3xl text-gray-800">
         <h1 class="font-mono text-3xl font-semibold">www.aper.kz</h1>
         <p class="font-semibold py-2">Сатылады | For sale | Продается</p>
-        <p><a href="0x0.kz" class="hover:text-emerald-600 transition-colors">www.0x0.kz</a> • <a href="mailto:info@0x0.kz" class="hover:text-emerald-600 transition-colors">info@0x0.kz</a></p>
+        <p><a href="https://www.0x0.kz" class="hover:text-emerald-600 transition-colors">www.0x0.kz</a> • <a href="mailto:info@0x0.kz" class="hover:text-emerald-600 transition-colors">info@0x0.kz</a></p>
       </div>
     </div>
   </div>
