@@ -9,6 +9,9 @@ use App\Http\Controllers\ServiceController;
 use Illuminate\Support\Facades\Route;
 
 
+Route::get('/test', [ServiceController::class, 'test']);
+
+
 
 // ================================================================
 // 
@@ -76,7 +79,7 @@ Route::domain('0x0.kz')->group(function () {
   // ====================== SERVICE ROUTES ======================
 
 
-  Route::get('/test', [ServiceController::class, 'test'])->middleware('auth');
+  // Route::get('/test', [ServiceController::class, 'test']);
 });
 
 
