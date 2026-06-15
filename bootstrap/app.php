@@ -12,6 +12,10 @@ return Application::configure(basePath: dirname(__DIR__))
         api: __DIR__ . '/../routes/api.php',
     )
     ->withMiddleware(function (Middleware $middleware): void {
+        $middleware->statefulApi([
+            '0x0.kz',
+            'aper.kz',
+        ]);
         // $middleware->append(\App\Http\Middleware\Visitors::class);
         $middleware->alias([
             'CheckUser' => \App\Http\Middleware\CheckUser::class,

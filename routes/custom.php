@@ -65,3 +65,24 @@ Route::middleware('CheckUser:upr')->group(function () {
 
 
 Route::get('/test', [ServiceController::class, 'test'])->middleware('auth');
+
+
+
+
+
+
+
+// ================================================================
+// 
+//        Domain aper.kz
+// 
+// ================================================================
+
+
+Route::domain('aper.kz')->group(function () {
+
+  Route::get('/', function () {
+
+    return view('aper.index');
+  });
+});
