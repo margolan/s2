@@ -1,9 +1,17 @@
 <x-app-layout>
 
-{{-- 
-  <div class="w-full h-screen flex items-center justify-center absolute top-0 overflow-hidden">
-    <div id="qr-reader" class=""></div>
-  </div> --}}
+
+  <div id="qr-modal" class="fixed inset-0 z-50 flex items-center justify-center hidden bg-black bg-opacity-50 p-4">
+    <div class="bg-white rounded-lg shadow-xl overflow-hidden w-full max-w-md">
+      <div class="flex justify-between items-center px-4 py-3 bg-gray-100 border-b">
+        <h3 class="font-semibold text-gray-800">Сканирование QR-кода</h3>
+        <button type="button" onclick="closeScanner()" class="text-gray-400 hover:text-gray-600 text-2xl">&times;</button>
+      </div>
+      <div class="p-4 bg-gray-50">
+        <div id="scanner-preview" class="w-full aspect-square rounded-lg overflow-hidden bg-black"></div>
+      </div>
+    </div>
+  </div>
 
 
   <div class="py-12">
@@ -55,18 +63,27 @@
 
           <form action="{{ route('cassette-dashboard') }}" method="post" class="flex gap-3 my-10">
             @csrf
-            <select name="type" class="rounded-md text-sm dark:bg-neutral-600 dark:text-neutral-300">
+            <select name="type" class="rounded-md text-sm dark:bg-neutral-600 dark:text-neutral-300 px-1 md:px-5">
               <option value="repaired">Закрытие</option>
               <option value="incoming">Приход</option>
             </select>
 
-            <input type="text" id="qr-reader-results" name="number"
+            <input type="text" id="qr-result" name="number"
               class="w-full dark:bg-neutral-600 dark:text-neutral-300 rounded-md" autofocus>
 
+            <button type="button" onclick="openScanner()"
+              class="text-gray-500 hover:text-blue-600 focus:outline-none">
+              <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                  d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z" />
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                  d="M15 13a3 3 0 11-6 0 3 3 0 016 0z" />
+              </svg>
+            </button>
 
 
             <input type="submit" value="Добавить"
-              class="px-5 py-2 dark:bg-neutral-200 dark:text-neutral-800 text-sm rounded-md">
+              class="px-1 md:px-5 py-2 dark:bg-neutral-200 dark:text-neutral-800 text-sm rounded-md">
           </form>
 
           <div class="text-sm my-10 flex justify-center items-center font-mono">
@@ -171,39 +188,57 @@
   <script src="https://unpkg.com/html5-qrcode" type="text/javascript"></script>
 
   <script>
-    function onScanSuccess(decodedText, decodedResult) {
-      // Этот код сработает, когда QR-код успешно отсканирован
-      document.getElementById('qr-reader-results').innerText = `Успешно отсканировано: ${decodedText}`;
+    let html5Qrcode = null;
+    const scannerId = "scanner-preview";
 
-      // Перенаправляем пользователя на отсканированный URL, или делаем AJAX-запрос
-      // window.location.href = decodedText;
+    function openScanner() {
+      // Показываем модалку (удаляем класс hidden)
+      document.getElementById('qr-modal').classList.remove('hidden');
 
-      // Останавливаем сканер после успешного считывания (опционально)
-      html5QrcodeScanner.clear();
+      // Инициализируем чистый экземпляр сканера, если еще не создан
+      if (!html5Qrcode) {
+        html5Qrcode = new Html5Qrcode(scannerId);
+      }
+
+      // Запуск камеры (environment означает заднюю камеру смартфона)
+      html5Qrcode.start({
+          facingMode: "environment"
+        }, {
+          fps: 10,
+          qrbox: function(width, height) {
+            // Динамический размер рамки прицела (70% от ширины видео)
+            const minEdge = Math.min(width, height);
+            const qrboxSize = Math.floor(minEdge * 0.7);
+            return {
+              width: qrboxSize,
+              height: qrboxSize
+            };
+          }
+        },
+        (decodedText) => {
+          // Успех: записываем в инпут и закрываем
+          document.getElementById('qr-result').value = decodedText;
+          closeScanner();
+        },
+        (errorMessage) => {
+          // Ошибка поиска QR в кадре (игнорируем)
+        }
+      ).catch(err => {
+        console.error("Ошибка запуска камеры:", err);
+        alert("Не удалось получить доступ к камере.");
+        closeScanner();
+      });
     }
 
-    function onScanFailure(error) {
-      // Срабатывает при каждом кадре, если QR-код не найден в объективе.
-      // Оставляем пустым, чтобы не спамить в консоль.
+    function closeScanner() {
+      // Прячем модалку
+      document.getElementById('qr-modal').classList.add('hidden');
+
+      // Обязательно выключаем камеру, чтобы освободить ресурсы устройства
+      if (html5Qrcode && html5Qrcode.isScanning) {
+        html5Qrcode.stop().catch(err => console.error("Ошибка остановки:", err));
+      }
     }
-
-    // Настройка сканера
-    let html5QrcodeScanner = new Html5QrcodeScanner(
-      "qr-reader", {
-        fps: 10, // Кол-во кадров в секунду для анализа
-        qrbox: {
-          width: 250,
-          height: 250
-        }, // Размер рамки прицела
-        rememberLastUsedCamera: true, // Запоминать выбранную камеру
-        supportedScanTypes: [Html5QrcodeScanType.SCAN_TYPE_CAMERA] // Только камера
-      },
-      /* verbose= */
-      false
-    );
-
-    // Запуск
-    html5QrcodeScanner.render(onScanSuccess, onScanFailure);
   </script>
 
 
