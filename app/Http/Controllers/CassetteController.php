@@ -17,7 +17,15 @@ class CassetteController extends Controller
             $searchingRow = Cassette::where('number', $request->number)->orderBy('created_at', 'desc')->get();
 
             $validated = $request->validate([
-                'number' => 'required',
+                'number' => [
+                    'required',
+                    'required_if:type,incoming',
+                    function ($attribute, $value, $fail) use ($request) {
+                        if ($request->input('type') === 'incoming' && !is_numeric($value)) {
+                            $fail('При выборе второй опции поле должно содержать только цифры.');
+                        }
+                    }
+                ],
                 'type' => 'required|in:repaired,incoming',
             ], [
                 'number.required' => 'Поле пустое',
@@ -25,9 +33,9 @@ class CassetteController extends Controller
             ]);
 
 
-            if ($searchingRow->isNotEmpty()) {
+            if ($searchingRow->isNotEmpty() && ($searchingRow->first()->type === 'repaired')) {  // if cassette already WAS past 30 days
 
-                if ($searchingRow->first()->created_at->format('Y-m-d') !== now()->format('Y-m-d')) {
+                if ($searchingRow->first()->created_at->format('Y-m-d') !== now()->format('Y-m-d')) {   // if cassette was earlier than today
 
                     $validated['var1'] = $searchingRow->first()->created_at->format('d.m.Y');
 
@@ -42,7 +50,15 @@ class CassetteController extends Controller
 
                 Cassette::create($validated);
 
-                return redirect()->back()->with('status', 'Кассета ' . $request->number . ' добавлена');
+                if ($request->type === 'repaired') {
+
+                    $reply = 'Кассета ' . $request->number . ' добавлена';
+                } else {
+
+                    $reply = 'Приход ' . $request->number . ' добавлен';
+                };
+
+                return redirect()->back()->with('status', $reply);
             }
         }
 
@@ -74,6 +90,14 @@ class CassetteController extends Controller
 
         $row->delete();
 
-        return redirect()->back()->with('status', 'Кассете ' . $request->number . ' удалена');
+        if ($row->type === 'repaired') {
+
+            $reply = 'Кассета ' . $row->number . ' удалена';
+        } else {
+
+            $reply = 'Приход ' . $row->number . ' удален';
+        }
+
+        return redirect()->back()->with('status', $reply);
     }
 }

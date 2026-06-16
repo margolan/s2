@@ -96,7 +96,12 @@ class KeyController extends Controller
     public function edit(Request $request)
     {
 
-        $retrievedData = Key::where('reg_number', $request->query('d'))->firstOrFail();
+        $retrievedData = Key::find($request->id);
+
+        // if (!$retrievedData) {
+
+        //     return redirect()->back()->with('status', 'Ключ не найден');
+        // }
 
         if ($request->isMethod('put')) {
 
@@ -104,7 +109,22 @@ class KeyController extends Controller
                 'is_active' => $request->has('is_active')
             ]);
 
-            $retrievedData->update($request->all());
+            $validated = $request->validate([
+                'device_serial' => 'nullable|string',
+                'reg_number' => 'required|string|max:255',
+                'device_id' => 'nullable|string',
+                'device_address' => 'required|string|max:255',
+                'district' => 'required|string|max:255',
+                'color' => 'required|string|max:50',
+                'model_name' => 'nullable|string|max:255',
+                'os_version' => 'nullable|string|max:255',
+                'ip_address' => 'nullable|ip',
+                'sim_number' => 'nullable|string|max:50',
+                'note' => 'nullable|string',
+                'is_active' => 'required|boolean'
+            ]);
+
+            $retrievedData->update($validated);
 
             return redirect()->route('key-dashboard')->with('status', 'Данные обновлены!');
         }

@@ -48,7 +48,7 @@
 
 
           <div class="max-w-lg text-sm">
-            <form action="{{ route('key-edit', ['d' => $retrievedData->reg_number]) }}" method="post" class="flex flex-col px-3 py-5 gap-1">
+            <form action="{{ route('key-edit', ['id' => $retrievedData->id]) }}" method="post" class="flex flex-col px-3 py-5 gap-1">
 
               @method('put')
               @csrf

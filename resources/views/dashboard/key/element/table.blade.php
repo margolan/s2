@@ -65,7 +65,7 @@
               <div class="w-28 flex items-center">
                 <div class="w-3 h-3 border border-white mr-1 {{ $bgColors[$cell->color] ?? '' }}"></div>
                 @if (Auth::user()->role === 'rg')
-                  <a href="key/edit?d={{ $cell->reg_number }}"
+                  <a href="key/edit?id={{ $cell->id }}"
                     class="underline underline-offset-3">{{ $cell->reg_number }}</a>
                 @else
                   {{ $cell->reg_number }}
