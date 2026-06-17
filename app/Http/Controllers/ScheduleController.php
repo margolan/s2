@@ -4,15 +4,12 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Imports\ScheduleImport;
-use App\Models\Key;
 use App\Models\Schedule;
 use Illuminate\Support\Carbon;
 use PhpOffice\PhpSpreadsheet\IOFactory;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Cookie;
 use Illuminate\Support\Str;
-use Illuminate\Support\Facades\Log;
-use Illuminate\Support\Facades\Http;
 
 
 
@@ -237,15 +234,32 @@ class ScheduleController extends Controller
       ->get()
       ->groupBy('depart');
 
+    // ================= TODAY's STAFF =================
+
+    $todaysStaff = [];
+
+    foreach ($requestedSchedule as $departIndex => $depart) {
+      foreach ($depart as $workerIndex => $worker) {
+
+        if ($worker->schedule_data[now()->day - 1] === '+') {
+          $todaysStaff[$departIndex]['working'][] = explode(' ', $worker->worker_name)[1];
+        };
+
+        if ($worker->schedule_data[now()->day - 1] === 'D') {
+          $todaysStaff[$departIndex]['onDuty'][] = explode(' ', $worker->worker_name)[1];
+        };
+      }
+    }
 
     return [
       'requestedSchedule' => $requestedSchedule,
       'nextMonthSchedule' => $nextMonthSchedule,
       'month' => $month,
+      'todaysStaff' => $todaysStaff,
     ];
   }
 
-  private function calendar($y = null, $m = null) // =============================== [ GETDATA ] ================================================
+  private function calendar($y = null, $m = null) // =============================== [ CALENDAR ] ================================================
   {
 
     if (!$y && !$m) {

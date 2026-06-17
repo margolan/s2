@@ -98,11 +98,6 @@ class KeyController extends Controller
 
         $retrievedData = Key::find($request->id);
 
-        // if (!$retrievedData) {
-
-        //     return redirect()->back()->with('status', 'Ключ не найден');
-        // }
-
         if ($request->isMethod('put')) {
 
             $request->merge([

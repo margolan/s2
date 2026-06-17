@@ -32,6 +32,8 @@ class AdminController extends Controller
             'currentYear' => $currentYear
         ];
 
+        // ======================== Visitors
+
         $query = Visitor::orderBy('id', 'desc')->take(100)->get();
         
         $visitors['allRows'] = $query;
