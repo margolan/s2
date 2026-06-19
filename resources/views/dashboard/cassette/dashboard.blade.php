@@ -205,7 +205,7 @@
       html5Qrcode.start({
           facingMode: "environment"
         }, {
-          fps: 10,
+          fps: 25,
           qrbox: function(width, height) {
             // Динамический размер рамки прицела (70% от ширины видео)
             const minEdge = Math.min(width, height);

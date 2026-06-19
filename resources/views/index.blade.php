@@ -40,6 +40,7 @@
   <div class="h-screen dark:text-gray-300 bg-[url(/public/bg_index.jpg)] bg-center bg-cover">
     <div class="w-full h-full dark:bg-neutral-900/80 flex justify-center items-center">
       <div class="w-2xl p-5 md:text-left text-center">
+        <img src="/0x0_logo_small.png" alt="logo" class="grayscale brightness-150 hover:grayscale-0 hover:brightness-120 transition duration-300">
         <h1 class="font-mono tracking-wider text-3xl py-3">DIGITAL CORE</h1>
         <p class="py-3">Привет. Я Маргулан, и это хаб моих проектов. Если вы ищете конкретный инструмент или моё
           резюме — воспользуйтесь ссылками ниже.</p>
