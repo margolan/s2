@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Schedule;
+use App\Models\User;
 use App\Models\Visitor;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
@@ -12,6 +13,13 @@ class AdminController extends Controller
 {
     public function index(Request $request)
     {
+
+        $users = User::all();
+
+
+
+
+
         $allSchedules  = Schedule::get()->groupBy(['depart', 'batch_id']);
 
         $months = collect(range(1, 12))->mapWithKeys(function ($month) {
@@ -42,6 +50,6 @@ class AdminController extends Controller
         });
         $test['b'] = '';
 
-        return view('dashboard.admin.dashboard', compact('allSchedules', 'formData', 'visitors', 'test'));
+        return view('dashboard.admin.dashboard', compact('users', 'allSchedules', 'formData', 'visitors', 'test'));
     }
 }

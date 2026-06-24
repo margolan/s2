@@ -103,8 +103,11 @@
 
           @if ($cassettes)
 
+          {{-- @dump($cassettes) --}}
+
             @foreach ($cassettes as $index => $date)
               <div class="pb-10">
+
                 <div class="flex items-center py-2 justify-center">
                   <span class="mr-1">
                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="size-5">
@@ -115,6 +118,7 @@
                   </span>
                   {{ \Carbon\Carbon::create($index)->format('j.m.Y') }} ( {{ count($date['repaired'] ?? []) }} )
                 </div>
+
                 <table class="w-full border-collapse border border-gray-400 dark:border-gray-700 text-sm">
                   <thead>
                     <tr>

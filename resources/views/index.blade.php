@@ -6,7 +6,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta http-equiv="X-UA-Compatible" content="ie=edge">
   @vite(['resources/css/app.css', 'resources/js/app.js'])
-  <title>DIGITAL CORE</title>
+  <title>0x0 CORE</title>
 </head>
 
 <body>
@@ -38,22 +38,31 @@
   </div>
 
   <div class="h-screen dark:text-gray-300 bg-[url(/public/bg_index.jpg)] bg-center bg-cover">
-    <div class="w-full h-full dark:bg-neutral-900/80 flex justify-center items-center">
-      <div class="w-2xl p-5 md:text-left text-center">
-        <img src="/0x0_logo_small.png" alt="logo" class="grayscale brightness-150 hover:grayscale-0 hover:brightness-120 transition duration-300">
-        <h1 class="font-mono tracking-wider text-3xl py-3">DIGITAL CORE</h1>
-        <p class="py-3">Привет. Я Маргулан, и это хаб моих проектов. Если вы ищете конкретный инструмент или моё
+    <div class="w-full h-full flex justify-center items-center">
+      <div class="w-2xl p-5 md:text-left backdrop-blur-sm m-2 rounded-2xl shadow-[0_0_5px] shadow-neutral-500">
+        <div class="flex items-center gap-3">
+          <a href="/"><img src="/0x0_logo_small.png" alt="0x0"
+              class="w-20 py-4 animate-pulse brightness-200 hover:animate-none cursor-pointer">
+          </a>
+          <span class="w-1 h-12 border-l-3 border-neutral-400"></span>
+          <h1 class="tracking-wider text-3xl py-3">CORE</h1>
+        </div>
+        <p class="py-3">Привет. Я Маргулан, и это ядро моих проектов на Laravel. Если вы ищете конкретный инструмент
+          или моё
           резюме — воспользуйтесь ссылками ниже.</p>
         <div class="flex gap-5 justify-around md:justify-normal flex-wrap">
           <p class="flex flex-nowrap">//<a href="{{ route('schedule-index') }}"
-              class="text-gray-400 hover:text-teal-400 transition-colors underline underline-offset-3 pl-1"> Grafik</a></p>
+              class="text-gray-400 hover:text-blue-400 transition-colors underline underline-offset-3 pl-1"> Grafik</a>
+          </p>
           <p class="flex flex-nowrap">//<a href="{{ route('key-dashboard') }}"
-              class="text-gray-400 hover:text-teal-400 transition-colors underline underline-offset-3 pl-1"> Keys</a></p>
+              class="text-gray-400 hover:text-blue-400 transition-colors underline underline-offset-3 pl-1"> Keys</a>
+          </p>
           <p class="flex flex-nowrap">//<a href="{{ route('cassette-dashboard') }}"
-              class="text-gray-400 hover:text-teal-400 transition-colors underline underline-offset-3 pl-1"> Cassette</a></p>
+              class="text-gray-400 hover:text-blue-400 transition-colors underline underline-offset-3 pl-1">
+              Cassette</a></p>
           <p class="flex flex-nowrap">//<a href="{{ route('about') }}"
-              class="text-gray-400 hover:text-teal-400 transition-colors underline underline-offset-3 pl-1">For
-              HeadHunters</a>
+              class="text-gray-400 hover:text-blue-400 transition-colors underline underline-offset-3 pl-1">For
+              HeadHunters</a></p>
         </div>
       </div>
     </div>

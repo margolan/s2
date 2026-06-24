@@ -34,5 +34,17 @@
 			"problemMatcher": [],
 			"detail": "Запуск встроенного сервера Laravel"
 		},
+		{
+			"label": "Run PostgreSQL server (npm run dev)",
+			"type": "process",
+			"command": "cmd",
+			"args": ["/c", "%userprofile%/Desktop/localhost/pgsql/bin/pg_ctl -D %userprofile%/Desktop/localhost/pgsql/data start"],
+			"group": {
+				"kind": "build",
+				"isDefault": true
+			},
+			"problemMatcher": [],
+			"detail": "Запуск сервера PostgreSQL"
+		},
 	]
 }
