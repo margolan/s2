@@ -103,6 +103,8 @@
 
           @if ($cassettes)
 
+          @dump($test)
+
           {{-- @dump($cassettes) --}}
 
             @foreach ($cassettes as $index => $date)

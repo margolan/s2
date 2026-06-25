@@ -6,9 +6,10 @@
 			"type": "shell",
 			"dependsOn": [
 				"Run Vite (npm run dev)",
-				"Run Laravel Server (php artisan serve)"
+				"Run Laravel Server (php artisan serve)",
+				"Run PostgreSQL server (npm run dev)"
 			],
-			"detail": "Запуск сервера Laravel и Vite одновременно",
+			"detail": "Запуск сервера Laravel, Vite & PostgreSQL",
 			"problemMatcher": []
 		},
 		{

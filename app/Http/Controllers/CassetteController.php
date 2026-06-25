@@ -80,7 +80,25 @@ class CassetteController extends Controller
             }
         }
 
-        return view('dashboard.cassette.dashboard', compact('cassettes', 'report', 'startPerion', 'endPerion'));
+        $test = [];
+
+        $todayDayNumber = today();
+
+        $startOfMonth = $todayDayNumber->copy()->firstOfMonth();
+
+        for ($i = $startOfMonth->day; $i <= $todayDayNumber->day; $i++) {
+
+            $date = $todayDayNumber->copy()->day($i);
+
+            $test[] = [
+                'date' => $date->format('d.m.Y'),
+                'tableIndex' => $date->dayOfWeek(),
+                // 'stastartOfMonthrt' => $startOfMonth->day,
+                // 'todayDayNumber' => $todayDayNumber->day
+            ];
+        }
+
+        return view('dashboard.cassette.dashboard', compact('cassettes', 'report', 'startPerion', 'endPerion', 'test'));
     }
 
     public function delete(Request $request)
