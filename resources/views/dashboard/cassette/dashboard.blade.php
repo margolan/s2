@@ -103,7 +103,7 @@
 
           <hr>
 
-          <table class="w-full border border-neutral-600 border-collapse">
+          <table class="border border-neutral-600 border-collapse">
             <thead>
               <tr class="text-center">
                 <td class="border border-neutral-400">ПН</td>
@@ -116,15 +116,22 @@
               </tr>
             </thead>
             <tbody>
-              <tr>
-                
-              </tr>
+              @foreach ($calendar as $week)
+                <tr>
+                  @foreach ($week as $day)
+                    <td class="border border-neutral-400 py-1 px-3">{{ $day['date'] }}
+                    </td>
+                  @endforeach
+                </tr>
+              @endforeach
             </tbody>
           </table>
 
+          {{-- @dump($test) --}}
+
           <hr>
 
-          @dump($test)
+          @dump($calendar)
 
           <hr>
 

@@ -80,28 +80,30 @@ class CassetteController extends Controller
             }
         }
 
-        $test = [];
+        // ===================== CALENDAR =====================
 
-        // $todayDayNumber = today();
-        $todayDayNumber = Carbon::createFromDate(26,05,24);
+        $today = Carbon::create(2026, 05, 24);
 
-        $startOfMonth = $todayDayNumber->copy()->firstOfMonth();
+        $startDate = $today->copy()->startOfMonth()->startOfWeek();
 
-        for ($i = $startOfMonth->day; $i <= $todayDayNumber->day; $i++) {
+        $endDate = $today->copy()->endOfMonth()->endOfWeek();
 
-            $date = $todayDayNumber->copy()->day($i);
+        $calendar = [];
 
-            $test[$date->week][] = [
-                // 'date' => $date->format('d.m.Y'),
-                // 'tableIndex' => $date->dayOfWeekIso - 1,
-                // 'stastartOfMonthrt' => $startOfMonth->day,
-                // 'todayDayNumber' => $todayDayNumber->day
-                $date->format('d.m.Y'),
-                // 'test' => $date->week
+        while($startDate->lte($endDate)) {
+
+            $calendar[$startDate->weekOfYear()][] = [
+                'date' => $startDate->format('d'),
+                'tableIndex' => $startDate->dayOfWeekIso,
+                'isCurrentMonth' => $startDate->month === $today->month
             ];
+
+            $startDate->addDay();
         }
 
-        return view('dashboard.cassette.dashboard', compact('cassettes', 'report', 'startPerion', 'endPerion', 'test'));
+        // ===================== END CALENDAR =====================
+
+        return view('dashboard.cassette.dashboard', compact('cassettes', 'report', 'startPerion', 'endPerion', 'calendar'));
     }
 
     public function delete(Request $request)
