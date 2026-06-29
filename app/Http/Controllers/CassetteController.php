@@ -95,7 +95,8 @@ class CassetteController extends Controller
             $calendar[$startDate->weekOfYear()][] = [
                 'date' => $startDate->format('d'),
                 'tableIndex' => $startDate->dayOfWeekIso,
-                'isCurrentMonth' => $startDate->month === $today->month
+                'isCurrentMonth' => $startDate->month === $today->month,
+                'isWeekEnd' =>  $startDate->isWeekend(),
             ];
 
             $startDate->addDay();

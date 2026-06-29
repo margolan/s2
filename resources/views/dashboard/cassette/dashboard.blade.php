@@ -103,23 +103,25 @@
 
           <hr>
 
-          <table class="border border-neutral-600 border-collapse">
+          <table class="border border-neutral-600 border-collapse text-sm text-neutral-400">
             <thead>
-              <tr class="text-center">
-                <td class="border border-neutral-400">ПН</td>
-                <td class="border border-neutral-400">ВТ</td>
-                <td class="border border-neutral-400">СР</td>
-                <td class="border border-neutral-400">ЧТ</td>
-                <td class="border border-neutral-400">ПТ</td>
-                <td class="border border-neutral-400">СБ</td>
-                <td class="border border-neutral-400">ВС</td>
+              <tr class="text-center text-neutral-200">
+                <td class="border border-neutral-400 py-2">Пн</td>
+                <td class="border border-neutral-400">Вт</td>
+                <td class="border border-neutral-400">Ср</td>
+                <td class="border border-neutral-400">Чт</td>
+                <td class="border border-neutral-400">Пт</td>
+                <td class="border border-neutral-400">Сб</td>
+                <td class="border border-neutral-400">Вс</td>
               </tr>
             </thead>
             <tbody>
               @foreach ($calendar as $week)
                 <tr>
                   @foreach ($week as $day)
-                    <td class="border border-neutral-400 py-1 px-3">{{ $day['date'] }}
+                    <td
+                      class="border border-neutral-400 py-1 px-4 {{ $day['isCurrentMonth'] ? '' : 'bg-neutral-500' }}">
+                      {{ $day['date'] }}
                     </td>
                   @endforeach
                 </tr>
