@@ -82,7 +82,8 @@ class CassetteController extends Controller
 
         $test = [];
 
-        $todayDayNumber = today();
+        // $todayDayNumber = today();
+        $todayDayNumber = Carbon::createFromDate(26,05,24);
 
         $startOfMonth = $todayDayNumber->copy()->firstOfMonth();
 
@@ -90,11 +91,13 @@ class CassetteController extends Controller
 
             $date = $todayDayNumber->copy()->day($i);
 
-            $test[] = [
-                'date' => $date->format('d.m.Y'),
-                'tableIndex' => $date->dayOfWeek(),
+            $test[$date->week][] = [
+                // 'date' => $date->format('d.m.Y'),
+                // 'tableIndex' => $date->dayOfWeekIso - 1,
                 // 'stastartOfMonthrt' => $startOfMonth->day,
                 // 'todayDayNumber' => $todayDayNumber->day
+                $date->format('d.m.Y'),
+                // 'test' => $date->week
             ];
         }
 

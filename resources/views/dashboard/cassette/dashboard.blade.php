@@ -101,11 +101,34 @@
           {{-- =================== CASSETTES LIST =================== --}}
 
 
-          @if ($cassettes)
+          <hr>
+
+          <table class="w-full border border-neutral-600 border-collapse">
+            <thead>
+              <tr class="text-center">
+                <td class="border border-neutral-400">ПН</td>
+                <td class="border border-neutral-400">ВТ</td>
+                <td class="border border-neutral-400">СР</td>
+                <td class="border border-neutral-400">ЧТ</td>
+                <td class="border border-neutral-400">ПТ</td>
+                <td class="border border-neutral-400">СБ</td>
+                <td class="border border-neutral-400">ВС</td>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                
+              </tr>
+            </tbody>
+          </table>
+
+          <hr>
 
           @dump($test)
 
-          {{-- @dump($cassettes) --}}
+          <hr>
+
+          @if ($cassettes)
 
             @foreach ($cassettes as $index => $date)
               <div class="pb-10">
