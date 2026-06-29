@@ -12,6 +12,8 @@
 <body>
 
 
+  {{-- LOGIN / LOGOUT --}}
+
   <div class="absolute p-5 right-0 cursor-pointer">
     <div>
       @if (!Auth::check())
@@ -36,6 +38,8 @@
       @endif
     </div>
   </div>
+
+  {{-- LOGIN / LOGOUT --}}
 
   <div class="h-screen dark:text-gray-300 bg-[url(/public/bg_index.jpg)] bg-center bg-cover">
     <div class="w-full h-full flex justify-center items-center">

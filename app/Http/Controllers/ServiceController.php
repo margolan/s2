@@ -8,6 +8,6 @@ class ServiceController extends Controller
 {
   public function test()
   {
-    return view('aperkz.index');
+    return view('test');
   }
 }
