@@ -87,57 +87,85 @@
               class="px-3 py-2 dark:bg-neutral-200 dark:text-neutral-800 text-sm rounded-md">
           </form>
 
-          <div class="text-sm my-10 flex justify-center items-center font-mono">
-            <div class="py-1">
-              <div class="py-1 text-right">С {{ $startPerion->format('d.m.Y') }}</div>
-              <div class="py-1 text-right">По {{ $endPerion->format('d.m.Y') }}</div>
-            </div>
-            <div class="flex">
-              <div class="text-6xl -translate-y-2 px-2">}</div>
-              <div class="flex items-center -translate-y-1">{{ $report }} кассет</div>
-            </div>
-          </div>
 
           {{-- =================== CASSETTES LIST =================== --}}
 
 
           <hr>
 
-          <table class="border border-neutral-600 border-collapse text-sm text-neutral-400">
-            <thead>
-              <tr class="text-center text-neutral-200">
-                <td class="border border-neutral-400 py-2">Пн</td>
-                <td class="border border-neutral-400">Вт</td>
-                <td class="border border-neutral-400">Ср</td>
-                <td class="border border-neutral-400">Чт</td>
-                <td class="border border-neutral-400">Пт</td>
-                <td class="border border-neutral-400">Сб</td>
-                <td class="border border-neutral-400">Вс</td>
-              </tr>
-            </thead>
-            <tbody>
-              @foreach ($calendar as $week)
-                <tr>
-                  @foreach ($week as $day)
-                    <td
-                      class="border border-neutral-400 py-1 px-4 {{ $day['isCurrentMonth'] ? '' : 'bg-neutral-500' }}">
-                      {{ $day['date'] }}
-                    </td>
-                  @endforeach
+          <div
+            class="border border-neutral-400 rounded-xl overflow-hidden my-10 max-w-max mx-auto shadow-lg shadow-black/10">
+            <table class="w-full md:w-auto border-separate border-spacing-0 text-neutral-200">
+              <thead>
+                <tr class="text-center text-neutral-200 font-medium bg-neutral-800/40">
+                  <td class="border-b border-r border-neutral-400 py-3 w-24">Пн</td>
+                  <td class="border-b border-r border-neutral-400">Вт</td>
+                  <td class="border-b border-r border-neutral-400">Ср</td>
+                  <td class="border-b border-r border-neutral-400">Чт</td>
+                  <td class="border-b border-r border-neutral-400">Пт</td>
+                  <td class="border-b border-r border-neutral-400">Сб</td>
+                  <td class="border-b border-neutral-400">Вс</td>
                 </tr>
-              @endforeach
-            </tbody>
-          </table>
+              </thead>
+              <tbody>
+                @foreach ($calendar['days'] as $week)
+                  <tr>
+                    @foreach ($week as $day)
+                      <td
+                        class="md:w-24 min-w-17.5 h-20 border-r border-b border-neutral-400 p-2 relative vertical-align-top transition-colors hover:bg-neutral-800/30
+                            {{ $day['isCurrentMonth'] ? 'bg-neutral-900/20' : 'bg-neutral-900/60' }} 
+                            {{ $loop->parent->last ? '' : '' }} {{ $loop->last ? '!border-r-0' : '' }}">
 
-          {{-- @dump($test) --}}
+                        <span
+                          class="absolute left-2 top-1.5 text-[11px] font-semibold tracking-wide 
+                                {{ $day['isCurrentMonth'] ? 'text-neutral-400' : 'text-neutral-600' }}">
+                          {{ $day['date'] }}
+                        </span>
 
-          <hr>
+                        <div class="flex flex-col gap-1.5 justify-center items-center h-full pt-3">
 
-          @dump($calendar)
+                          @if ($day['repaired'] > 0)
+                            <div
+                              class="flex items-center gap-1 px-1.5 py-0.5 bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 rounded text-xs font-semibold min-w-[42px] justify-center"
+                              title="Отремонтировано">
+                              <svg class="w-3 h-3 text-emerald-500 shrink-0" fill="none" stroke="currentColor"
+                                viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5"
+                                  d="M5 13l4 4L19 7" />
+                              </svg>
+                              <span>{{ $day['repaired'] }}</span>
+                            </div>
+                          @endif
+
+                          @if ($day['incoming'] > 0)
+                            <div
+                              class="flex items-center gap-1 px-1.5 py-0.5 bg-sky-500/10 border border-sky-500/20 text-sky-400 rounded text-xs font-semibold min-w-[42px] justify-center"
+                              title="Приход новых">
+                              <svg class="w-3 h-3 text-sky-500 shrink-0" fill="none" stroke="currentColor"
+                                viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5"
+                                  d="M19 14l-7 7m0 0l-7-7m7 7V3" />
+                              </svg>
+                              <span>{{ $day['incoming'] }}</span>
+                            </div>
+                          @endif
+
+                        </div>
+
+                      </td>
+                    @endforeach
+                  </tr>
+                @endforeach
+              </tbody>
+            </table>
+          </div>
 
           <hr>
 
           @if ($cassettes)
+
+            {{-- @dump($cassettes) --}}
+
 
             @foreach ($cassettes as $index => $date)
               <div class="pb-10">

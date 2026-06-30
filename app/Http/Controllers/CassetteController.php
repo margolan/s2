@@ -12,6 +12,13 @@ class CassetteController extends Controller
     {
 
 
+        // =================================================================================
+        // 
+        //    POST REQUEST
+        // 
+        // =================================================================================
+
+
         if ($request->isMethod('post')) {
 
             $searchingRow = Cassette::where('number', $request->number)->orderBy('created_at', 'desc')->get();
@@ -62,6 +69,12 @@ class CassetteController extends Controller
             }
         }
 
+        // =================================================================================
+        // 
+        //    GET REQUEST
+        // 
+        // =================================================================================
+
 
         $startPerion = now()->subMonth();
 
@@ -82,29 +95,52 @@ class CassetteController extends Controller
 
         // ===================== CALENDAR =====================
 
-        $today = Carbon::create(2026, 05, 24);
+        $today = Carbon::create(2026, 06, 24);
 
-        $startDate = $today->copy()->startOfMonth()->startOfWeek();
+        $startDate = $today->copy()->startOfMonth()->subWeek()->startOfWeek();
 
         $endDate = $today->copy()->endOfMonth()->endOfWeek();
 
         $calendar = [];
 
-        while($startDate->lte($endDate)) {
+        $calendar['data'] = Cassette::whereBetween('created_at', [$startDate, $endDate])
+            ->orderBy('created_at', 'desc')
+            ->get()
+            ->groupBy([function ($item) {
+                return $item->created_at->format('d.m.Y');
+            }, 'type']);
 
-            $calendar[$startDate->weekOfYear()][] = [
+        // $test = [
+        //     'repaired' => $test0->pluck('repaired')->flatten()->count(),
+        //     'incoming' => $test0->pluck('incoming'),
+        // ];
+
+        // $test = $test->pluck('repaired');
+
+        // $test = [$startDate->format('d.m.Y'), $endDate->format('d.m.Y')];
+
+
+        while ($startDate->lte($endDate)) {
+
+            $incomingRecords = $calendar['data'][$startDate->format('d.m.Y')]['incoming'] ?? [];
+
+            $calendar['days'][$startDate->weekOfYear()][] = [
                 'date' => $startDate->format('d'),
                 'tableIndex' => $startDate->dayOfWeekIso,
                 'isCurrentMonth' => $startDate->month === $today->month,
                 'isWeekEnd' =>  $startDate->isWeekend(),
+                'repaired' => count($calendar['data'][$startDate->format('d.m.Y')]['repaired'] ?? []),
+                'incoming' => collect($incomingRecords)->sum('number'),
             ];
 
             $startDate->addDay();
         }
 
+
+
         // ===================== END CALENDAR =====================
 
-        return view('dashboard.cassette.dashboard', compact('cassettes', 'report', 'startPerion', 'endPerion', 'calendar'));
+        return view('dashboard.cassette.dashboard', compact('cassettes', 'calendar'));
     }
 
     public function delete(Request $request)
