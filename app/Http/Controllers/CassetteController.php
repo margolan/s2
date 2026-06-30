@@ -95,7 +95,7 @@ class CassetteController extends Controller
 
         // ===================== CALENDAR =====================
 
-        $today = Carbon::create(2026, 06, 24);
+        $today = today();
 
         $startDate = $today->copy()->startOfMonth()->subWeek()->startOfWeek();
 
@@ -109,15 +109,6 @@ class CassetteController extends Controller
             ->groupBy([function ($item) {
                 return $item->created_at->format('d.m.Y');
             }, 'type']);
-
-        // $test = [
-        //     'repaired' => $test0->pluck('repaired')->flatten()->count(),
-        //     'incoming' => $test0->pluck('incoming'),
-        // ];
-
-        // $test = $test->pluck('repaired');
-
-        // $test = [$startDate->format('d.m.Y'), $endDate->format('d.m.Y')];
 
 
         while ($startDate->lte($endDate)) {
@@ -135,7 +126,6 @@ class CassetteController extends Controller
 
             $startDate->addDay();
         }
-
 
 
         // ===================== END CALENDAR =====================
