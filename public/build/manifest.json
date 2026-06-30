@@ -8,13 +8,25 @@
     "src": "public/person.jpg"
   },
   "resources/css/app.css": {
-    "file": "assets/app-DXGZh07j.css",
+    "file": "assets/app-DcKiPEiY.css",
     "src": "resources/css/app.css",
     "isEntry": true,
     "name": "app",
     "names": [
       "app.css"
     ]
+  },
+  "resources/fonts/SFProText-Bold.ttf": {
+    "file": "assets/SFProText-Bold-xE-p46bC.ttf",
+    "src": "resources/fonts/SFProText-Bold.ttf"
+  },
+  "resources/fonts/SFProText-Light.ttf": {
+    "file": "assets/SFProText-Light-_O1k9I2d.ttf",
+    "src": "resources/fonts/SFProText-Light.ttf"
+  },
+  "resources/fonts/SFProText-Regular.ttf": {
+    "file": "assets/SFProText-Regular-Cp76WCaJ.ttf",
+    "src": "resources/fonts/SFProText-Regular.ttf"
   },
   "resources/js/app.js": {
     "file": "assets/app-BjMeHjpC.js",
