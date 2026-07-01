@@ -60,13 +60,13 @@
               <tbody>
                 @foreach ($users as $user)
                   <tr class="odd:bg-gray-700 hover:bg-gray-900 text-gray-300">
-                    <td class="border border-gray-600 py-1 px-4">{{ $user->name }}</td>
+                    <td class="border border-gray-600 py-1 px-4"><a
+                        href="{{ route('admin.user.edit', $user) }}" class="underline underline-offset-3">{{ $user->name }}</a></td>
                     <td class="border border-gray-600 py-1 px-4">{{ $user->email }}</td>
                     <td class="border border-gray-600 py-1 px-4">{{ $user->role }}</td>
                     <td class="border border-gray-600 py-1 px-4">{{ $user->depart }}</td>
                     <td class="border border-gray-600 py-1 px-4">{{ $user->city }}</td>
-                    <td class="border border-gray-600 py-1 px-4">{{ $user->active }}</td>
-                  </tr>
+                    <td class="border border-gray-600 py-1 px-4">{{ $user->active ? 'Yes' : 'No' }}</td>
                 @endforeach
               </tbody>
             </table>

@@ -43,7 +43,7 @@ class AdminController extends Controller
         // ======================== Visitors
 
         $query = Visitor::orderBy('id', 'desc')->take(100)->get();
-        
+
         $visitors['allRows'] = $query;
         $visitors['byResources'] = $query->groupBy('url')->map(function ($item) {
             return $item->count();
@@ -51,5 +51,32 @@ class AdminController extends Controller
         $test['b'] = '';
 
         return view('dashboard.admin.dashboard', compact('users', 'allSchedules', 'formData', 'visitors', 'test'));
+    }
+
+    public function edit(Request $request)
+    {
+
+        $user = User::findOrFail($request->id);
+
+        return view('dashboard.admin.element.user', compact('user'));
+    }
+
+    public function update(Request $request)
+    {
+
+        $user = User::findOrFail($request->id);
+
+        $validated = $request->validate([
+            'name' => 'required',
+            'email' => 'required',
+            'role' => 'required',
+            'depart' => 'required',
+            'city' => 'required',
+            'active' => 'required',
+        ]);
+
+        $user->update($validated);
+
+        return redirect()->route('admin.dashboard')->with('status', 'Данные ' . $user->name . ' обновлены');
     }
 }

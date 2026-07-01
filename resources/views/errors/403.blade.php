@@ -16,10 +16,10 @@
     <div class="w-full h-full flex justify-center flex-col items-center">
       <img src="/0x0_logo_small.png" alt="0x0"
         class="py-4 brightness-150 hover:brightness-200 duration-300 cursor-pointer mb-5">
-      <p class="md:text-4xl text-xl font-bold px-10">Страница не найдена</p>
-      <p class="md:text-lg text-xs">Не удается найти запрашиваемую вами страницу</p>
+      <p class="md:text-4xl text-xl font-bold px-10">Нет доступа к странице</p>
+      <p class="md:text-lg text-xs">У вас отсутствуют права для просмотра страницы </p>
       <a href="/"
-        class="px-5 py-1 text-sm mt-10 bg-neutral-300 hover:bg-neutral-100 duration-300 rounded-full text-black font-bold">Домой</a>
+        class="px-5 py-1 mt-10 text-sm bg-neutral-300 hover:bg-neutral-100 duration-300 rounded-full text-black font-bold">Домой</a>
     </div>
   </div>
 
