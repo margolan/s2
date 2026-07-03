@@ -91,7 +91,6 @@
           {{-- =================== CALENDAR =================== --}}
 
 
-          {{-- @dump($calendar) --}}
 
           <div class="border-y-2 border-neutral-300 my-10" x-data="{ open: false }">
             <div
@@ -101,10 +100,10 @@
                 fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M19 9l-7 7-7-7" />
               </svg>
-              <p>С {{ $report['period'][0]->format('j') }} по {{ $report['period'][1]->translatedFormat('j F Y') }} было
-                <span class="border border-sky-500/20 bg-sky-500/20 text-sky-400 py-1 px-2 rounded-md">принято
+              <p class=" leading-loose">С {{ $report['period'][0]->format('j') }} по {{ $report['period'][1]->translatedFormat('j F Y') }} было
+                <span class="border border-sky-500/20 bg-sky-500/20 text-sky-400 py-1 px-2 rounded-md whitespace-nowrap">принято
                   {{ $report['incoming'] }}</span> и <span
-                  class="border border-emerald-500/20 bg-emerald-500/20 text-emerald-400 py-1 px-2 rounded-md">закрыто
+                  class="border border-emerald-500/20 bg-emerald-500/20 text-emerald-400 py-1 px-2 rounded-md whitespace-nowrap">закрыто
                   {{ $report['repaired'] }}</span> кассет.
               </p>
               <svg class="w-4 h-4 text-slate-400 transition-transform duration-200" :class="open ? 'rotate-180' : ''"
@@ -138,7 +137,7 @@
                             {{ $loop->parent->last ? '' : '' }} {{ $loop->last ? 'border-r-0' : '' }}">
                           @if ($day['date'] === today()->format('d.m'))
                             <p
-                              class="w-full h-full absolute inset-0 bg-emerald-500/30 {{ $day['date'] === today()->format('d.m') ? 'animate-pulse' : '' }}">
+                              class="absolute inset-0 bg-emerald-500/30 border border-emerald-500 animate-pulse">
                             </p>
                           @endif
                           <span
