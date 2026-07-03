@@ -52,7 +52,7 @@
           <h1> <a href="/grafik" class="font-semibold text-gray-800 dark:text-gray-200">График работ</a> </h1>
 
           <div class="flex">
-            <form action="{{ route('schedule-settings') }}" method="post" class="flex items-center gap-2">
+            <form action="{{ route('schedule.settings') }}" method="post" class="flex items-center gap-2">
               @csrf
               <button name="depart" value="sort" class="hover:text-rose-500 transition"><svg
                   xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="currentColor" class="size-4">

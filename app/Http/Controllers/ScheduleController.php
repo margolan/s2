@@ -57,7 +57,7 @@ class ScheduleController extends Controller
 
     Cookie::queue('settings', $encode, 2628000);
 
-    return redirect()->route('schedule-index');
+    return redirect()->route('schedule.index');
   }
 
   public function dashboard(Request $request) // =============================== [ DASHBOARD ] ================================================
@@ -129,7 +129,7 @@ class ScheduleController extends Controller
 
     $checkExist = Schedule::where('month', $request->month)->where('year', $request->year)->where('depart', $user->depart)->exists();
 
-    if ($checkExist) return redirect()->route('schedule-dashboard')->with('status', $request->month . $request->year . $user->depart);
+    if ($checkExist) return redirect()->route('schedule.dashboard')->with('status', $request->month . $request->year . $user->depart);
 
     $spreadsheet = IOFactory::load($request->file('file'));
     $import = new ScheduleImport();
@@ -141,7 +141,7 @@ class ScheduleController extends Controller
       $user->depart,
     );
 
-    return redirect()->route('schedule-dashboard')->with('status', 'График добавлен. Подтвердите, чтобы он отображался на главной');
+    return redirect()->route('schedule.dashboard')->with('status', 'График добавлен. Подтвердите, чтобы он отображался на главной');
   }
 
   public function activate(Request $request) // =============================== [ ACTIVATE ] ================================================
@@ -151,7 +151,7 @@ class ScheduleController extends Controller
 
     Schedule::where('batch_id', $request->batch_id)->where('depart', Auth::user()->depart)->update(['is_active' => true]);
 
-    return redirect()->route('schedule-dashboard')->with('status', 'График за ' . Carbon::create($selectedSchedule->year, $selectedSchedule->month)->translatedFormat('F Y') . ' подтвержден');
+    return redirect()->route('schedule.dashboard')->with('status', 'График за ' . Carbon::create($selectedSchedule->year, $selectedSchedule->month)->translatedFormat('F Y') . ' подтвержден');
   }
 
   public function delete(Request $request) // =============================== [ DELETE ] ================================================
@@ -161,7 +161,7 @@ class ScheduleController extends Controller
 
     Schedule::where('batch_id', $request->batch_id)->where('depart', Auth::user()->depart)->delete();
 
-    return redirect()->route('schedule-dashboard')->with('status', 'График за ' . Carbon::create($selectedSchedule->year, $selectedSchedule->month)->translatedFormat('F Y') . ' удален');
+    return redirect()->route('schedule.dashboard')->with('status', 'График за ' . Carbon::create($selectedSchedule->year, $selectedSchedule->month)->translatedFormat('F Y') . ' удален');
   }
 
   private function checkCookie() // =============================== [ COOKIE ] ================================================
@@ -205,7 +205,7 @@ class ScheduleController extends Controller
     $query = Schedule::where('is_active', true)
       ->orderBy('depart', $sort ? 'asc' : 'desc');
 
-    if (request()->routeIs('schedule-dashboard')) {
+    if (request()->routeIs('schedule.dashboard')) {
 
       $query->where('depart', Auth::user()->depart);
     } else {

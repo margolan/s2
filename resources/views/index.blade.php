@@ -55,13 +55,13 @@
           или моё
           резюме — воспользуйтесь ссылками ниже.</p>
         <div class="flex gap-5 justify-around md:justify-normal flex-wrap">
-          <p class="flex flex-nowrap">//<a href="{{ route('schedule-index') }}"
+          <p class="flex flex-nowrap">//<a href="{{ route('schedule.index') }}"
               class="text-gray-400 hover:text-blue-400 transition-colors underline underline-offset-3 pl-1"> Grafik</a>
           </p>
-          <p class="flex flex-nowrap">//<a href="{{ route('key-dashboard') }}"
+          <p class="flex flex-nowrap">//<a href="{{ route('key.dashboard') }}"
               class="text-gray-400 hover:text-blue-400 transition-colors underline underline-offset-3 pl-1"> Keys</a>
           </p>
-          <p class="flex flex-nowrap">//<a href="{{ route('cassette-dashboard') }}"
+          <p class="flex flex-nowrap">//<a href="{{ route('cassette.dashboard') }}"
               class="text-gray-400 hover:text-blue-400 transition-colors underline underline-offset-3 pl-1">
               Cassette</a></p>
           <p class="flex flex-nowrap">//<a href="{{ route('about') }}"

@@ -100,7 +100,7 @@
 
           <div class="bg-gray-700 p-5 rounded-2xl my-5">
             <h2 class="text-2xl px-2 py-3">Add New Schedule</h2>
-            <form action="{{ route('schedule-store') }}" enctype="multipart/form-data" method="POST"
+            <form action="{{ route('schedule.store') }}" enctype="multipart/form-data" method="POST"
               class="max-w-81 flex flex-col gap-5 dark:text-gray-800">
               @csrf
               <div class="flex gap-5 ">

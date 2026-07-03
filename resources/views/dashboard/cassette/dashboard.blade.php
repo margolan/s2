@@ -61,7 +61,7 @@
 
           {{-- =================== ADD FORM =================== --}}
 
-          <form action="{{ route('cassette-dashboard') }}" method="post" class="flex gap-3 my-10">
+          <form action="{{ route('cassette.dashboard') }}" method="post" class="flex gap-3 my-10">
             @csrf
             <select name="type" class="rounded-md text-sm dark:bg-neutral-600 dark:text-neutral-300">
               <option value="repaired">Закрытие</option>
@@ -91,76 +91,103 @@
           {{-- =================== CALENDAR =================== --}}
 
 
-          <hr>
+          @dump($calendar)
 
-          <div
-            class="border border-neutral-400 rounded-xl overflow-hidden my-10 max-w-max mx-auto shadow-lg shadow-black/10">
-            <table class="w-full md:w-auto border-separate border-spacing-0 text-neutral-200">
-              <thead>
-                <tr class="text-center text-neutral-200 font-medium bg-neutral-800/40">
-                  <td class="border-b border-r border-neutral-400 py-3 w-24">Пн</td>
-                  <td class="border-b border-r border-neutral-400">Вт</td>
-                  <td class="border-b border-r border-neutral-400">Ср</td>
-                  <td class="border-b border-r border-neutral-400">Чт</td>
-                  <td class="border-b border-r border-neutral-400">Пт</td>
-                  <td class="border-b border-r border-neutral-400">Сб</td>
-                  <td class="border-b border-neutral-400">Вс</td>
-                </tr>
-              </thead>
-              <tbody>
-                @foreach ($calendar['days'] as $week)
-                  <tr>
-                    @foreach ($week as $day)
-                      <td
-                        class="md:w-24 min-w-17.5 h-20 border-r border-b border-neutral-400 p-2 relative vertical-align-top transition-colors hover:bg-neutral-800/30
-                            {{ $day['isCurrentMonth'] ? 'bg-neutral-900/20' : 'bg-neutral-900/60' }} 
-                            {{ $loop->parent->last ? '' : '' }} {{ $loop->last ? '!border-r-0' : '' }}">
+          <div class="border-y-2 border-neutral-300 my-10" x-data="{ open: false }">
+            <div
+              class="py-5 text-center cursor-pointer flex justify-center items-center gap-3 hover:bg-slate-700/50 transition"
+              @click="open =!open">
+              <svg class="w-4 h-4 text-slate-400 transition-transform duration-200" :class="open ? 'rotate-180' : ''"
+                fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M19 9l-7 7-7-7" />
+              </svg>
+              <p>С {{ $report['period'][0]->format('j') }} по {{ $report['period'][1]->translatedFormat('j F Y') }} было
+                <span class="border border-sky-500/20 bg-sky-500/20 text-sky-400 py-1 px-2 rounded-md">принято
+                  {{ $report['incoming'] }}</span> и <span
+                  class="border border-emerald-500/20 bg-emerald-500/20 text-emerald-400 py-1 px-2 rounded-md">закрыто
+                  {{ $report['repaired'] }}</span> кассет.
+              </p>
+              <svg class="w-4 h-4 text-slate-400 transition-transform duration-200" :class="open ? 'rotate-180' : ''"
+                fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M19 9l-7 7-7-7" />
+              </svg>
+            </div>
 
-                        <span
-                          class="absolute left-2 top-1.5 text-[11px] font-semibold tracking-wide 
-                                {{ $day['isCurrentMonth'] ? 'text-neutral-400' : 'text-neutral-600' }}">
-                          {{ $day['date'] }}
-                        </span>
-
-                        <div class="flex flex-col gap-1.5 justify-center items-center h-full pt-3">
-
-                          @if ($day['repaired'] > 0)
-                            <div
-                              class="flex items-center gap-1 px-1.5 py-0.5 bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 rounded text-xs font-semibold min-w-[42px] justify-center"
-                              title="Отремонтировано">
-                              <svg class="w-3 h-3 text-emerald-500 shrink-0" fill="none" stroke="currentColor"
-                                viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5"
-                                  d="M5 13l4 4L19 7" />
-                              </svg>
-                              <span>{{ $day['repaired'] }}</span>
-                            </div>
-                          @endif
-
-                          @if ($day['incoming'] > 0)
-                            <div
-                              class="flex items-center gap-1 px-1.5 py-0.5 bg-sky-500/10 border border-sky-500/20 text-sky-400 rounded text-xs font-semibold min-w-[42px] justify-center"
-                              title="Приход новых">
-                              <svg class="w-3 h-3 text-sky-500 shrink-0" fill="none" stroke="currentColor"
-                                viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5"
-                                  d="M19 14l-7 7m0 0l-7-7m7 7V3" />
-                              </svg>
-                              <span>{{ $day['incoming'] }}</span>
-                            </div>
-                          @endif
-
-                        </div>
-
-                      </td>
-                    @endforeach
+            <div
+              class="border border-neutral-400 rounded-xl overflow-x-auto my-10 max-w-max mx-auto shadow-lg shadow-black/10"
+              x-show="open" x-transition>
+              <table class="w-full md:w-auto border-separate border-spacing-0 text-neutral-200">
+                <thead>
+                  <tr class="text-center text-neutral-200 font-medium bg-neutral-800/40">
+                    <td class="border-b border-r border-neutral-400 py-3">Пн</td>
+                    <td class="border-b border-r border-neutral-400">Вт</td>
+                    <td class="border-b border-r border-neutral-400">Ср</td>
+                    <td class="border-b border-r border-neutral-400">Чт</td>
+                    <td class="border-b border-r border-neutral-400">Пт</td>
+                    <td class="border-b border-r border-neutral-400 text-red-400">Сб</td>
+                    <td class="border-b border-neutral-400 text-red-400">Вс</td>
                   </tr>
-                @endforeach
-              </tbody>
-            </table>
+                </thead>
+                <tbody>
+                  @foreach ($calendar['days'] as $week)
+                    <tr>
+                      @foreach ($week as $day)
+                        <td
+                          class="md:w-24 min-w-18 h-20 relative border-r border-b border-neutral-400 p-2 relative vertical-align-top transition-colors hover:bg-neutral-700/50
+                            {{ $day['isCurrentMonth'] ? 'bg-neutral-900/20' : 'bg-neutral-900/60' }} 
+                            {{ $loop->parent->last ? '' : '' }} {{ $loop->last ? 'border-r-0' : '' }}">
+                          @if ($day['date'] === today()->format('d.m'))
+                            <p
+                              class="w-full h-full absolute inset-0 bg-emerald-500/30 {{ $day['date'] === today()->format('d.m') ? 'animate-pulse' : '' }}">
+                            </p>
+                          @endif
+                          <span
+                            class="absolute left-2 top-1.5 text-[11px] font-semibold tracking-wide 
+                                {{ $day['date'] === today()->format('d.m') ? 'text-emerald-500!' : '' }}
+                                {{ $day['isCurrentMonth'] ? 'text-neutral-400' : 'text-neutral-600' }}
+                                {{ $day['isWeekEnd'] ? 'text-red-400' : '' }}">
+                            {{ $day['date'] }}
+                          </span>
+
+                          <div class="flex flex-col gap-1.5 justify-center items-center h-full pt-3">
+
+                            @if ($day['repaired'] > 0)
+                              <div
+                                class="flex items-center gap-1 px-1.5 py-0.5 bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 rounded text-xs font-semibold min-w-[42px] justify-center"
+                                title="Отремонтировано">
+                                <svg class="w-3 h-3 text-emerald-500 shrink-0" fill="none" stroke="currentColor"
+                                  viewBox="0 0 24 24">
+                                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5"
+                                    d="M5 13l4 4L19 7" />
+                                </svg>
+                                <span>{{ $day['repaired'] }}</span>
+                              </div>
+                            @endif
+
+                            @if ($day['incoming'] > 0)
+                              <div
+                                class="flex items-center gap-1 px-1.5 py-0.5 bg-sky-500/10 border border-sky-500/20 text-sky-400 rounded text-xs font-semibold min-w-[42px] justify-center"
+                                title="Приход новых">
+                                <svg class="w-3 h-3 text-sky-500 shrink-0" fill="none" stroke="currentColor"
+                                  viewBox="0 0 24 24">
+                                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5"
+                                    d="M19 14l-7 7m0 0l-7-7m7 7V3" />
+                                </svg>
+                                <span>{{ $day['incoming'] }}</span>
+                              </div>
+                            @endif
+
+                          </div>
+
+                        </td>
+                      @endforeach
+                    </tr>
+                  @endforeach
+                </tbody>
+              </table>
+            </div>
           </div>
 
-          <hr>
 
           {{-- =================== CASSETTES LIST =================== --}}
 
@@ -186,11 +213,9 @@
                 <table class="w-full border-collapse border border-gray-400 dark:border-gray-700 text-sm">
                   <thead>
                     <tr>
-                      <th class="w-8 border border-gray-400 dark:border-gray-700 py-3 text-center">#</td>
-                      <th class="border border-gray-400 dark:border-gray-700 px-2 py-3 text-center">Номер кассеты
-                        </td>
-                      <th class="w-20 border border-gray-400 dark:border-gray-700 py-3 text-center">Время</td>
-                      <th class="w-20 border border-gray-400 dark:border-gray-700 py-3 text-center">Действие</td>
+                      <th class="w-8 border border-gray-400 dark:border-gray-700 py-3 text-center">#</th>
+                      <th class="border border-gray-400 dark:border-gray-700 px-2 py-3 text-center">Номер кассеты</th>
+                      <th class="w-20 border border-gray-400 dark:border-gray-700 py-3 text-center">Время</th>
                     </tr>
                   </thead>
                   @foreach ($date['repaired'] ?? [] as $index => $item)
@@ -198,21 +223,11 @@
                       <td class="border border-gray-400 dark:border-gray-700 px-2 py-1 text-center">
                         {{ $loop->count - $loop->index }}</td>
                       <td class="border border-gray-400 dark:border-gray-700 px-2 py-1">
-                        {{ $item->number }}{{ $item->var1 ? ", повтор от $item->var1" : '' }}</td>
-                      <td class="border border-gray-400 dark:border-gray-700 px-2 py-1 text-center">
-                        {{ $item->created_at->format('H:i:s') }}
+                        <a href="{{ route('cassette.edit', $item) }}"
+                          class="underline underline-offset-4">{{ $item->number }}</a>{{ $item->var1 ? ", повтор от $item->var1" : '' }}
                       </td>
                       <td class="border border-gray-400 dark:border-gray-700 px-2 py-1 text-center">
-                        @if ($item->created_at->format('Y-m-d') === now()->format('Y-m-d'))
-                          <form action="{{ route('cassette-delete') }}" method="post">
-                            @method('delete')
-                            @csrf
-                            <input type="hidden" name="id" value="{{ $item->id }}">
-                            <input type="submit" value="Удалить">
-                          </form>
-                        @else
-                          -
-                        @endif
+                        {{ $item->created_at->format('H:i:s') }}
                       </td>
                     </tr>
                   @endforeach
@@ -224,19 +239,9 @@
                     @foreach ($date['incoming'] ?? [] as $index => $item)
                       <tr>
                         <td class="w-8 border border-gray-400 dark:border-gray-700 px-2 py-1 text-center">*</td>
-                        <td class="border border-gray-400 dark:border-gray-700 px-2 py-1">Приход
-                          {{ $item->number }}</td>
-                        <td class="w-20 border border-gray-400 dark:border-gray-700 px-2 py-1 text-center">
-                          @if ($item->created_at->format('Y-m-d') === now()->format('Y-m-d'))
-                            <form action="{{ route('cassette-delete') }}" method="post">
-                              @method('delete')
-                              @csrf
-                              <input type="hidden" name="id" value="{{ $item->id }}">
-                              <input type="submit" value="Удалить">
-                            </form>
-                          @else
-                            -
-                          @endif
+                        <td class="border border-gray-400 dark:border-gray-700 px-2 py-1">
+                          <a href="{{ route('cassette.edit', $item) }}" class="underline underline-offset-4">Приход
+                            {{ $item->number }}</a>
                         </td>
                       </tr>
                     @endforeach

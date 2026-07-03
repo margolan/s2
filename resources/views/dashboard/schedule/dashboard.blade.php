@@ -66,7 +66,7 @@
                         <p class="sm:w-40 min-w-32">• {{ $yearIndex }},
                           {{ Str::ucfirst(\Carbon\Carbon::create(null, $monthIndex)->translatedFormat('F')) }}</p>
                         @if (!$is_activeIndex)
-                          <form action="{{ route('schedule-activate') }}" method="post" class="">
+                          <form action="{{ route('schedule.activate') }}" method="post" class="">
                             @csrf
                             @method('put')
                             <input type="hidden" name="batch_id" value="{{ $month->first()->batch_id }}">
@@ -74,7 +74,7 @@
                               class="text-emerald-500 text-sm border border-emerald-500 px-2 hover:bg-emerald-500/20">Подтвердить</button>
                           </form>
                         @endif
-                        <form action="{{ route('schedule-delete') }}" method="post">
+                        <form action="{{ route('schedule.delete') }}" method="post">
                           @csrf
                           @method('delete')
                           <input type="hidden" name="batch_id" value="{{ $month->first()->batch_id }}">
@@ -94,7 +94,7 @@
 
 
           <h1 class="font-semibold text-gray-800 dark:text-gray-200 px-1 py-4">Добавить график</h1>
-          <form action="{{ route('schedule-store') }}" enctype="multipart/form-data" method="POST"
+          <form action="{{ route('schedule.store') }}" enctype="multipart/form-data" method="POST"
             class="max-w-81 flex flex-col gap-5 dark:text-gray-800">
             @csrf
             <div class="flex gap-5 ">

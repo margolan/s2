@@ -33,7 +33,7 @@ Route::get('/test', [ServiceController::class, 'test']);
 
   // ====================== ADMIN DASHBOARD ======================
 
-  Route::middleware('auth')->group(function () {
+  Route::middleware('CheckUser:admin')->group(function () {
     Route::get('/dashboard/admin', [AdminController::class, 'index'])->name('admin.dashboard');
     Route::get('/dashboard/admin/{id}/edit', [AdminController::class, 'edit'])->name('admin.user.edit');
     Route::put('/dashboard/admin/{id}', [AdminController::class, 'update'])->name('admin.user.update');
@@ -43,14 +43,14 @@ Route::get('/test', [ServiceController::class, 'test']);
 
   // ====================== SCHEDULES PROJECT ======================
 
-  Route::get('/grafik', [ScheduleController::class, 'index'])->name('schedule-index');
-  Route::post('/grafik', [ScheduleController::class, 'settings'])->name('schedule-settings');
+  Route::get('/grafik', [ScheduleController::class, 'index'])->name('schedule.index');
+  Route::post('/grafik', [ScheduleController::class, 'settings'])->name('schedule.settings');
 
   Route::middleware('CheckUser:ter,pos')->group(function () {
     Route::get('/dashboard/schedule', [ScheduleController::class, 'dashboard'])->name('schedule.dashboard');
-    Route::post('/dashboard/schedule/store', [ScheduleController::class, 'store'])->name('schedule-store');
-    Route::put('/dashboard/schedule/activate', [ScheduleController::class, 'activate'])->name('schedule-activate');
-    Route::delete('/dashboard/schedule/delete', [ScheduleController::class, 'delete'])->name('schedule-delete');
+    Route::post('/dashboard/schedule/store', [ScheduleController::class, 'store'])->name('schedule.store');
+    Route::put('/dashboard/schedule/activate', [ScheduleController::class, 'activate'])->name('schedule.activate');
+    Route::delete('/dashboard/schedule/delete', [ScheduleController::class, 'delete'])->name('schedule.delete');
   });
 
 
@@ -60,10 +60,10 @@ Route::get('/test', [ServiceController::class, 'test']);
   // Route::match(['get', 'post'], '/dashboard/key/pincode', [KeyController::class, 'pincode'])->name('key-pincode');
 
   Route::middleware('CheckUser:ter')->group(function () {
-    Route::get('/dashboard/key', [KeyController::class, 'dashboard'])->name('key-dashboard');
-    Route::post('/dashboard/key/store', [KeyController::class, 'store'])->name('key-store');
-    Route::match(['get', 'put'], '/dashboard/key/edit', [KeyController::class, 'edit'])->name('key-edit');
-    Route::delete('/dashboard/key/delete', [KeyController::class, 'delete'])->name('key-delete');
+    Route::get('/dashboard/key', [KeyController::class, 'dashboard'])->name('key.dashboard');
+    Route::post('/dashboard/key/store', [KeyController::class, 'store'])->name('key.store');
+    Route::match(['get', 'put'], '/dashboard/key/edit', [KeyController::class, 'edit'])->name('key.edit');
+    Route::delete('/dashboard/key/delete', [KeyController::class, 'delete'])->name('key.delete');
   });
 
 
@@ -72,7 +72,9 @@ Route::get('/test', [ServiceController::class, 'test']);
 
   Route::middleware('CheckUser:upr')->group(function () {
     Route::match(['get', 'post'], '/dashboard/cassette', [CassetteController::class, 'dashboard'])->name('cassette.dashboard');
-    Route::delete('/cassette/delete', [CassetteController::class, 'delete'])->name('cassette-delete');
+    Route::get('/cassette/{id}/edit', [CassetteController::class, 'edit'])->name('cassette.edit');
+    Route::put('/cassette/{id}', [CassetteController::class, 'update'])->name('cassette.update');
+    // Route::delete('/cassette/delete', [CassetteController::class, 'delete'])->name('cassette.delete');
   });
 
 

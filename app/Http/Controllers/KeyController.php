@@ -30,7 +30,7 @@ class KeyController extends Controller
                     Auth::login($user);
                     $request->session()->regenerate();
 
-                    return redirect()->intended(route('key-dashboard'))->with('status', 'Вы авторизованы');
+                    return redirect()->intended(route('key.dashboard'))->with('status', 'Вы авторизованы');
                 }
             }
 
@@ -121,7 +121,7 @@ class KeyController extends Controller
 
             $retrievedData->update($validated);
 
-            return redirect()->route('key-dashboard')->with('status', 'Данные обновлены!');
+            return redirect()->route('key.dashboard')->with('status', 'Данные обновлены!');
         }
 
         return view('dashboard.key.edit', compact('retrievedData'));

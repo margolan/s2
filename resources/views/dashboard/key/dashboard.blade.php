@@ -57,7 +57,7 @@
               <hr class="my-5">
               <div>
                 <h2 class="my-5 text-lg">Удалить все ключи</h2>
-                <form action="{{ route('key-delete') }}" method="post">
+                <form action="{{ route('key.delete') }}" method="post">
                   @method('delete')
                   @csrf
                   <input type="hidden" name="batch_id" value="{{ $availableKeys->batch_id }}">
@@ -74,7 +74,7 @@
 
             <div>
               <h2 class="my-5 text-lg">Добавить данные с Excel</h2>
-              <form action="{{ route('key-store') }}" method="post" enctype="multipart/form-data">
+              <form action="{{ route('key.store') }}" method="post" enctype="multipart/form-data">
                 @csrf
                 <input type="file" class="custom-file-input text-sm w-max dark:text-gray-800" name="file">
                 <input type="submit"

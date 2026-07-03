@@ -76,30 +76,37 @@ class CassetteController extends Controller
         // =================================================================================
 
 
-        $startPerion = now()->subMonth();
+        // ===================== PERIOD =====================
 
-        $endPerion = now()->endOfDay();
 
-        $cassettes = Cassette::whereBetween('created_at', [$startPerion, $endPerion])->orderBy('created_at', 'desc')->get()
+        $today = today();
+        // $today = Carbon::create(2026, 05, 22); // test
+
+        $startOfMonth = $today->startOfMonth();
+
+        $endOfMonth = $today->copy()->endOfMonth();
+
+        $startDate = $startOfMonth->copy()->subWeek()->startOfWeek();
+
+        $endDate = $endOfMonth->copy()->endOfWeek();
+
+
+        // ===================== FETCHING DATA FROM DB =====================
+
+
+        $cassettes = Cassette::whereBetween('created_at', [$startOfMonth, $endOfMonth])->orderBy('created_at', 'desc')->get()
             ->groupBy([function ($item) {
                 return $item->created_at->format('Y-m-d');
             }, 'type']);
 
-        $report = 0;
+        $report['period'] = [$startOfMonth, $endOfMonth];
+        $report['incoming'] = $cassettes->pluck('incoming')->flatten()->sum('number');
+        $report['repaired'] = $cassettes->pluck('repaired')->flatten()->count();
 
-        foreach ($cassettes->pluck('incoming') as $cassette) {
-            foreach ($cassette ?? [] as $item) {
-                $report += $item->number ?? 0;
-            }
-        }
 
-        // ===================== CALENDAR =====================
 
-        $today = today();
+        // ===================== CREATING CALENDAR =====================
 
-        $startDate = $today->copy()->startOfMonth()->subWeek()->startOfWeek();
-
-        $endDate = $today->copy()->endOfMonth()->endOfWeek();
 
         $calendar = [];
 
@@ -116,7 +123,7 @@ class CassetteController extends Controller
             $incomingRecords = $calendar['data'][$startDate->format('d.m.Y')]['incoming'] ?? [];
 
             $calendar['days'][$startDate->weekOfYear()][] = [
-                'date' => $startDate->format('d'),
+                'date' => $startDate->format('d.m'),
                 'tableIndex' => $startDate->dayOfWeekIso,
                 'isCurrentMonth' => $startDate->month === $today->month,
                 'isWeekEnd' =>  $startDate->isWeekend(),
@@ -128,9 +135,38 @@ class CassetteController extends Controller
         }
 
 
-        // ===================== END CALENDAR =====================
 
-        return view('dashboard.cassette.dashboard', compact('cassettes', 'calendar'));
+        return view('dashboard.cassette.dashboard', compact('cassettes', 'calendar', 'report'));
+    }
+
+    public function edit(Request $request)
+    {
+
+        $cassette = Cassette::findOrFail($request->id);
+
+        $status = 'Данные обновлены';
+
+        return view('dashboard.cassette.element.cassette', compact('cassette'));
+    }
+
+    public function update(Request $request)
+    {
+
+        $cassette = Cassette::findOrFail($request->id);
+
+        $validated = $request->validate([
+            'number' => 'required',
+            'type' => 'required',
+            'var1' => 'nullable',
+            'var2' => 'nullable',
+            'var3' => 'nullable',
+        ]);
+
+        $cassette->update($validated);
+
+        $status = 'Данные обновлены';
+
+        return redirect()->route('cassette.dashboard')->with('status', $status);
     }
 
     public function delete(Request $request)
