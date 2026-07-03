@@ -91,7 +91,7 @@
           {{-- =================== CALENDAR =================== --}}
 
 
-          @dump($calendar)
+          {{-- @dump($calendar) --}}
 
           <div class="border-y-2 border-neutral-300 my-10" x-data="{ open: false }">
             <div
