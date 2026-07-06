@@ -8,7 +8,7 @@
     "src": "public/person.jpg"
   },
   "resources/css/app.css": {
-    "file": "assets/app-zCsk4M8b.css",
+    "file": "assets/app-D1CDaz-j.css",
     "src": "resources/css/app.css",
     "isEntry": true,
     "name": "app",
@@ -29,7 +29,7 @@
     "src": "resources/fonts/SFProText-Regular.ttf"
   },
   "resources/js/app.js": {
-    "file": "assets/app-BjMeHjpC.js",
+    "file": "assets/app-CJy8ASEk.js",
     "name": "app",
     "src": "resources/js/app.js",
     "isEntry": true
