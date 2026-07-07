@@ -57,3 +57,10 @@
     font-weight: 100;
     font-style: normal;
 }
+
+@font-face {
+    font-family: 'Giovanie';
+    src: url('../fonts/giovanie.regular.otf') format('truetype');
+    font-weight: 100;
+    font-style: normal;
+}

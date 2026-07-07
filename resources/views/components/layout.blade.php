@@ -9,7 +9,8 @@
   <title>{{ $title ?? '0x0' }}</title>
 </head>
 
-<body class="font-sans antialiased dark:bg-neutral-800 dark:text-neutral-200">
+<body class="font-sans antialiased bg-gray-900 text-gray-200">
+  <x-header />
   {{ $slot }}
 </body>
 

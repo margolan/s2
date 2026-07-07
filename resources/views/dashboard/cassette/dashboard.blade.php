@@ -1,4 +1,5 @@
-<x-app-layout>
+<x-layout>
+  <x-slot:title>{{ $title }}</x-slot:title>
 
 
   <div id="qr-modal" class="fixed inset-0 z-50 flex items-center justify-center hidden bg-black bg-opacity-50 p-4">
@@ -100,8 +101,10 @@
                 fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M19 9l-7 7-7-7" />
               </svg>
-              <p class=" leading-loose">С {{ $report['period'][0]->format('j') }} по {{ $report['period'][1]->translatedFormat('j F Y') }} было
-                <span class="border border-sky-500/20 bg-sky-500/20 text-sky-400 py-1 px-2 rounded-md whitespace-nowrap">принято
+              <p class=" leading-loose">С {{ $report['period'][0]->format('j') }} по
+                {{ $report['period'][1]->translatedFormat('j F Y') }} было
+                <span
+                  class="border border-sky-500/20 bg-sky-500/20 text-sky-400 py-1 px-2 rounded-md whitespace-nowrap">принято
                   {{ $report['incoming'] }}</span> и <span
                   class="border border-emerald-500/20 bg-emerald-500/20 text-emerald-400 py-1 px-2 rounded-md whitespace-nowrap">закрыто
                   {{ $report['repaired'] }}</span> кассет.
@@ -136,8 +139,7 @@
                             {{ $day['isCurrentMonth'] ? 'bg-neutral-900/20' : 'bg-neutral-900/60' }} 
                             {{ $loop->parent->last ? '' : '' }} {{ $loop->last ? 'border-r-0' : '' }}">
                           @if ($day['date'] === today()->format('d.m'))
-                            <p
-                              class="absolute inset-0 bg-emerald-500/30 border border-emerald-500 animate-pulse">
+                            <p class="absolute inset-0 bg-emerald-500/30 border border-emerald-500 animate-pulse">
                             </p>
                           @endif
                           <span
@@ -315,4 +317,4 @@
   </script>
 
 
-</x-app-layout>
+</x-layout>

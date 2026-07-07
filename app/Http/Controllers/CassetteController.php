@@ -134,9 +134,9 @@ class CassetteController extends Controller
             $startDate->addDay();
         }
 
+        $title = '0x0 | Кассеты';
 
-
-        return view('dashboard.cassette.dashboard', compact('cassettes', 'calendar', 'report'));
+        return view('dashboard.cassette.dashboard', compact('title','cassettes', 'calendar', 'report'));
     }
 
     public function edit(Request $request)
