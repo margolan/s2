@@ -52,6 +52,7 @@
         <h2 class="font-semibold text-3xl text-gray-800 dark:text-gray-200 px-1">{{ Str::upper($index) }}</h2>
       </div>
 
+
       <div class="max-w-max flex flex-wrap flex-col text-sm mb-4 gap-y-2 bg-gray-900 py-3 px-4 rounded-lg">
         @foreach ($todaysStaff[$index] as $workTypeIndex => $workType)
           @if ($workTypeIndex === 'working')

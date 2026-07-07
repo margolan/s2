@@ -255,7 +255,24 @@ class ScheduleController extends Controller
       'requestedSchedule' => $requestedSchedule,
       'nextMonthSchedule' => $nextMonthSchedule,
       'month' => $month,
-      'todaysStaff' => $todaysStaff,
+      'todaysStaff' => empty($todaysStaff) ? [
+        'pos' => [
+          'working' => [
+            'Нет данных'
+          ],
+          'onDuty' => [
+            'Нет данных'
+          ]
+        ],
+        'ter' => [
+          'working' => [
+            'Нет данных'
+          ],
+          'onDuty' => [
+            'Нет данных'
+          ]
+        ],
+      ] : $todaysStaff
     ];
   }
 
