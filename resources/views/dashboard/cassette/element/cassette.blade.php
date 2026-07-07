@@ -34,7 +34,7 @@
     </div>
   @endif
 
-  
+
   {{-- ======================================= [ NOTIFICATION ] ======================================= --}}
 
 
@@ -129,7 +129,16 @@
               </div>
 
             </form>
+
+            <form action="{{ route('cassette.delete', $cassette) }}" method="POST"  onsubmit="return confirm('Вы уверены, что хотите удалить эту кассету?');">
+              @csrf
+              @method('DELETE')
+              <button class="cursor-pointer text-red-500 pl-6 pt-3">Удалить кассету</button>
+            </form>
+
           </div>
+
+
 
         </div>
       </div>

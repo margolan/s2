@@ -74,7 +74,7 @@ Route::get('/test', [ServiceController::class, 'test']);
     Route::match(['get', 'post'], '/dashboard/cassette', [CassetteController::class, 'dashboard'])->name('cassette.dashboard');
     Route::get('/cassette/{id}/edit', [CassetteController::class, 'edit'])->name('cassette.edit');
     Route::put('/cassette/{id}', [CassetteController::class, 'update'])->name('cassette.update');
-    // Route::delete('/cassette/delete', [CassetteController::class, 'delete'])->name('cassette.delete');
+    Route::delete('/cassette/{id}', [CassetteController::class, 'delete'])->name('cassette.delete');
   });
 
 

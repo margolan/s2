@@ -184,6 +184,6 @@ class CassetteController extends Controller
             $reply = 'Приход ' . $row->number . ' удален';
         }
 
-        return redirect()->back()->with('status', $reply);
+        return redirect()->route('cassette.dashboard')->with('status', $reply);
     }
 }
