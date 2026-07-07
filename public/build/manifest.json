@@ -8,11 +8,7 @@
     "src": "public/person.jpg"
   },
   "resources/css/app.css": {
-<<<<<<< HEAD
-    "file": "assets/app-BsqtWnPX.css",
-=======
-    "file": "assets/app-D1CDaz-j.css",
->>>>>>> 59ea21c6f97d8acd542363b4a5efddf97dce41d9
+    "file": "assets/app-DyajJFeO.css",
     "src": "resources/css/app.css",
     "isEntry": true,
     "name": "app",
@@ -33,7 +29,7 @@
     "src": "resources/fonts/SFProText-Regular.ttf"
   },
   "resources/js/app.js": {
-    "file": "assets/app-CJy8ASEk.js",
+    "file": "assets/app-BjMeHjpC.js",
     "name": "app",
     "src": "resources/js/app.js",
     "isEntry": true
